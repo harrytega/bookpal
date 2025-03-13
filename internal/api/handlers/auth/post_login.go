@@ -5,19 +5,19 @@ import (
 	"errors"
 	"net/http"
 
-	"allaboutapps.dev/aw/go-starter/internal/api"
-	"allaboutapps.dev/aw/go-starter/internal/api/middleware"
-	"allaboutapps.dev/aw/go-starter/internal/models"
-	"allaboutapps.dev/aw/go-starter/internal/types"
-	"allaboutapps.dev/aw/go-starter/internal/util"
-	"allaboutapps.dev/aw/go-starter/internal/util/db"
-	"allaboutapps.dev/aw/go-starter/internal/util/hashing"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/strfmt/conv"
 	"github.com/go-openapi/swag"
 	"github.com/labstack/echo/v4"
 	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/boil"
+	"test-project/internal/api"
+	"test-project/internal/api/middleware"
+	"test-project/internal/models"
+	"test-project/internal/types"
+	"test-project/internal/util"
+	"test-project/internal/util/db"
+	"test-project/internal/util/hashing"
 )
 
 const (

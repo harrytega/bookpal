@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"allaboutapps.dev/aw/go-starter/internal/models"
-	"allaboutapps.dev/aw/go-starter/internal/util"
 	"github.com/volatiletech/sqlboiler/v4/boil"
+	"test-project/internal/models"
+	"test-project/internal/util"
 )
 
 // Live Service fixtures to be applied by manually running the CLI "app db seed"

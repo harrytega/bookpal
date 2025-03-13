@@ -9,11 +9,11 @@ import (
 	"sync"
 	"testing"
 
-	"allaboutapps.dev/aw/go-starter/internal/config"
-	"allaboutapps.dev/aw/go-starter/internal/test"
-	pUtil "allaboutapps.dev/aw/go-starter/internal/util"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"test-project/internal/config"
+	"test-project/internal/test"
+	pUtil "test-project/internal/util"
 )
 
 func TestWithTestDatabaseConcurrentUsage(t *testing.T) {

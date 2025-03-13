@@ -8,11 +8,11 @@ import (
 	"os"
 	"path/filepath"
 
-	"allaboutapps.dev/aw/go-starter/internal/config"
-	"allaboutapps.dev/aw/go-starter/internal/mailer/transport"
-	"allaboutapps.dev/aw/go-starter/internal/util"
 	"github.com/jordan-wright/email"
 	"github.com/rs/zerolog/log"
+	"test-project/internal/config"
+	"test-project/internal/mailer/transport"
+	"test-project/internal/util"
 )
 
 var (

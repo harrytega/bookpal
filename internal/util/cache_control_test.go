@@ -6,13 +6,13 @@ import (
 	"net/http"
 	"testing"
 
-	"allaboutapps.dev/aw/go-starter/internal/api"
-	"allaboutapps.dev/aw/go-starter/internal/api/middleware"
-	"allaboutapps.dev/aw/go-starter/internal/test"
-	"allaboutapps.dev/aw/go-starter/internal/util"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"test-project/internal/api"
+	"test-project/internal/api/middleware"
+	"test-project/internal/test"
+	"test-project/internal/util"
 )
 
 func TestCacheControl(t *testing.T) {

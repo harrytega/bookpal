@@ -8,17 +8,17 @@ import (
 	"testing"
 	"time"
 
-	"allaboutapps.dev/aw/go-starter/internal/api"
-	"allaboutapps.dev/aw/go-starter/internal/api/httperrors"
-	"allaboutapps.dev/aw/go-starter/internal/config"
-	"allaboutapps.dev/aw/go-starter/internal/models"
-	"allaboutapps.dev/aw/go-starter/internal/test"
-	"allaboutapps.dev/aw/go-starter/internal/types"
-	"allaboutapps.dev/aw/go-starter/internal/util/db"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/boil"
+	"test-project/internal/api"
+	"test-project/internal/api/httperrors"
+	"test-project/internal/config"
+	"test-project/internal/models"
+	"test-project/internal/test"
+	"test-project/internal/types"
+	"test-project/internal/util/db"
 )
 
 func TestPostForgotPasswordSuccess(t *testing.T) {

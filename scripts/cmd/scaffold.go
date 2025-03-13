@@ -7,7 +7,7 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"allaboutapps.dev/aw/go-starter/scripts/internal/scaffold"
+	"test-project/scripts/internal/scaffold"
 	"github.com/spf13/cobra"
 )
 

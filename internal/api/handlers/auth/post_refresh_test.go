@@ -6,14 +6,14 @@ import (
 	"net/http"
 	"testing"
 
-	"allaboutapps.dev/aw/go-starter/internal/api"
-	"allaboutapps.dev/aw/go-starter/internal/api/handlers/auth"
-	"allaboutapps.dev/aw/go-starter/internal/api/httperrors"
-	"allaboutapps.dev/aw/go-starter/internal/api/middleware"
-	"allaboutapps.dev/aw/go-starter/internal/test"
-	"allaboutapps.dev/aw/go-starter/internal/types"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
+	"test-project/internal/api"
+	"test-project/internal/api/handlers/auth"
+	"test-project/internal/api/httperrors"
+	"test-project/internal/api/middleware"
+	"test-project/internal/test"
+	"test-project/internal/types"
 )
 
 func TestPostRefreshSuccess(t *testing.T) {

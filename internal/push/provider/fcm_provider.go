@@ -5,10 +5,10 @@ import (
 	"errors"
 	"net/http"
 
-	"allaboutapps.dev/aw/go-starter/internal/push"
 	"google.golang.org/api/fcm/v1"
 	"google.golang.org/api/googleapi"
 	"google.golang.org/api/option"
+	"test-project/internal/push"
 )
 
 type FCM struct {

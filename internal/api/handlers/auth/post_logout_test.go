@@ -6,12 +6,12 @@ import (
 	"net/http"
 	"testing"
 
-	"allaboutapps.dev/aw/go-starter/internal/api"
-	"allaboutapps.dev/aw/go-starter/internal/api/httperrors"
-	"allaboutapps.dev/aw/go-starter/internal/api/middleware"
-	"allaboutapps.dev/aw/go-starter/internal/test"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
+	"test-project/internal/api"
+	"test-project/internal/api/httperrors"
+	"test-project/internal/api/middleware"
+	"test-project/internal/test"
 )
 
 func TestPostLogoutSuccess(t *testing.T) {

@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"allaboutapps.dev/aw/go-starter/internal/util"
 	"github.com/go-openapi/swag"
 	"github.com/stretchr/testify/assert"
+	"test-project/internal/util"
 )
 
 type readInterface interface {

@@ -8,15 +8,15 @@ import (
 	"net/http"
 	"time"
 
-	"allaboutapps.dev/aw/go-starter/internal/config"
-	"allaboutapps.dev/aw/go-starter/internal/i18n"
-	"allaboutapps.dev/aw/go-starter/internal/mailer"
-	"allaboutapps.dev/aw/go-starter/internal/mailer/transport"
-	"allaboutapps.dev/aw/go-starter/internal/push"
-	"allaboutapps.dev/aw/go-starter/internal/push/provider"
 	"github.com/dropbox/godropbox/time2"
 	"github.com/labstack/echo/v4"
 	"github.com/rs/zerolog/log"
+	"test-project/internal/config"
+	"test-project/internal/i18n"
+	"test-project/internal/mailer"
+	"test-project/internal/mailer/transport"
+	"test-project/internal/push"
+	"test-project/internal/push/provider"
 
 	// Import postgres driver for database/sql package
 	_ "github.com/lib/pq"

@@ -7,8 +7,8 @@ import (
 	"sync"
 	"time"
 
-	"allaboutapps.dev/aw/go-starter/internal/util"
 	"github.com/jordan-wright/email"
+	"test-project/internal/util"
 )
 
 const defaultWaitTimeout = time.Second * 10

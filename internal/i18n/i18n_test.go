@@ -9,14 +9,14 @@ import (
 	"sync"
 	"testing"
 
-	"allaboutapps.dev/aw/go-starter/internal/api"
-	"allaboutapps.dev/aw/go-starter/internal/config"
-	"allaboutapps.dev/aw/go-starter/internal/i18n"
-	"allaboutapps.dev/aw/go-starter/internal/test"
-	"allaboutapps.dev/aw/go-starter/internal/util"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"golang.org/x/text/language"
+	"test-project/internal/api"
+	"test-project/internal/config"
+	"test-project/internal/i18n"
+	"test-project/internal/test"
+	"test-project/internal/util"
 )
 
 func TestServerProvidedI18n(t *testing.T) {

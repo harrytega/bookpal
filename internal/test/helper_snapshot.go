@@ -11,7 +11,7 @@ import (
 	"regexp"
 	"strings"
 
-	"allaboutapps.dev/aw/go-starter/internal/util"
+	"test-project/internal/util"
 
 	"github.com/davecgh/go-spew/spew"
 	"github.com/go-openapi/runtime"

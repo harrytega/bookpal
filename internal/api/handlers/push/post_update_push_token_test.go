@@ -6,13 +6,13 @@ import (
 	"net/http"
 	"testing"
 
-	"allaboutapps.dev/aw/go-starter/internal/api"
-	"allaboutapps.dev/aw/go-starter/internal/api/httperrors"
-	"allaboutapps.dev/aw/go-starter/internal/models"
-	"allaboutapps.dev/aw/go-starter/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/volatiletech/sqlboiler/v4/boil"
+	"test-project/internal/api"
+	"test-project/internal/api/httperrors"
+	"test-project/internal/models"
+	"test-project/internal/test"
 )
 
 func TestPostUpdatePushTokenSuccess(t *testing.T) {
