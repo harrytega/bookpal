@@ -1,0 +1,171 @@
+  
+swagger: "2.0"
+info:
+  title: bookpal
+  version: 0.1.0
+paths:
+    /api/lists:
+      post:
+        summary: Creates a new book list.
+        description: Creates a new book list with a name.
+        operationId: createList
+        parameters:
+          - name: body
+            in: body
+            description: Creates a new book list with a name.
+            required: true
+            schema:
+              $ref: '../definitions/list.yml#/definitions/List'
+        responses:
+          200: 
+            description: Successful operation
+          400:
+            description: Invalid input
+
+    /api/lists/{list_id}:
+      get:
+        summary: Returns a list.
+        description: Returns a list from its list_id.
+        operationId: getList
+        parameters:
+          - name: list_id
+            in: path
+            description: ID of list to return.
+            required: true
+            type: string
+            format: uuid
+        responses:
+          200:
+            description: Successful operation.
+          400:
+            description: Invalid ID supplied.
+          404:
+            description: List not found.
+
+      put:
+        summary: Changes the name of a list.
+        operationId: changeListName
+        parameters:
+          - name: list_id
+            in: path
+            description: ID from list to update
+            required: true
+            type: string
+            format: uuid
+          - name: body
+            in: body
+            description: updated List
+            required: true
+            schema:
+              $ref: '../definitions/list.yml#/definitions/List'
+        responses:
+          200:
+            description: Successful operation.
+          400:
+            description: Invalid list ID.
+
+      delete:
+        summary: Deletes a list.
+        operationId: deleteList
+        parameters:
+          - name: list_id
+            in: path
+            description: List ID from the list to delete.
+            required: true
+            type: string
+            format: uuid
+        responses:
+          200:
+            description: Successful Operation.
+          400:
+            description: Invalid list ID
+
+    /api/lists/{list_id}/books:
+      post:
+        summary: Saves a book to an existing list.
+        operationId: saveBookToList
+        parameters:
+          - name: list_id
+            in: path
+            description: List ID to to get the list to add books to.
+            required: true
+            type: string
+            format: uuid
+          - name: body
+            in: body
+            description: Book to add to the list.
+            required: true
+            schema:
+              $ref: '../definitions/book.yml#/definitions/Book'
+        responses:
+          200:
+            description: Book succesfully added to list.
+          400:
+            description: Invalid List ID supplied.
+          404:
+            description: List not found.
+    
+    /api/lists/{list_id}/{book_id}:
+      get:
+        summary: Returns a book from a list.
+        operationId: getBookFromList
+        parameters:
+          - name: list_id
+            in: path
+            description: ID for the List that is searched on.
+            required: true
+            type: string
+            format: uuid
+          - name: book_id
+            in: path
+            description: ID for the book that is searched for.
+            required: true
+            type: string
+            format: uuid
+        responses:
+          200:
+            description: Found book.
+            schema: 
+              $ref: '../definitions/book.yml#/definitions/Book'
+          400:
+            description: Invalid IDs
+          404:
+            description: Book or list couldn't be found.
+      
+      delete:
+        summary: Deletes a specific book from the list.
+        operationId: deleteBookFromList
+        parameters:
+          - name: list_id
+            in: path
+            description: ID for the List
+            required: true
+            type: string
+            format: uuid
+          - name: book_id
+            in: path
+            description: ID for the book that will be deleted.
+            required: true
+            type: string
+            format: uuid
+        responses:
+          200:
+            description: Successful operation.
+          400:
+            description: Invalid list or book ID.
+
+    /api/lists/rated:
+      get:
+        summary: Returns all rated books.
+        operationId: getAllRatedBooks
+        responses:
+          200:
+            description: Successful operation.
+            schema:
+              $ref: '../definitions/list.yml#/definitions/List'
+
+
+
+
+
+

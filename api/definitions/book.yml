@@ -1,0 +1,39 @@
+definitions:
+     Book:
+      type: object
+      properties:
+        book_id:
+          type: string
+          format: uuid4
+          example: "d6764ee3-bf09-40c3-97c5-8f78b7de7ec3"
+        title:
+          type: string
+          example: "Harry Potter"
+        author:
+          type: string
+          example: "J. K. Rowling"
+        publisher: 
+          type: string
+          example: "Bloomsbury"
+        book_description:
+          type: string
+          example: "Dark times have come to Hogwarts. After the Dementors' attack on his cousin Dudley, Harry Potter knows that Voldemort will stop at nothing to find him. ..."
+        genre:
+          type: string
+          example: "Novel, Fantasy Fiction, Young adult literature"
+        pages:
+          type: integer
+          format: int32
+          example: 409
+        rating:
+          type: integer
+          format: int32
+          example: 3
+          description: Ratings are from 1 to 5.
+        user_notes:
+          type: string
+          example: "Amazing Character Development from the main character."
+      required:
+        - book_id
+        - title
+        - author

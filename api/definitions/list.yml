@@ -1,0 +1,23 @@
+definitions:
+  List:
+    type: object
+    properties:
+      list_id:
+        type: string
+        format: uuid
+        example: "d6764ee3-bf09-40c3-97c5-8f78b7de7ec3"
+      name:
+        type: string
+        example: "Cookbooks"
+      user_id:
+        type: string
+        format: uuid
+        example: "d6764ee3-bf09-40c3-97c5-8f78b7de7ec3"
+      books:
+        type: array
+        items:
+          $ref: 'book.yml#/definitions/Book'
+    required:
+      - list_id
+      - name
+      - user_id

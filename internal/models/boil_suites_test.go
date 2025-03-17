@@ -14,6 +14,8 @@ import "testing"
 func TestParent(t *testing.T) {
 	t.Run("AccessTokens", testAccessTokens)
 	t.Run("AppUserProfiles", testAppUserProfiles)
+	t.Run("Books", testBooks)
+	t.Run("Lists", testLists)
 	t.Run("PasswordResetTokens", testPasswordResetTokens)
 	t.Run("PushTokens", testPushTokens)
 	t.Run("RefreshTokens", testRefreshTokens)
@@ -23,6 +25,8 @@ func TestParent(t *testing.T) {
 func TestDelete(t *testing.T) {
 	t.Run("AccessTokens", testAccessTokensDelete)
 	t.Run("AppUserProfiles", testAppUserProfilesDelete)
+	t.Run("Books", testBooksDelete)
+	t.Run("Lists", testListsDelete)
 	t.Run("PasswordResetTokens", testPasswordResetTokensDelete)
 	t.Run("PushTokens", testPushTokensDelete)
 	t.Run("RefreshTokens", testRefreshTokensDelete)
@@ -32,6 +36,8 @@ func TestDelete(t *testing.T) {
 func TestQueryDeleteAll(t *testing.T) {
 	t.Run("AccessTokens", testAccessTokensQueryDeleteAll)
 	t.Run("AppUserProfiles", testAppUserProfilesQueryDeleteAll)
+	t.Run("Books", testBooksQueryDeleteAll)
+	t.Run("Lists", testListsQueryDeleteAll)
 	t.Run("PasswordResetTokens", testPasswordResetTokensQueryDeleteAll)
 	t.Run("PushTokens", testPushTokensQueryDeleteAll)
 	t.Run("RefreshTokens", testRefreshTokensQueryDeleteAll)
@@ -41,6 +47,8 @@ func TestQueryDeleteAll(t *testing.T) {
 func TestSliceDeleteAll(t *testing.T) {
 	t.Run("AccessTokens", testAccessTokensSliceDeleteAll)
 	t.Run("AppUserProfiles", testAppUserProfilesSliceDeleteAll)
+	t.Run("Books", testBooksSliceDeleteAll)
+	t.Run("Lists", testListsSliceDeleteAll)
 	t.Run("PasswordResetTokens", testPasswordResetTokensSliceDeleteAll)
 	t.Run("PushTokens", testPushTokensSliceDeleteAll)
 	t.Run("RefreshTokens", testRefreshTokensSliceDeleteAll)
@@ -50,6 +58,8 @@ func TestSliceDeleteAll(t *testing.T) {
 func TestExists(t *testing.T) {
 	t.Run("AccessTokens", testAccessTokensExists)
 	t.Run("AppUserProfiles", testAppUserProfilesExists)
+	t.Run("Books", testBooksExists)
+	t.Run("Lists", testListsExists)
 	t.Run("PasswordResetTokens", testPasswordResetTokensExists)
 	t.Run("PushTokens", testPushTokensExists)
 	t.Run("RefreshTokens", testRefreshTokensExists)
@@ -59,6 +69,8 @@ func TestExists(t *testing.T) {
 func TestFind(t *testing.T) {
 	t.Run("AccessTokens", testAccessTokensFind)
 	t.Run("AppUserProfiles", testAppUserProfilesFind)
+	t.Run("Books", testBooksFind)
+	t.Run("Lists", testListsFind)
 	t.Run("PasswordResetTokens", testPasswordResetTokensFind)
 	t.Run("PushTokens", testPushTokensFind)
 	t.Run("RefreshTokens", testRefreshTokensFind)
@@ -68,6 +80,8 @@ func TestFind(t *testing.T) {
 func TestBind(t *testing.T) {
 	t.Run("AccessTokens", testAccessTokensBind)
 	t.Run("AppUserProfiles", testAppUserProfilesBind)
+	t.Run("Books", testBooksBind)
+	t.Run("Lists", testListsBind)
 	t.Run("PasswordResetTokens", testPasswordResetTokensBind)
 	t.Run("PushTokens", testPushTokensBind)
 	t.Run("RefreshTokens", testRefreshTokensBind)
@@ -77,6 +91,8 @@ func TestBind(t *testing.T) {
 func TestOne(t *testing.T) {
 	t.Run("AccessTokens", testAccessTokensOne)
 	t.Run("AppUserProfiles", testAppUserProfilesOne)
+	t.Run("Books", testBooksOne)
+	t.Run("Lists", testListsOne)
 	t.Run("PasswordResetTokens", testPasswordResetTokensOne)
 	t.Run("PushTokens", testPushTokensOne)
 	t.Run("RefreshTokens", testRefreshTokensOne)
@@ -86,6 +102,8 @@ func TestOne(t *testing.T) {
 func TestAll(t *testing.T) {
 	t.Run("AccessTokens", testAccessTokensAll)
 	t.Run("AppUserProfiles", testAppUserProfilesAll)
+	t.Run("Books", testBooksAll)
+	t.Run("Lists", testListsAll)
 	t.Run("PasswordResetTokens", testPasswordResetTokensAll)
 	t.Run("PushTokens", testPushTokensAll)
 	t.Run("RefreshTokens", testRefreshTokensAll)
@@ -95,6 +113,8 @@ func TestAll(t *testing.T) {
 func TestCount(t *testing.T) {
 	t.Run("AccessTokens", testAccessTokensCount)
 	t.Run("AppUserProfiles", testAppUserProfilesCount)
+	t.Run("Books", testBooksCount)
+	t.Run("Lists", testListsCount)
 	t.Run("PasswordResetTokens", testPasswordResetTokensCount)
 	t.Run("PushTokens", testPushTokensCount)
 	t.Run("RefreshTokens", testRefreshTokensCount)
@@ -106,6 +126,10 @@ func TestInsert(t *testing.T) {
 	t.Run("AccessTokens", testAccessTokensInsertWhitelist)
 	t.Run("AppUserProfiles", testAppUserProfilesInsert)
 	t.Run("AppUserProfiles", testAppUserProfilesInsertWhitelist)
+	t.Run("Books", testBooksInsert)
+	t.Run("Books", testBooksInsertWhitelist)
+	t.Run("Lists", testListsInsert)
+	t.Run("Lists", testListsInsertWhitelist)
 	t.Run("PasswordResetTokens", testPasswordResetTokensInsert)
 	t.Run("PasswordResetTokens", testPasswordResetTokensInsertWhitelist)
 	t.Run("PushTokens", testPushTokensInsert)
@@ -119,6 +143,8 @@ func TestInsert(t *testing.T) {
 func TestReload(t *testing.T) {
 	t.Run("AccessTokens", testAccessTokensReload)
 	t.Run("AppUserProfiles", testAppUserProfilesReload)
+	t.Run("Books", testBooksReload)
+	t.Run("Lists", testListsReload)
 	t.Run("PasswordResetTokens", testPasswordResetTokensReload)
 	t.Run("PushTokens", testPushTokensReload)
 	t.Run("RefreshTokens", testRefreshTokensReload)
@@ -128,6 +154,8 @@ func TestReload(t *testing.T) {
 func TestReloadAll(t *testing.T) {
 	t.Run("AccessTokens", testAccessTokensReloadAll)
 	t.Run("AppUserProfiles", testAppUserProfilesReloadAll)
+	t.Run("Books", testBooksReloadAll)
+	t.Run("Lists", testListsReloadAll)
 	t.Run("PasswordResetTokens", testPasswordResetTokensReloadAll)
 	t.Run("PushTokens", testPushTokensReloadAll)
 	t.Run("RefreshTokens", testRefreshTokensReloadAll)
@@ -137,6 +165,8 @@ func TestReloadAll(t *testing.T) {
 func TestSelect(t *testing.T) {
 	t.Run("AccessTokens", testAccessTokensSelect)
 	t.Run("AppUserProfiles", testAppUserProfilesSelect)
+	t.Run("Books", testBooksSelect)
+	t.Run("Lists", testListsSelect)
 	t.Run("PasswordResetTokens", testPasswordResetTokensSelect)
 	t.Run("PushTokens", testPushTokensSelect)
 	t.Run("RefreshTokens", testRefreshTokensSelect)
@@ -146,6 +176,8 @@ func TestSelect(t *testing.T) {
 func TestUpdate(t *testing.T) {
 	t.Run("AccessTokens", testAccessTokensUpdate)
 	t.Run("AppUserProfiles", testAppUserProfilesUpdate)
+	t.Run("Books", testBooksUpdate)
+	t.Run("Lists", testListsUpdate)
 	t.Run("PasswordResetTokens", testPasswordResetTokensUpdate)
 	t.Run("PushTokens", testPushTokensUpdate)
 	t.Run("RefreshTokens", testRefreshTokensUpdate)
@@ -155,6 +187,8 @@ func TestUpdate(t *testing.T) {
 func TestSliceUpdateAll(t *testing.T) {
 	t.Run("AccessTokens", testAccessTokensSliceUpdateAll)
 	t.Run("AppUserProfiles", testAppUserProfilesSliceUpdateAll)
+	t.Run("Books", testBooksSliceUpdateAll)
+	t.Run("Lists", testListsSliceUpdateAll)
 	t.Run("PasswordResetTokens", testPasswordResetTokensSliceUpdateAll)
 	t.Run("PushTokens", testPushTokensSliceUpdateAll)
 	t.Run("RefreshTokens", testRefreshTokensSliceUpdateAll)

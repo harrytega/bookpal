@@ -1,0 +1,70 @@
+
+swagger: "2.0"
+info:
+  title: bookpal
+  version: 0.1.0
+paths:
+  /api/books/search:
+    get:
+      summary: Searches for books using the Google Books API.
+      description: Searches for books using the Google Books API. You can search by title, author or publisher.
+      operationId: searchBooks
+      parameters: 
+        - name: query
+          in: query
+          description: Search term for searching books. (title, author or publisher)
+          required: true
+          type: string
+      responses:
+        200:
+          description: Successful operation
+        400:
+          description: Invalid status value
+
+  /api/books/{book_id}:
+    get:
+      summary: Gets additional details about a book.
+      description: Gets additional details about a book. (title, author, publisher, description, pages, genre)
+      operationId: getBookDetails
+      parameters:
+        - name: book_id
+          in: path
+          description: Id of book to return.
+          required: true
+          type: string
+          format: uuid
+      responses:
+       200:
+        description: Successful operation
+       400: 
+        description: Invalid ID supplied
+       404:
+        description: Book not found
+
+
+    put:
+      summary: Adds or edits a rating and eventually some notes to the book.
+      description: Adds or edits a rating and eventually some notes to the book. A book can be rated 1-5 stars.
+      operationId: addBookRating
+      parameters:
+        - name: book_id
+          in: path
+          description: Id of book to rate.
+          required: true
+          type: string
+          format: uuid
+        - name: body
+          in: body
+          description: Book with rating/notes.
+          required: true
+          schema: 
+            $ref: '../definitions/book.yml#/definitions/Book'
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            $ref: '../definitions/book.yml#/definitions/Book'
+        400:
+          description: Invalid ID supplied
+        404:
+          description: Book not found 
