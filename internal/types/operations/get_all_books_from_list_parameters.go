@@ -16,9 +16,9 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// NewSearchBooksParams creates a new SearchBooksParams object
+// NewGetAllBooksFromListParams creates a new GetAllBooksFromListParams object
 // with the default values initialized.
-func NewSearchBooksParams() SearchBooksParams {
+func NewGetAllBooksFromListParams() GetAllBooksFromListParams {
 
 	var (
 		// initialize parameters with default values
@@ -27,22 +27,27 @@ func NewSearchBooksParams() SearchBooksParams {
 		pageSizeDefault = int64(10)
 	)
 
-	return SearchBooksParams{
+	return GetAllBooksFromListParams{
 		Page: &pageDefault,
 
 		PageSize: &pageSizeDefault,
 	}
 }
 
-// SearchBooksParams contains all the bound params for the search books operation
+// GetAllBooksFromListParams contains all the bound params for the get all books from list operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters searchBooks
-type SearchBooksParams struct {
+// swagger:parameters getAllBooksFromList
+type GetAllBooksFromListParams struct {
 
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
+	/*List ID from the list we want the books for.
+	  Required: true
+	  In: path
+	*/
+	ListID strfmt.UUID `param:"list_id"`
 	/*Page number
 	  In: query
 	  Default: 1
@@ -54,23 +59,23 @@ type SearchBooksParams struct {
 	  Default: 10
 	*/
 	PageSize *int64 `query:"pageSize"`
-	/*Search term for searching books. (title, author or publisher)
-	  Required: true
-	  In: query
-	*/
-	Query string `query:"query"`
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
 // for simple values it will use straight method calls.
 //
-// To ensure default values, the struct must have been initialized with NewSearchBooksParams() beforehand.
-func (o *SearchBooksParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
+// To ensure default values, the struct must have been initialized with NewGetAllBooksFromListParams() beforehand.
+func (o *GetAllBooksFromListParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
 
 	o.HTTPRequest = r
 
 	qs := runtime.Values(r.URL.Query())
+
+	rListID, rhkListID, _ := route.Params.GetOK("list_id")
+	if err := o.bindListID(rListID, rhkListID, route.Formats); err != nil {
+		res = append(res, err)
+	}
 
 	qPage, qhkPage, _ := qs.GetOK("page")
 	if err := o.bindPage(qPage, qhkPage, route.Formats); err != nil {
@@ -82,19 +87,22 @@ func (o *SearchBooksParams) BindRequest(r *http.Request, route *middleware.Match
 		res = append(res, err)
 	}
 
-	qQuery, qhkQuery, _ := qs.GetOK("query")
-	if err := o.bindQuery(qQuery, qhkQuery, route.Formats); err != nil {
-		res = append(res, err)
-	}
-
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
 	return nil
 }
 
-func (o *SearchBooksParams) Validate(formats strfmt.Registry) error {
+func (o *GetAllBooksFromListParams) Validate(formats strfmt.Registry) error {
 	var res []error
+
+	// list_id
+	// Required: true
+	// Parameter is provided by construction from the route
+
+	if err := o.validateListID(formats); err != nil {
+		res = append(res, err)
+	}
 
 	// page
 	// Required: false
@@ -108,21 +116,47 @@ func (o *SearchBooksParams) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	// query
-	// Required: true
-	// AllowEmptyValue: false
-	if err := validate.Required("query", "query", o.Query); err != nil {
-		res = append(res, err)
-	}
-
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
 	return nil
 }
 
+// bindListID binds and validates parameter ListID from path.
+func (o *GetAllBooksFromListParams) bindListID(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: true
+	// Parameter is provided by construction from the route
+
+	// Format: uuid
+	value, err := formats.Parse("uuid", raw)
+	if err != nil {
+		return errors.InvalidType("list_id", "path", "strfmt.UUID", raw)
+	}
+	o.ListID = *(value.(*strfmt.UUID))
+
+	if err := o.validateListID(formats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// validateListID carries on validations for parameter ListID
+func (o *GetAllBooksFromListParams) validateListID(formats strfmt.Registry) error {
+
+	if err := validate.FormatOf("list_id", "path", "uuid", o.ListID.String(), formats); err != nil {
+		return err
+	}
+	return nil
+}
+
 // bindPage binds and validates parameter Page from query.
-func (o *SearchBooksParams) bindPage(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetAllBooksFromListParams) bindPage(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -131,7 +165,7 @@ func (o *SearchBooksParams) bindPage(rawData []string, hasKey bool, formats strf
 	// Required: false
 	// AllowEmptyValue: false
 	if raw == "" { // empty values pass all other validations
-		// Default values have been previously initialized by NewSearchBooksParams()
+		// Default values have been previously initialized by NewGetAllBooksFromListParams()
 		return nil
 	}
 
@@ -145,7 +179,7 @@ func (o *SearchBooksParams) bindPage(rawData []string, hasKey bool, formats strf
 }
 
 // bindPageSize binds and validates parameter PageSize from query.
-func (o *SearchBooksParams) bindPageSize(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetAllBooksFromListParams) bindPageSize(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -154,7 +188,7 @@ func (o *SearchBooksParams) bindPageSize(rawData []string, hasKey bool, formats 
 	// Required: false
 	// AllowEmptyValue: false
 	if raw == "" { // empty values pass all other validations
-		// Default values have been previously initialized by NewSearchBooksParams()
+		// Default values have been previously initialized by NewGetAllBooksFromListParams()
 		return nil
 	}
 
@@ -172,7 +206,7 @@ func (o *SearchBooksParams) bindPageSize(rawData []string, hasKey bool, formats 
 }
 
 // validatePageSize carries on validations for parameter PageSize
-func (o *SearchBooksParams) validatePageSize(formats strfmt.Registry) error {
+func (o *GetAllBooksFromListParams) validatePageSize(formats strfmt.Registry) error {
 
 	// Required: false
 	if o.PageSize == nil {
@@ -182,27 +216,6 @@ func (o *SearchBooksParams) validatePageSize(formats strfmt.Registry) error {
 	if err := validate.MaximumInt("pageSize", "query", *o.PageSize, 30, false); err != nil {
 		return err
 	}
-
-	return nil
-}
-
-// bindQuery binds and validates parameter Query from query.
-func (o *SearchBooksParams) bindQuery(rawData []string, hasKey bool, formats strfmt.Registry) error {
-	if !hasKey {
-		return errors.Required("query", "query", rawData)
-	}
-	var raw string
-	if len(rawData) > 0 {
-		raw = rawData[len(rawData)-1]
-	}
-
-	// Required: true
-	// AllowEmptyValue: false
-	if err := validate.RequiredString("query", "query", raw); err != nil {
-		return err
-	}
-
-	o.Query = raw
 
 	return nil
 }

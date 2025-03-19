@@ -34,16 +34,16 @@ type AddBookRatingParams struct {
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
-	/*Book with rating/notes.
-	  Required: true
-	  In: body
-	*/
-	Body *types.ListBooksItems
 	/*Id of book to rate.
 	  Required: true
 	  In: path
 	*/
 	BookID strfmt.UUID `param:"book_id"`
+	/*Book with rating/notes.
+	  Required: true
+	  In: body
+	*/
+	NewBook *types.ListBooksItems
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -55,14 +55,19 @@ func (o *AddBookRatingParams) BindRequest(r *http.Request, route *middleware.Mat
 
 	o.HTTPRequest = r
 
+	rBookID, rhkBookID, _ := route.Params.GetOK("book_id")
+	if err := o.bindBookID(rBookID, rhkBookID, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
 	if runtime.HasBody(r) {
 		defer r.Body.Close()
 		var body types.ListBooksItems
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
 			if err == io.EOF {
-				res = append(res, errors.Required("body", "body", ""))
+				res = append(res, errors.Required("newBook", "body", ""))
 			} else {
-				res = append(res, errors.NewParseError("body", "body", "", err))
+				res = append(res, errors.NewParseError("newBook", "body", "", err))
 			}
 		} else {
 			// validate body object
@@ -71,17 +76,12 @@ func (o *AddBookRatingParams) BindRequest(r *http.Request, route *middleware.Mat
 			}
 
 			if len(res) == 0 {
-				o.Body = &body
+				o.NewBook = &body
 			}
 		}
 	} else {
-		res = append(res, errors.Required("body", "body", ""))
+		res = append(res, errors.Required("newBook", "body", ""))
 	}
-	rBookID, rhkBookID, _ := route.Params.GetOK("book_id")
-	if err := o.bindBookID(rBookID, rhkBookID, route.Formats); err != nil {
-		res = append(res, err)
-	}
-
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
@@ -91,14 +91,6 @@ func (o *AddBookRatingParams) BindRequest(r *http.Request, route *middleware.Mat
 func (o *AddBookRatingParams) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	// body
-	// Required: true
-
-	// body is validated in endpoint
-	//if err := o.Body.Validate(formats); err != nil {
-	//  res = append(res, err)
-	//}
-
 	// book_id
 	// Required: true
 	// Parameter is provided by construction from the route
@@ -106,6 +98,14 @@ func (o *AddBookRatingParams) Validate(formats strfmt.Registry) error {
 	if err := o.validateBookID(formats); err != nil {
 		res = append(res, err)
 	}
+
+	// newBook
+	// Required: true
+
+	// body is validated in endpoint
+	//if err := o.NewBook.Validate(formats); err != nil {
+	//  res = append(res, err)
+	//}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)

@@ -1,8 +1,8 @@
 -- +migrate Up
 CREATE TABLE books (
     book_id uuid NOT NULL DEFAULT uuid_generate_v4 (),
-    title text,
-    author text,
+    title text NOT NULL,
+    author text NOT NULL,
     publisher text,
     book_description text,
     genre text,

@@ -2,7 +2,7 @@
 CREATE TABLE users (
     id uuid NOT NULL DEFAULT uuid_generate_v4 (),
     username text,
-    email text,
+    email text NOT NULL,
     "password" text,
     is_active bool NOT NULL,
     -- TODO: use user_scope enum as "scopes user_scope[]" when supported

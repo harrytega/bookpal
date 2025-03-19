@@ -25,8 +25,8 @@ import (
 // Book is an object representing the database table.
 type Book struct {
 	BookID          string      `boil:"book_id" json:"book_id" toml:"book_id" yaml:"book_id"`
-	Title           null.String `boil:"title" json:"title,omitempty" toml:"title" yaml:"title,omitempty"`
-	Author          null.String `boil:"author" json:"author,omitempty" toml:"author" yaml:"author,omitempty"`
+	Title           string      `boil:"title" json:"title" toml:"title" yaml:"title"`
+	Author          string      `boil:"author" json:"author" toml:"author" yaml:"author"`
 	Publisher       null.String `boil:"publisher" json:"publisher,omitempty" toml:"publisher" yaml:"publisher,omitempty"`
 	BookDescription null.String `boil:"book_description" json:"book_description,omitempty" toml:"book_description" yaml:"book_description,omitempty"`
 	Genre           null.String `boil:"genre" json:"genre,omitempty" toml:"genre" yaml:"genre,omitempty"`
@@ -185,8 +185,8 @@ func (w whereHelpernull_Int) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNo
 
 var BookWhere = struct {
 	BookID          whereHelperstring
-	Title           whereHelpernull_String
-	Author          whereHelpernull_String
+	Title           whereHelperstring
+	Author          whereHelperstring
 	Publisher       whereHelpernull_String
 	BookDescription whereHelpernull_String
 	Genre           whereHelpernull_String
@@ -196,8 +196,8 @@ var BookWhere = struct {
 	UserID          whereHelperstring
 }{
 	BookID:          whereHelperstring{field: "\"books\".\"book_id\""},
-	Title:           whereHelpernull_String{field: "\"books\".\"title\""},
-	Author:          whereHelpernull_String{field: "\"books\".\"author\""},
+	Title:           whereHelperstring{field: "\"books\".\"title\""},
+	Author:          whereHelperstring{field: "\"books\".\"author\""},
 	Publisher:       whereHelpernull_String{field: "\"books\".\"publisher\""},
 	BookDescription: whereHelpernull_String{field: "\"books\".\"book_description\""},
 	Genre:           whereHelpernull_String{field: "\"books\".\"genre\""},
@@ -246,8 +246,8 @@ type bookL struct{}
 
 var (
 	bookAllColumns            = []string{"book_id", "title", "author", "publisher", "book_description", "genre", "pages", "rating", "user_notes", "user_id"}
-	bookColumnsWithoutDefault = []string{"user_id"}
-	bookColumnsWithDefault    = []string{"book_id", "title", "author", "publisher", "book_description", "genre", "pages", "rating", "user_notes"}
+	bookColumnsWithoutDefault = []string{"title", "author", "user_id"}
+	bookColumnsWithDefault    = []string{"book_id", "publisher", "book_description", "genre", "pages", "rating", "user_notes"}
 	bookPrimaryKeyColumns     = []string{"book_id"}
 	bookGeneratedColumns      = []string{}
 )

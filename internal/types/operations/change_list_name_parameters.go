@@ -34,16 +34,16 @@ type ChangeListNameParams struct {
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
-	/*updated List
-	  Required: true
-	  In: body
-	*/
-	Body *types.List
 	/*ID from list to update
 	  Required: true
 	  In: path
 	*/
 	ListID strfmt.UUID `param:"list_id"`
+	/*updated List with a new name.
+	  Required: true
+	  In: body
+	*/
+	UpdatedList *types.List
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -55,14 +55,19 @@ func (o *ChangeListNameParams) BindRequest(r *http.Request, route *middleware.Ma
 
 	o.HTTPRequest = r
 
+	rListID, rhkListID, _ := route.Params.GetOK("list_id")
+	if err := o.bindListID(rListID, rhkListID, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
 	if runtime.HasBody(r) {
 		defer r.Body.Close()
 		var body types.List
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
 			if err == io.EOF {
-				res = append(res, errors.Required("body", "body", ""))
+				res = append(res, errors.Required("updatedList", "body", ""))
 			} else {
-				res = append(res, errors.NewParseError("body", "body", "", err))
+				res = append(res, errors.NewParseError("updatedList", "body", "", err))
 			}
 		} else {
 			// validate body object
@@ -71,17 +76,12 @@ func (o *ChangeListNameParams) BindRequest(r *http.Request, route *middleware.Ma
 			}
 
 			if len(res) == 0 {
-				o.Body = &body
+				o.UpdatedList = &body
 			}
 		}
 	} else {
-		res = append(res, errors.Required("body", "body", ""))
+		res = append(res, errors.Required("updatedList", "body", ""))
 	}
-	rListID, rhkListID, _ := route.Params.GetOK("list_id")
-	if err := o.bindListID(rListID, rhkListID, route.Formats); err != nil {
-		res = append(res, err)
-	}
-
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
@@ -91,14 +91,6 @@ func (o *ChangeListNameParams) BindRequest(r *http.Request, route *middleware.Ma
 func (o *ChangeListNameParams) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	// body
-	// Required: true
-
-	// body is validated in endpoint
-	//if err := o.Body.Validate(formats); err != nil {
-	//  res = append(res, err)
-	//}
-
 	// list_id
 	// Required: true
 	// Parameter is provided by construction from the route
@@ -106,6 +98,14 @@ func (o *ChangeListNameParams) Validate(formats strfmt.Registry) error {
 	if err := o.validateListID(formats); err != nil {
 		res = append(res, err)
 	}
+
+	// updatedList
+	// Required: true
+
+	// body is validated in endpoint
+	//if err := o.UpdatedList.Validate(formats); err != nil {
+	//  res = append(res, err)
+	//}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)

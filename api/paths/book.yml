@@ -4,7 +4,25 @@ info:
   title: bookpal
   version: 0.1.0
 paths:
-  /api/books/search:
+
+  /api/v1/books:
+    post:
+      summary: Creates a book.
+      operationId: createBook
+      parameters:
+        - name: body
+          in: body
+          description: book to create
+          required: true
+          schema:
+            $ref: '../definitions/book.yml#/definitions/BookInMyDb'
+      responses:
+        201:
+          description: Added book to database
+        400:
+          description: Invalid input
+
+  /api/v1/books/search:
     get:
       summary: Searches for books using the Google Books API.
       description: Searches for books using the Google Books API. You can search by title, author or publisher.
@@ -15,13 +33,35 @@ paths:
           description: Search term for searching books. (title, author or publisher)
           required: true
           type: string
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          type: integer
+          default: 1
+        - name: pageSize
+          in: query
+          description: amount of books per page
+          required: false
+          type: integer
+          default: 10
+          maximum: 30
       responses:
         200:
           description: Successful operation
+          schema:
+            allOf:
+              - type: array
+                items: 
+                  $ref: '../definitions/book.yml#/definitions/Book'
+              - type: object
+                properties: 
+                  pagination:
+                    $ref: '../definitions/pagination.yml#/definitions/Pagination'
         400:
           description: Invalid status value
 
-  /api/books/{book_id}:
+  /api/v1/books/{book_id}:
     get:
       summary: Gets additional details about a book.
       description: Gets additional details about a book. (title, author, publisher, description, pages, genre)
@@ -37,9 +77,7 @@ paths:
        200:
         description: Successful operation
         schema:
-          type: array
-          items: 
-            $ref: '../definitions/book.yml#/definitions/Book'
+          $ref: '../definitions/book.yml#/definitions/Book'
        400: 
         description: Invalid ID supplied
        404:
@@ -57,7 +95,7 @@ paths:
           required: true
           type: string
           format: uuid
-        - name: body
+        - name: newBook
           in: body
           description: Book with rating/notes.
           required: true

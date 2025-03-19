@@ -4,27 +4,25 @@ info:
   title: bookpal
   version: 0.1.0
 paths:
-    /api/lists:
+    /api/v1/lists:
       post:
         summary: Creates a new book list.
         description: Creates a new book list with a name.
         operationId: createList
         parameters:
-          - name: body
+          - name: newList
             in: body
             description: Creates a new book list with a name.
             required: true
             schema:
               $ref: '../definitions/list.yml#/definitions/List'
         responses:
-          200: 
-            description: Successful operation
-            schema: 
-              $ref: '../definitions/list.yml#/definitions/List'
+          201: 
+            description: List has been created.
           400:
             description: Invalid input
 
-    /api/lists/{list_id}:
+    /api/v1/lists/{list_id}:
       get:
         summary: Returns a list.
         description: Returns a list from its list_id.
@@ -56,9 +54,9 @@ paths:
             required: true
             type: string
             format: uuid
-          - name: body
+          - name: updatedList
             in: body
-            description: updated List
+            description: updated List with a new name.
             required: true
             schema:
               $ref: '../definitions/list.yml#/definitions/List'
@@ -81,12 +79,48 @@ paths:
             type: string
             format: uuid
         responses:
-          200:
+          204:
             description: Successful Operation.
           400:
             description: Invalid list ID
 
-    /api/lists/{list_id}/books:
+    /api/v1/lists/{list_id}/books:
+      get:
+        summary: Returns all the books from the list
+        operationId: getAllBooksFromList
+        parameters:
+          - name: list_id
+            in: path
+            description: List ID from the list we want the books for.
+            required: true
+            type: string
+            format: uuid
+          - name: page
+            in: query
+            description: Page number
+            required: false
+            type: integer
+            default: 1
+          - name: pageSize
+            in: query
+            description: amount of books per page
+            required: false
+            type: integer
+            default: 10
+            maximum: 30
+        responses:
+          200:
+            description: "Succesful Operation"
+            schema:
+              allOf:
+                - type: array
+                  items: 
+                    $ref: '../definitions/book.yml#/definitions/Book'
+                - type: object
+                  properties: 
+                    pagination:
+                      $ref: '../definitions/pagination.yml#/definitions/Pagination'
+              
       post:
         summary: Saves a book to an existing list.
         operationId: saveBookToList
@@ -97,21 +131,21 @@ paths:
             required: true
             type: string
             format: uuid
-          - name: body
+          - name: bookToAddToList
             in: body
             description: Book to add to the list.
             required: true
             schema:
               $ref: '../definitions/book.yml#/definitions/Book'
         responses:
-          200:
+          201:
             description: Book succesfully added to list.
           400:
             description: Invalid List ID supplied.
           404:
             description: List not found.
     
-    /api/lists/{list_id}/{book_id}:
+    /api/v1/lists/{list_id}/{book_id}:
       get:
         summary: Returns a book from a list.
         operationId: getBookFromList
@@ -155,12 +189,12 @@ paths:
             type: string
             format: uuid
         responses:
-          200:
+          204:
             description: Successful operation.
           400:
             description: Invalid list or book ID.
 
-    /api/lists/rated:
+    /api/v1/lists/rated:
       get:
         summary: Returns all rated books.
         operationId: getAllRatedBooks

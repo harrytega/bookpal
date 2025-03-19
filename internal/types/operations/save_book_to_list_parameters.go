@@ -38,7 +38,7 @@ type SaveBookToListParams struct {
 	  Required: true
 	  In: body
 	*/
-	Body *types.ListBooksItems
+	BookToAddToList *types.ListBooksItems
 	/*List ID to to get the list to add books to.
 	  Required: true
 	  In: path
@@ -60,9 +60,9 @@ func (o *SaveBookToListParams) BindRequest(r *http.Request, route *middleware.Ma
 		var body types.ListBooksItems
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
 			if err == io.EOF {
-				res = append(res, errors.Required("body", "body", ""))
+				res = append(res, errors.Required("bookToAddToList", "body", ""))
 			} else {
-				res = append(res, errors.NewParseError("body", "body", "", err))
+				res = append(res, errors.NewParseError("bookToAddToList", "body", "", err))
 			}
 		} else {
 			// validate body object
@@ -71,11 +71,11 @@ func (o *SaveBookToListParams) BindRequest(r *http.Request, route *middleware.Ma
 			}
 
 			if len(res) == 0 {
-				o.Body = &body
+				o.BookToAddToList = &body
 			}
 		}
 	} else {
-		res = append(res, errors.Required("body", "body", ""))
+		res = append(res, errors.Required("bookToAddToList", "body", ""))
 	}
 	rListID, rhkListID, _ := route.Params.GetOK("list_id")
 	if err := o.bindListID(rListID, rhkListID, route.Formats); err != nil {
@@ -91,11 +91,11 @@ func (o *SaveBookToListParams) BindRequest(r *http.Request, route *middleware.Ma
 func (o *SaveBookToListParams) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	// body
+	// bookToAddToList
 	// Required: true
 
 	// body is validated in endpoint
-	//if err := o.Body.Validate(formats); err != nil {
+	//if err := o.BookToAddToList.Validate(formats); err != nil {
 	//  res = append(res, err)
 	//}
 

@@ -1,0 +1,22 @@
+definitions:
+  Pagination:
+    type: object
+    properties:
+      totalItems:
+        type: integer
+        description: Sum of all existing items
+      totalPages:
+        type: integer
+        description: Sum of all pages
+      currentPage:
+        type: integer
+        description: Current page the user is on
+      pageSize:
+        type: integer
+        description: Amount of elements per page
+      hasNextPage:
+        type: boolean
+        description: Is there another page after?
+      hasPreviousPage:
+        type: boolean
+        description: Is there a page before?

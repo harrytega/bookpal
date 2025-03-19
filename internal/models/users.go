@@ -27,7 +27,7 @@ import (
 type User struct {
 	ID                  string            `boil:"id" json:"id" toml:"id" yaml:"id"`
 	Username            null.String       `boil:"username" json:"username,omitempty" toml:"username" yaml:"username,omitempty"`
-	Email               null.String       `boil:"email" json:"email,omitempty" toml:"email" yaml:"email,omitempty"`
+	Email               string            `boil:"email" json:"email" toml:"email" yaml:"email"`
 	Password            null.String       `boil:"password" json:"password,omitempty" toml:"password" yaml:"password,omitempty"`
 	IsActive            bool              `boil:"is_active" json:"is_active" toml:"is_active" yaml:"is_active"`
 	Scopes              types.StringArray `boil:"scopes" json:"scopes" toml:"scopes" yaml:"scopes"`
@@ -118,7 +118,7 @@ func (w whereHelpertypes_StringArray) GTE(x types.StringArray) qm.QueryMod {
 var UserWhere = struct {
 	ID                  whereHelperstring
 	Username            whereHelpernull_String
-	Email               whereHelpernull_String
+	Email               whereHelperstring
 	Password            whereHelpernull_String
 	IsActive            whereHelperbool
 	Scopes              whereHelpertypes_StringArray
@@ -128,7 +128,7 @@ var UserWhere = struct {
 }{
 	ID:                  whereHelperstring{field: "\"users\".\"id\""},
 	Username:            whereHelpernull_String{field: "\"users\".\"username\""},
-	Email:               whereHelpernull_String{field: "\"users\".\"email\""},
+	Email:               whereHelperstring{field: "\"users\".\"email\""},
 	Password:            whereHelpernull_String{field: "\"users\".\"password\""},
 	IsActive:            whereHelperbool{field: "\"users\".\"is_active\""},
 	Scopes:              whereHelpertypes_StringArray{field: "\"users\".\"scopes\""},
@@ -226,8 +226,8 @@ type userL struct{}
 
 var (
 	userAllColumns            = []string{"id", "username", "email", "password", "is_active", "scopes", "last_authenticated_at", "created_at", "updated_at"}
-	userColumnsWithoutDefault = []string{"is_active", "scopes", "created_at", "updated_at"}
-	userColumnsWithDefault    = []string{"id", "username", "email", "password", "last_authenticated_at"}
+	userColumnsWithoutDefault = []string{"email", "is_active", "scopes", "created_at", "updated_at"}
+	userColumnsWithDefault    = []string{"id", "username", "password", "last_authenticated_at"}
 	userPrimaryKeyColumns     = []string{"id"}
 	userGeneratedColumns      = []string{}
 )

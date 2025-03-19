@@ -61,232 +61,6 @@ paths:
       responses:
         "200":
           description: ModuleName @ Commit (BuildDate)
-  /api/books/search:
-    get:
-      description: Searches for books using the Google Books API. You can search by
-        title, author or publisher.
-      summary: Searches for books using the Google Books API.
-      operationId: searchBooks
-      parameters:
-      - type: string
-        description: Search term for searching books. (title, author or publisher)
-        name: query
-        in: query
-        required: true
-      responses:
-        "200":
-          description: Successful operation
-        "400":
-          description: Invalid status value
-  /api/books/{book_id}:
-    get:
-      description: Gets additional details about a book. (title, author, publisher,
-        description, pages, genre)
-      summary: Gets additional details about a book.
-      operationId: getBookDetails
-      parameters:
-      - type: string
-        format: uuid
-        description: Id of book to return.
-        name: book_id
-        in: path
-        required: true
-      responses:
-        "200":
-          description: Successful operation
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/book'
-        "400":
-          description: Invalid ID supplied
-        "404":
-          description: Book not found
-    put:
-      description: Adds or edits a rating and eventually some notes to the book. A
-        book can be rated 1-5 stars.
-      summary: Adds or edits a rating and eventually some notes to the book.
-      operationId: addBookRating
-      parameters:
-      - type: string
-        format: uuid
-        description: Id of book to rate.
-        name: book_id
-        in: path
-        required: true
-      - description: Book with rating/notes.
-        name: body
-        in: body
-        required: true
-        schema:
-          $ref: '#/definitions/listBooksItems'
-      responses:
-        "200":
-          description: Successful operation
-          schema:
-            $ref: '#/definitions/listBooksItems'
-        "400":
-          description: Invalid ID supplied
-        "404":
-          description: Book not found
-  /api/lists:
-    post:
-      description: Creates a new book list with a name.
-      summary: Creates a new book list.
-      operationId: createList
-      parameters:
-      - description: Creates a new book list with a name.
-        name: body
-        in: body
-        required: true
-        schema:
-          $ref: '#/definitions/list'
-      responses:
-        "200":
-          description: Successful operation
-          schema:
-            $ref: '#/definitions/list'
-        "400":
-          description: Invalid input
-  /api/lists/rated:
-    get:
-      summary: Returns all rated books.
-      operationId: getAllRatedBooks
-      responses:
-        "200":
-          description: Successful operation.
-          schema:
-            $ref: '#/definitions/list'
-  /api/lists/{list_id}:
-    get:
-      description: Returns a list from its list_id.
-      summary: Returns a list.
-      operationId: getList
-      parameters:
-      - type: string
-        format: uuid
-        description: ID of list to return.
-        name: list_id
-        in: path
-        required: true
-      responses:
-        "200":
-          description: Successful operation.
-          schema:
-            $ref: '#/definitions/list'
-        "400":
-          description: Invalid ID supplied.
-        "404":
-          description: List not found.
-    put:
-      summary: Changes the name of a list.
-      operationId: changeListName
-      parameters:
-      - type: string
-        format: uuid
-        description: ID from list to update
-        name: list_id
-        in: path
-        required: true
-      - description: updated List
-        name: body
-        in: body
-        required: true
-        schema:
-          $ref: '#/definitions/list'
-      responses:
-        "200":
-          description: Successful operation.
-          schema:
-            $ref: '#/definitions/list'
-        "400":
-          description: Invalid list ID.
-    delete:
-      summary: Deletes a list.
-      operationId: deleteList
-      parameters:
-      - type: string
-        format: uuid
-        description: List ID from the list to delete.
-        name: list_id
-        in: path
-        required: true
-      responses:
-        "200":
-          description: Successful Operation.
-        "400":
-          description: Invalid list ID
-  /api/lists/{list_id}/books:
-    post:
-      summary: Saves a book to an existing list.
-      operationId: saveBookToList
-      parameters:
-      - type: string
-        format: uuid
-        description: List ID to to get the list to add books to.
-        name: list_id
-        in: path
-        required: true
-      - description: Book to add to the list.
-        name: body
-        in: body
-        required: true
-        schema:
-          $ref: '#/definitions/listBooksItems'
-      responses:
-        "200":
-          description: Book succesfully added to list.
-        "400":
-          description: Invalid List ID supplied.
-        "404":
-          description: List not found.
-  /api/lists/{list_id}/{book_id}:
-    get:
-      summary: Returns a book from a list.
-      operationId: getBookFromList
-      parameters:
-      - type: string
-        format: uuid
-        description: ID for the List that is searched on.
-        name: list_id
-        in: path
-        required: true
-      - type: string
-        format: uuid
-        description: ID for the book that is searched for.
-        name: book_id
-        in: path
-        required: true
-      responses:
-        "200":
-          description: Found book.
-          schema:
-            $ref: '#/definitions/listBooksItems'
-        "400":
-          description: Invalid IDs
-        "404":
-          description: Book or list couldn't be found.
-    delete:
-      summary: Deletes a specific book from the list.
-      operationId: deleteBookFromList
-      parameters:
-      - type: string
-        format: uuid
-        description: ID for the List
-        name: list_id
-        in: path
-        required: true
-      - type: string
-        format: uuid
-        description: ID for the book that will be deleted.
-        name: book_id
-        in: path
-        required: true
-      responses:
-        "200":
-          description: Successful operation.
-        "400":
-          description: Invalid list or book ID.
   /api/v1/auth/change-password:
     post:
       security:
@@ -506,6 +280,297 @@ paths:
           description: GetUserInfoResponse
           schema:
             $ref: '#/definitions/getUserInfoResponse'
+  /api/v1/books:
+    post:
+      summary: Creates a book.
+      operationId: createBook
+      parameters:
+      - description: book to create
+        name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/bookInMyDb'
+      responses:
+        "201":
+          description: Added book to database
+        "400":
+          description: Invalid input
+  /api/v1/books/search:
+    get:
+      description: Searches for books using the Google Books API. You can search by
+        title, author or publisher.
+      summary: Searches for books using the Google Books API.
+      operationId: searchBooks
+      parameters:
+      - type: string
+        description: Search term for searching books. (title, author or publisher)
+        name: query
+        in: query
+        required: true
+      - type: integer
+        default: 1
+        description: Page number
+        name: page
+        in: query
+      - maximum: 30
+        type: integer
+        default: 10
+        description: amount of books per page
+        name: pageSize
+        in: query
+      responses:
+        "200":
+          description: Successful operation
+          schema:
+            allOf:
+            - type: array
+              items:
+                $ref: '#/definitions/book'
+            - type: object
+              properties:
+                pagination:
+                  $ref: '#/definitions/pagination'
+        "400":
+          description: Invalid status value
+  /api/v1/books/{book_id}:
+    get:
+      description: Gets additional details about a book. (title, author, publisher,
+        description, pages, genre)
+      summary: Gets additional details about a book.
+      operationId: getBookDetails
+      parameters:
+      - type: string
+        format: uuid
+        description: Id of book to return.
+        name: book_id
+        in: path
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/listBooksItems'
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Book not found
+    put:
+      description: Adds or edits a rating and eventually some notes to the book. A
+        book can be rated 1-5 stars.
+      summary: Adds or edits a rating and eventually some notes to the book.
+      operationId: addBookRating
+      parameters:
+      - type: string
+        format: uuid
+        description: Id of book to rate.
+        name: book_id
+        in: path
+        required: true
+      - description: Book with rating/notes.
+        name: newBook
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/listBooksItems'
+      responses:
+        "200":
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/listBooksItems'
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Book not found
+  /api/v1/lists:
+    post:
+      description: Creates a new book list with a name.
+      summary: Creates a new book list.
+      operationId: createList
+      parameters:
+      - description: Creates a new book list with a name.
+        name: newList
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/list'
+      responses:
+        "201":
+          description: List has been created.
+        "400":
+          description: Invalid input
+  /api/v1/lists/rated:
+    get:
+      summary: Returns all rated books.
+      operationId: getAllRatedBooks
+      responses:
+        "200":
+          description: Successful operation.
+          schema:
+            $ref: '#/definitions/list'
+  /api/v1/lists/{list_id}:
+    get:
+      description: Returns a list from its list_id.
+      summary: Returns a list.
+      operationId: getList
+      parameters:
+      - type: string
+        format: uuid
+        description: ID of list to return.
+        name: list_id
+        in: path
+        required: true
+      responses:
+        "200":
+          description: Successful operation.
+          schema:
+            $ref: '#/definitions/list'
+        "400":
+          description: Invalid ID supplied.
+        "404":
+          description: List not found.
+    put:
+      summary: Changes the name of a list.
+      operationId: changeListName
+      parameters:
+      - type: string
+        format: uuid
+        description: ID from list to update
+        name: list_id
+        in: path
+        required: true
+      - description: updated List with a new name.
+        name: updatedList
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/list'
+      responses:
+        "200":
+          description: Successful operation.
+          schema:
+            $ref: '#/definitions/list'
+        "400":
+          description: Invalid list ID.
+    delete:
+      summary: Deletes a list.
+      operationId: deleteList
+      parameters:
+      - type: string
+        format: uuid
+        description: List ID from the list to delete.
+        name: list_id
+        in: path
+        required: true
+      responses:
+        "204":
+          description: Successful Operation.
+        "400":
+          description: Invalid list ID
+  /api/v1/lists/{list_id}/books:
+    get:
+      summary: Returns all the books from the list
+      operationId: getAllBooksFromList
+      parameters:
+      - type: string
+        format: uuid
+        description: List ID from the list we want the books for.
+        name: list_id
+        in: path
+        required: true
+      - type: integer
+        default: 1
+        description: Page number
+        name: page
+        in: query
+      - maximum: 30
+        type: integer
+        default: 10
+        description: amount of books per page
+        name: pageSize
+        in: query
+      responses:
+        "200":
+          description: Succesful Operation
+          schema:
+            allOf:
+            - type: array
+              items:
+                $ref: '#/definitions/book'
+            - type: object
+              properties:
+                pagination:
+                  $ref: '#/definitions/pagination'
+    post:
+      summary: Saves a book to an existing list.
+      operationId: saveBookToList
+      parameters:
+      - type: string
+        format: uuid
+        description: List ID to to get the list to add books to.
+        name: list_id
+        in: path
+        required: true
+      - description: Book to add to the list.
+        name: bookToAddToList
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/listBooksItems'
+      responses:
+        "201":
+          description: Book succesfully added to list.
+        "400":
+          description: Invalid List ID supplied.
+        "404":
+          description: List not found.
+  /api/v1/lists/{list_id}/{book_id}:
+    get:
+      summary: Returns a book from a list.
+      operationId: getBookFromList
+      parameters:
+      - type: string
+        format: uuid
+        description: ID for the List that is searched on.
+        name: list_id
+        in: path
+        required: true
+      - type: string
+        format: uuid
+        description: ID for the book that is searched for.
+        name: book_id
+        in: path
+        required: true
+      responses:
+        "200":
+          description: Found book.
+          schema:
+            $ref: '#/definitions/listBooksItems'
+        "400":
+          description: Invalid IDs
+        "404":
+          description: Book or list couldn't be found.
+    delete:
+      summary: Deletes a specific book from the list.
+      operationId: deleteBookFromList
+      parameters:
+      - type: string
+        format: uuid
+        description: ID for the List
+        name: list_id
+        in: path
+        required: true
+      - type: string
+        format: uuid
+        description: ID for the book that will be deleted.
+        name: book_id
+        in: path
+        required: true
+      responses:
+        "204":
+          description: Successful operation.
+        "400":
+          description: Invalid list or book ID.
   /api/v1/push/test:
     get:
       security:
@@ -566,6 +631,45 @@ definitions:
     type: object
     required:
     - book_id
+    - title
+    - author
+    properties:
+      author:
+        type: string
+        example: J. K. Rowling
+      book_description:
+        type: string
+        example: Dark times have come to Hogwarts. After the Dementors' attack on
+          his cousin Dudley, Harry Potter knows that Voldemort will stop at nothing
+          to find him. ...
+      book_id:
+        type: string
+        format: uuid4
+        example: d6764ee3-bf09-40c3-97c5-8f78b7de7ec3
+      genre:
+        type: string
+        example: Novel, Fantasy Fiction, Young adult literature
+      pages:
+        type: integer
+        format: int32
+        example: 409
+      publisher:
+        type: string
+        example: Bloomsbury
+      rating:
+        description: Ratings are from 1 to 5.
+        type: integer
+        format: int32
+        example: 3
+      title:
+        type: string
+        example: Harry Potter
+      user_notes:
+        type: string
+        example: Amazing Character Development from the main character.
+  bookInMyDb:
+    type: object
+    required:
     - title
     - author
     properties:
@@ -903,6 +1007,27 @@ definitions:
     enum:
     - asc
     - desc
+  pagination:
+    type: object
+    properties:
+      currentPage:
+        description: Current page the user is on
+        type: integer
+      hasNextPage:
+        description: Is there another page after?
+        type: boolean
+      hasPreviousPage:
+        description: Is there a page before?
+        type: boolean
+      pageSize:
+        description: Amount of elements per page
+        type: integer
+      totalItems:
+        description: Sum of all existing items
+        type: integer
+      totalPages:
+        description: Sum of all pages
+        type: integer
   postChangePasswordPayload:
     type: object
     required:
