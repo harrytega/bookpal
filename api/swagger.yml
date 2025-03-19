@@ -94,6 +94,10 @@ paths:
       responses:
         "200":
           description: Successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/book'
         "400":
           description: Invalid ID supplied
         "404":
@@ -115,12 +119,12 @@ paths:
         in: body
         required: true
         schema:
-          $ref: '#/definitions/book'
+          $ref: '#/definitions/listBooksItems'
       responses:
         "200":
           description: Successful operation
           schema:
-            $ref: '#/definitions/book'
+            $ref: '#/definitions/listBooksItems'
         "400":
           description: Invalid ID supplied
         "404":
@@ -140,6 +144,8 @@ paths:
       responses:
         "200":
           description: Successful operation
+          schema:
+            $ref: '#/definitions/list'
         "400":
           description: Invalid input
   /api/lists/rated:
@@ -166,6 +172,8 @@ paths:
       responses:
         "200":
           description: Successful operation.
+          schema:
+            $ref: '#/definitions/list'
         "400":
           description: Invalid ID supplied.
         "404":
@@ -189,6 +197,8 @@ paths:
       responses:
         "200":
           description: Successful operation.
+          schema:
+            $ref: '#/definitions/list'
         "400":
           description: Invalid list ID.
     delete:
@@ -222,7 +232,7 @@ paths:
         in: body
         required: true
         schema:
-          $ref: '#/definitions/book'
+          $ref: '#/definitions/listBooksItems'
       responses:
         "200":
           description: Book succesfully added to list.
@@ -251,7 +261,7 @@ paths:
         "200":
           description: Found book.
           schema:
-            $ref: '#/definitions/book'
+            $ref: '#/definitions/listBooksItems'
         "400":
           description: Invalid IDs
         "404":
@@ -648,7 +658,7 @@ definitions:
       books:
         type: array
         items:
-          $ref: '#/definitions/book'
+          $ref: '#/definitions/listBooksItems'
       list_id:
         type: string
         format: uuid
@@ -660,6 +670,47 @@ definitions:
         type: string
         format: uuid
         example: d6764ee3-bf09-40c3-97c5-8f78b7de7ec3
+  listBooksItems:
+    type: object
+    required:
+    - book_id
+    - title
+    - author
+    properties:
+      author:
+        type: string
+        example: J. K. Rowling
+      book_description:
+        type: string
+        example: Dark times have come to Hogwarts. After the Dementors' attack on
+          his cousin Dudley, Harry Potter knows that Voldemort will stop at nothing
+          to find him. ...
+      book_id:
+        type: string
+        format: uuid4
+        example: d6764ee3-bf09-40c3-97c5-8f78b7de7ec3
+      genre:
+        type: string
+        example: Novel, Fantasy Fiction, Young adult literature
+      pages:
+        type: integer
+        format: int32
+        example: 409
+      publisher:
+        type: string
+        example: Bloomsbury
+      rating:
+        description: Ratings are from 1 to 5.
+        type: integer
+        format: int32
+        example: 3
+      title:
+        type: string
+        example: Harry Potter
+      user_notes:
+        type: string
+        example: Amazing Character Development from the main character.
+    x-go-gen-location: models
   nullableBool:
     type: boolean
     x-go-type:

@@ -19,6 +19,8 @@ paths:
         responses:
           200: 
             description: Successful operation
+            schema: 
+              $ref: '../definitions/list.yml#/definitions/List'
           400:
             description: Invalid input
 
@@ -37,6 +39,8 @@ paths:
         responses:
           200:
             description: Successful operation.
+            schema:
+              $ref: '../definitions/list.yml#/definitions/List'
           400:
             description: Invalid ID supplied.
           404:
@@ -61,6 +65,8 @@ paths:
         responses:
           200:
             description: Successful operation.
+            schema:
+              $ref: '../definitions/list.yml#/definitions/List'
           400:
             description: Invalid list ID.
 

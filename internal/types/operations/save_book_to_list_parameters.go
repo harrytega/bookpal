@@ -38,7 +38,7 @@ type SaveBookToListParams struct {
 	  Required: true
 	  In: body
 	*/
-	Body *types.Book
+	Body *types.ListBooksItems
 	/*List ID to to get the list to add books to.
 	  Required: true
 	  In: path
@@ -57,7 +57,7 @@ func (o *SaveBookToListParams) BindRequest(r *http.Request, route *middleware.Ma
 
 	if runtime.HasBody(r) {
 		defer r.Body.Close()
-		var body types.Book
+		var body types.ListBooksItems
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
 			if err == io.EOF {
 				res = append(res, errors.Required("body", "body", ""))

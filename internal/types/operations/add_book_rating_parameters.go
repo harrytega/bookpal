@@ -38,7 +38,7 @@ type AddBookRatingParams struct {
 	  Required: true
 	  In: body
 	*/
-	Body *types.Book
+	Body *types.ListBooksItems
 	/*Id of book to rate.
 	  Required: true
 	  In: path
@@ -57,7 +57,7 @@ func (o *AddBookRatingParams) BindRequest(r *http.Request, route *middleware.Mat
 
 	if runtime.HasBody(r) {
 		defer r.Body.Close()
-		var body types.Book
+		var body types.ListBooksItems
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
 			if err == io.EOF {
 				res = append(res, errors.Required("body", "body", ""))

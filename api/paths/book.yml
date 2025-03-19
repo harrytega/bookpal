@@ -36,6 +36,10 @@ paths:
       responses:
        200:
         description: Successful operation
+        schema:
+          type: array
+          items: 
+            $ref: '../definitions/book.yml#/definitions/Book'
        400: 
         description: Invalid ID supplied
        404:
