@@ -8,15 +8,17 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/dropbox/godropbox/time2"
-	"github.com/labstack/echo/v4"
-	"github.com/rs/zerolog/log"
 	"test-project/internal/config"
 	"test-project/internal/i18n"
 	"test-project/internal/mailer"
 	"test-project/internal/mailer/transport"
 	"test-project/internal/push"
 	"test-project/internal/push/provider"
+	"test-project/internal/services/googlebooks"
+
+	"github.com/dropbox/godropbox/time2"
+	"github.com/labstack/echo/v4"
+	"github.com/rs/zerolog/log"
 
 	// Import postgres driver for database/sql package
 	_ "github.com/lib/pq"
@@ -31,14 +33,15 @@ type Router struct {
 }
 
 type Server struct {
-	Config config.Server
-	DB     *sql.DB
-	Echo   *echo.Echo
-	Router *Router
-	Mailer *mailer.Mailer
-	Push   *push.Service
-	I18n   *i18n.Service
-	Clock  time2.Clock
+	Config      config.Server
+	DB          *sql.DB
+	Echo        *echo.Echo
+	Router      *Router
+	Mailer      *mailer.Mailer
+	Push        *push.Service
+	I18n        *i18n.Service
+	Clock       time2.Clock
+	GoogleBooks *googlebooks.Service
 }
 
 func NewServer(config config.Server) *Server {
@@ -88,6 +91,10 @@ func (s *Server) InitCmd() *Server {
 		log.Fatal().Err(err).Msg("Failed to initialize i18n service")
 	}
 
+	if err := s.InitGoogleBooks(); err != nil {
+		log.Fatal().Err(err).Msg("Failed to initialize google books service")
+	}
+
 	return s
 }
 
@@ -133,6 +140,12 @@ func (s *Server) InitMailer() error {
 	}
 
 	return s.Mailer.ParseTemplates()
+}
+
+func (s *Server) InitGoogleBooks() error {
+	s.GoogleBooks = googlebooks.NewService()
+
+	return nil
 }
 
 func (s *Server) InitPush() error {

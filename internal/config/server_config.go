@@ -7,11 +7,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/rs/zerolog"
-	"golang.org/x/text/language"
 	"test-project/internal/mailer/transport"
 	"test-project/internal/push/provider"
 	"test-project/internal/util"
+
+	"github.com/rs/zerolog"
+	"golang.org/x/text/language"
 )
 
 type EchoServer struct {
@@ -108,6 +109,11 @@ type Server struct {
 	Push       PushService
 	FCMConfig  provider.FCMConfig
 	I18n       I18n
+	Google     GoogleBooks
+}
+
+type GoogleBooks struct {
+	APIKey string
 }
 
 // DefaultServiceConfigFromEnv returns the server config as parsed from environment variables
@@ -131,6 +137,9 @@ func DefaultServiceConfigFromEnv() Server {
 	}
 
 	return Server{
+		Google: GoogleBooks{
+			APIKey: util.GetEnv("GOOGLE_BOOKS_API_KEY", ""),
+		},
 		Database: Database{
 			Host:     util.GetEnv("PGHOST", "postgres"),
 			Port:     util.GetEnvAsInt("PGPORT", 5432),
