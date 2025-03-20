@@ -3,12 +3,6 @@ package auth
 import (
 	"net/http"
 
-	"github.com/go-openapi/strfmt"
-	"github.com/go-openapi/strfmt/conv"
-	"github.com/go-openapi/swag"
-	"github.com/labstack/echo/v4"
-	"github.com/volatiletech/null/v8"
-	"github.com/volatiletech/sqlboiler/v4/boil"
 	"test-project/internal/api"
 	"test-project/internal/api/auth"
 	"test-project/internal/api/httperrors"
@@ -18,6 +12,13 @@ import (
 	"test-project/internal/util"
 	"test-project/internal/util/db"
 	"test-project/internal/util/hashing"
+
+	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/strfmt/conv"
+	"github.com/go-openapi/swag"
+	"github.com/labstack/echo/v4"
+	"github.com/volatiletech/null/v8"
+	"github.com/volatiletech/sqlboiler/v4/boil"
 )
 
 func PostChangePasswordRoute(s *api.Server) *echo.Route {
