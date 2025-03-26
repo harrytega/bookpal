@@ -109,7 +109,6 @@ func (s *Service) UpdateBookRatingAndNotes(ctx context.Context, bookID, userID s
 
 func (s *Service) AddGoogleBook(ctx context.Context, googleID, userID string) error {
 	exists, err := models.Books(
-		models.BookWhere.BookID.EQ(googleID),
 		models.BookWhere.UserID.EQ(userID),
 	).Exists(ctx, s.db)
 
@@ -132,7 +131,6 @@ func (s *Service) AddGoogleBook(ctx context.Context, googleID, userID string) er
 	defer tx.Rollback()
 
 	newBook := &models.Book{
-		BookID:          googleBook.GoogleID,
 		Title:           googleBook.BookDetails.Title,
 		Author:          googleBook.BookDetails.Authors[0],
 		Publisher:       null.StringFromPtr(&googleBook.BookDetails.Publisher),
