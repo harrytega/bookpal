@@ -90,6 +90,14 @@ func execClosureNewTestServer(ctx context.Context, t *testing.T, config config.S
 		t.Fatalf("Failed to init google books service: %v", err)
 	}
 
+	if err := s.InitBooks(); err != nil {
+		t.Fatalf("Failed to init books service: %v", err)
+	}
+
+	if err := s.InitLists(); err != nil {
+		t.Fatalf("Failed to init lists service %v", err)
+	}
+
 	router.Init(s)
 
 	closure(s)

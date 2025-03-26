@@ -14,7 +14,9 @@ import (
 	"test-project/internal/mailer/transport"
 	"test-project/internal/push"
 	"test-project/internal/push/provider"
+	"test-project/internal/services/books"
 	"test-project/internal/services/googlebooks"
+	"test-project/internal/services/lists"
 
 	"github.com/dropbox/godropbox/time2"
 	"github.com/labstack/echo/v4"
@@ -42,6 +44,8 @@ type Server struct {
 	I18n        *i18n.Service
 	Clock       time2.Clock
 	GoogleBooks *googlebooks.Service
+	Books       *books.Service
+	Lists       *lists.Service
 }
 
 func NewServer(config config.Server) *Server {
@@ -95,6 +99,13 @@ func (s *Server) InitCmd() *Server {
 		log.Fatal().Err(err).Msg("Failed to initialize google books service")
 	}
 
+	if err := s.InitBooks(); err != nil {
+		log.Fatal().Err(err).Msg("Failed to initialize books service")
+	}
+
+	if err := s.InitLists(); err != nil {
+		log.Fatal().Err(err).Msg("Failed to initialize lists service")
+	}
 	return s
 }
 
@@ -145,6 +156,17 @@ func (s *Server) InitMailer() error {
 func (s *Server) InitGoogleBooks() error {
 	s.GoogleBooks = googlebooks.NewService()
 
+	return nil
+}
+
+func (s *Server) InitBooks() error {
+	s.Books = books.NewService(s.DB, s.GoogleBooks)
+
+	return nil
+}
+
+func (s *Server) InitLists() error {
+	s.Lists = lists.NewService(s.DB)
 	return nil
 }
 

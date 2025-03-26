@@ -21,7 +21,7 @@ func NewService(db *sql.DB) *Service {
 	}
 }
 
-func (s *Service) createList(ctx context.Context, userID, listName string) (*models.List, error) {
+func (s *Service) CreateList(ctx context.Context, userID, listName string) (*models.List, error) {
 
 	if listName == "" {
 		return nil, errors.New("list name cannot be empty")
@@ -169,7 +169,7 @@ func (s *Service) AddBookToList(ctx context.Context, listID, userID, bookID stri
 		}
 	}
 
-	if err := list.AddBooks(ctx, tx, true, book); err != nil {
+	if err := list.AddBooks(ctx, tx, false, book); err != nil {
 		return fmt.Errorf("error adding book to list: %w", err)
 	}
 
