@@ -11,7 +11,6 @@ import (
 )
 
 func TestCreateList(t *testing.T) {
-	test.DotEnvLoadLocalOrSkipTest(t)
 
 	test.WithTestServer(t, func(s *api.Server) {
 		ctx := context.Background()
@@ -23,7 +22,6 @@ func TestCreateList(t *testing.T) {
 }
 
 func TestGetAllUserLists(t *testing.T) {
-	test.DotEnvLoadLocalOrSkipTest(t)
 
 	test.WithTestServer(t, func(s *api.Server) {
 		ctx := context.Background()
@@ -35,7 +33,6 @@ func TestGetAllUserLists(t *testing.T) {
 }
 
 func TestGetListByID(t *testing.T) {
-	test.DotEnvLoadLocalOrSkipTest(t)
 
 	test.WithTestServer(t, func(s *api.Server) {
 		ctx := context.Background()
@@ -47,7 +44,6 @@ func TestGetListByID(t *testing.T) {
 }
 
 func TestUpdateListName(t *testing.T) {
-	test.DotEnvLoadLocalOrSkipTest(t)
 
 	test.WithTestServer(t, func(s *api.Server) {
 		ctx := context.Background()
@@ -58,7 +54,6 @@ func TestUpdateListName(t *testing.T) {
 }
 
 func TestDeleteList(t *testing.T) {
-	test.DotEnvLoadLocalOrSkipTest(t)
 
 	test.WithTestServer(t, func(s *api.Server) {
 		ctx := context.Background()
@@ -69,7 +64,6 @@ func TestDeleteList(t *testing.T) {
 }
 
 func TestAddBookToList(t *testing.T) {
-	test.DotEnvLoadLocalOrSkipTest(t)
 
 	test.WithTestServer(t, func(s *api.Server) {
 		ctx := context.Background()
@@ -80,7 +74,6 @@ func TestAddBookToList(t *testing.T) {
 }
 
 func TestRemoveBookFromList(t *testing.T) {
-	test.DotEnvLoadLocalOrSkipTest(t)
 
 	test.WithTestServer(t, func(s *api.Server) {
 		ctx := context.Background()
@@ -90,7 +83,6 @@ func TestRemoveBookFromList(t *testing.T) {
 }
 
 func TestGetAllBooksFromList(t *testing.T) {
-	test.DotEnvLoadLocalOrSkipTest(t)
 	test.WithTestServer(t, func(s *api.Server) {
 		ctx := context.Background()
 

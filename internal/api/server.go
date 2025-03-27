@@ -154,7 +154,7 @@ func (s *Server) InitMailer() error {
 }
 
 func (s *Server) InitGoogleBooks() error {
-	s.GoogleBooks = googlebooks.NewService()
+	s.GoogleBooks = googlebooks.NewService(s.Config.Google)
 
 	return nil
 }
