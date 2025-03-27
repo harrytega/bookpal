@@ -6,11 +6,11 @@ import (
 	"path/filepath"
 	"strings"
 
-	"allaboutapps.dev/aw/go-starter/internal/config"
 	"github.com/BurntSushi/toml"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"github.com/rs/zerolog/log"
 	"golang.org/x/text/language"
+	"test-project/internal/config"
 )
 
 // i18n, we expect the following:

@@ -8,16 +8,16 @@ import (
 	"regexp"
 	"testing"
 
-	"allaboutapps.dev/aw/go-starter/internal/api"
-	"allaboutapps.dev/aw/go-starter/internal/test"
-	"allaboutapps.dev/aw/go-starter/internal/test/mocks"
-	"allaboutapps.dev/aw/go-starter/internal/util"
+	"test-project/internal/api"
+	"test-project/internal/test"
+	"test-project/internal/test/mocks"
+	"test-project/internal/util"
 
-	apitypes "allaboutapps.dev/aw/go-starter/internal/types"
 	"github.com/go-openapi/swag"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	"github.com/volatiletech/sqlboiler/v4/types"
+	apitypes "test-project/internal/types"
 )
 
 func TestSnapshot(t *testing.T) {

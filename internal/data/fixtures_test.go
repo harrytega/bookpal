@@ -3,9 +3,9 @@ package data_test
 import (
 	"testing"
 
-	"allaboutapps.dev/aw/go-starter/internal/data"
-	"allaboutapps.dev/aw/go-starter/internal/models"
 	"github.com/stretchr/testify/assert"
+	"test-project/internal/data"
+	"test-project/internal/models"
 )
 
 func TestUpsertableInterface(t *testing.T) {

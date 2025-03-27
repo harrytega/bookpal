@@ -6,10 +6,10 @@ import (
 	"testing"
 	"time"
 
-	"allaboutapps.dev/aw/go-starter/internal/api"
-	"allaboutapps.dev/aw/go-starter/internal/api/router"
-	"allaboutapps.dev/aw/go-starter/internal/config"
 	"github.com/dropbox/godropbox/time2"
+	"test-project/internal/api"
+	"test-project/internal/api/router"
+	"test-project/internal/config"
 )
 
 // WithTestServer returns a fully configured server (using the default server config).

@@ -5,9 +5,9 @@ import (
 	"database/sql"
 	"math"
 
-	"allaboutapps.dev/aw/go-starter/internal/util"
 	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/boil"
+	"test-project/internal/util"
 )
 
 type TxFn func(boil.ContextExecutor) error

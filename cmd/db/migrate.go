@@ -5,13 +5,13 @@ import (
 	"database/sql"
 	"fmt"
 
-	"allaboutapps.dev/aw/go-starter/internal/api"
-	"allaboutapps.dev/aw/go-starter/internal/config"
-	"allaboutapps.dev/aw/go-starter/internal/util"
-	"allaboutapps.dev/aw/go-starter/internal/util/command"
 	"github.com/rs/zerolog/log"
 	migrate "github.com/rubenv/sql-migrate"
 	"github.com/spf13/cobra"
+	"test-project/internal/api"
+	"test-project/internal/config"
+	"test-project/internal/util"
+	"test-project/internal/util/command"
 )
 
 func newMigrate() *cobra.Command {

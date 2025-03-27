@@ -5,13 +5,13 @@ import (
 	"errors"
 	"net/http"
 
-	"allaboutapps.dev/aw/go-starter/internal/api"
-	"allaboutapps.dev/aw/go-starter/internal/api/auth"
-	"allaboutapps.dev/aw/go-starter/internal/types"
-	"allaboutapps.dev/aw/go-starter/internal/util"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 	"github.com/labstack/echo/v4"
+	"test-project/internal/api"
+	"test-project/internal/api/auth"
+	"test-project/internal/types"
+	"test-project/internal/util"
 )
 
 func GetUserInfoRoute(s *api.Server) *echo.Route {

@@ -3,10 +3,10 @@ package router_test
 import (
 	"testing"
 
-	"allaboutapps.dev/aw/go-starter/internal/api"
-	"allaboutapps.dev/aw/go-starter/internal/config"
-	"allaboutapps.dev/aw/go-starter/internal/test"
 	"github.com/stretchr/testify/require"
+	"test-project/internal/api"
+	"test-project/internal/config"
+	"test-project/internal/test"
 )
 
 func TestPprofEnabled(t *testing.T) {

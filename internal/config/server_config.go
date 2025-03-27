@@ -7,11 +7,11 @@ import (
 	"testing"
 	"time"
 
-	"allaboutapps.dev/aw/go-starter/internal/mailer/transport"
-	"allaboutapps.dev/aw/go-starter/internal/push/provider"
-	"allaboutapps.dev/aw/go-starter/internal/util"
 	"github.com/rs/zerolog"
 	"golang.org/x/text/language"
+	"test-project/internal/mailer/transport"
+	"test-project/internal/push/provider"
+	"test-project/internal/util"
 )
 
 type EchoServer struct {

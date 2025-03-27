@@ -10,6 +10,8 @@ import "testing"
 func TestToOne(t *testing.T) {
 	t.Run("AccessTokenToUserUsingUser", testAccessTokenToOneUserUsingUser)
 	t.Run("AppUserProfileToUserUsingUser", testAppUserProfileToOneUserUsingUser)
+	t.Run("BookToUserUsingUser", testBookToOneUserUsingUser)
+	t.Run("ListToUserUsingUser", testListToOneUserUsingUser)
 	t.Run("PasswordResetTokenToUserUsingUser", testPasswordResetTokenToOneUserUsingUser)
 	t.Run("PushTokenToUserUsingUser", testPushTokenToOneUserUsingUser)
 	t.Run("RefreshTokenToUserUsingUser", testRefreshTokenToOneUserUsingUser)
@@ -24,7 +26,11 @@ func TestOneToOne(t *testing.T) {
 // TestToMany tests cannot be run in parallel
 // or deadlocks can occur.
 func TestToMany(t *testing.T) {
+	t.Run("BookToLists", testBookToManyLists)
+	t.Run("ListToBooks", testListToManyBooks)
 	t.Run("UserToAccessTokens", testUserToManyAccessTokens)
+	t.Run("UserToBooks", testUserToManyBooks)
+	t.Run("UserToLists", testUserToManyLists)
 	t.Run("UserToPasswordResetTokens", testUserToManyPasswordResetTokens)
 	t.Run("UserToPushTokens", testUserToManyPushTokens)
 	t.Run("UserToRefreshTokens", testUserToManyRefreshTokens)
@@ -35,6 +41,8 @@ func TestToMany(t *testing.T) {
 func TestToOneSet(t *testing.T) {
 	t.Run("AccessTokenToUserUsingAccessTokens", testAccessTokenToOneSetOpUserUsingUser)
 	t.Run("AppUserProfileToUserUsingAppUserProfile", testAppUserProfileToOneSetOpUserUsingUser)
+	t.Run("BookToUserUsingBooks", testBookToOneSetOpUserUsingUser)
+	t.Run("ListToUserUsingLists", testListToOneSetOpUserUsingUser)
 	t.Run("PasswordResetTokenToUserUsingPasswordResetTokens", testPasswordResetTokenToOneSetOpUserUsingUser)
 	t.Run("PushTokenToUserUsingPushTokens", testPushTokenToOneSetOpUserUsingUser)
 	t.Run("RefreshTokenToUserUsingRefreshTokens", testRefreshTokenToOneSetOpUserUsingUser)
@@ -57,7 +65,11 @@ func TestOneToOneRemove(t *testing.T) {}
 // TestToManyAdd tests cannot be run in parallel
 // or deadlocks can occur.
 func TestToManyAdd(t *testing.T) {
+	t.Run("BookToLists", testBookToManyAddOpLists)
+	t.Run("ListToBooks", testListToManyAddOpBooks)
 	t.Run("UserToAccessTokens", testUserToManyAddOpAccessTokens)
+	t.Run("UserToBooks", testUserToManyAddOpBooks)
+	t.Run("UserToLists", testUserToManyAddOpLists)
 	t.Run("UserToPasswordResetTokens", testUserToManyAddOpPasswordResetTokens)
 	t.Run("UserToPushTokens", testUserToManyAddOpPushTokens)
 	t.Run("UserToRefreshTokens", testUserToManyAddOpRefreshTokens)
@@ -65,8 +77,14 @@ func TestToManyAdd(t *testing.T) {
 
 // TestToManySet tests cannot be run in parallel
 // or deadlocks can occur.
-func TestToManySet(t *testing.T) {}
+func TestToManySet(t *testing.T) {
+	t.Run("BookToLists", testBookToManySetOpLists)
+	t.Run("ListToBooks", testListToManySetOpBooks)
+}
 
 // TestToManyRemove tests cannot be run in parallel
 // or deadlocks can occur.
-func TestToManyRemove(t *testing.T) {}
+func TestToManyRemove(t *testing.T) {
+	t.Run("BookToLists", testBookToManyRemoveOpLists)
+	t.Run("ListToBooks", testListToManyRemoveOpBooks)
+}

@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"allaboutapps.dev/aw/go-starter/internal/util"
+	"test-project/internal/util"
 )
 
 // The DatabaseMigrationTable name is baked into the binary

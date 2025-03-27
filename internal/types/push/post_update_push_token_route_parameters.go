@@ -13,7 +13,7 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/go-openapi/strfmt"
 
-	"allaboutapps.dev/aw/go-starter/internal/types"
+	"test-project/internal/types"
 )
 
 // NewPostUpdatePushTokenRouteParams creates a new PostUpdatePushTokenRouteParams object

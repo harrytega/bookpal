@@ -27,6 +27,7 @@ import (
 type User struct {
 	ID                  string            `boil:"id" json:"id" toml:"id" yaml:"id"`
 	Username            null.String       `boil:"username" json:"username,omitempty" toml:"username" yaml:"username,omitempty"`
+	Email               string            `boil:"email" json:"email" toml:"email" yaml:"email"`
 	Password            null.String       `boil:"password" json:"password,omitempty" toml:"password" yaml:"password,omitempty"`
 	IsActive            bool              `boil:"is_active" json:"is_active" toml:"is_active" yaml:"is_active"`
 	Scopes              types.StringArray `boil:"scopes" json:"scopes" toml:"scopes" yaml:"scopes"`
@@ -41,6 +42,7 @@ type User struct {
 var UserColumns = struct {
 	ID                  string
 	Username            string
+	Email               string
 	Password            string
 	IsActive            string
 	Scopes              string
@@ -50,6 +52,7 @@ var UserColumns = struct {
 }{
 	ID:                  "id",
 	Username:            "username",
+	Email:               "email",
 	Password:            "password",
 	IsActive:            "is_active",
 	Scopes:              "scopes",
@@ -61,6 +64,7 @@ var UserColumns = struct {
 var UserTableColumns = struct {
 	ID                  string
 	Username            string
+	Email               string
 	Password            string
 	IsActive            string
 	Scopes              string
@@ -70,6 +74,7 @@ var UserTableColumns = struct {
 }{
 	ID:                  "users.id",
 	Username:            "users.username",
+	Email:               "users.email",
 	Password:            "users.password",
 	IsActive:            "users.is_active",
 	Scopes:              "users.scopes",
@@ -79,62 +84,6 @@ var UserTableColumns = struct {
 }
 
 // Generated where
-
-type whereHelpernull_String struct{ field string }
-
-func (w whereHelpernull_String) EQ(x null.String) qm.QueryMod {
-	return qmhelper.WhereNullEQ(w.field, false, x)
-}
-func (w whereHelpernull_String) NEQ(x null.String) qm.QueryMod {
-	return qmhelper.WhereNullEQ(w.field, true, x)
-}
-func (w whereHelpernull_String) LT(x null.String) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LT, x)
-}
-func (w whereHelpernull_String) LTE(x null.String) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LTE, x)
-}
-func (w whereHelpernull_String) GT(x null.String) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GT, x)
-}
-func (w whereHelpernull_String) GTE(x null.String) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GTE, x)
-}
-func (w whereHelpernull_String) LIKE(x null.String) qm.QueryMod {
-	return qm.Where(w.field+" LIKE ?", x)
-}
-func (w whereHelpernull_String) NLIKE(x null.String) qm.QueryMod {
-	return qm.Where(w.field+" NOT LIKE ?", x)
-}
-func (w whereHelpernull_String) ILIKE(x null.String) qm.QueryMod {
-	return qm.Where(w.field+" ILIKE ?", x)
-}
-func (w whereHelpernull_String) NILIKE(x null.String) qm.QueryMod {
-	return qm.Where(w.field+" NOT ILIKE ?", x)
-}
-func (w whereHelpernull_String) SIMILAR(x null.String) qm.QueryMod {
-	return qm.Where(w.field+" SIMILAR TO ?", x)
-}
-func (w whereHelpernull_String) NSIMILAR(x null.String) qm.QueryMod {
-	return qm.Where(w.field+" NOT SIMILAR TO ?", x)
-}
-func (w whereHelpernull_String) IN(slice []string) qm.QueryMod {
-	values := make([]interface{}, 0, len(slice))
-	for _, value := range slice {
-		values = append(values, value)
-	}
-	return qm.WhereIn(fmt.Sprintf("%s IN ?", w.field), values...)
-}
-func (w whereHelpernull_String) NIN(slice []string) qm.QueryMod {
-	values := make([]interface{}, 0, len(slice))
-	for _, value := range slice {
-		values = append(values, value)
-	}
-	return qm.WhereNotIn(fmt.Sprintf("%s NOT IN ?", w.field), values...)
-}
-
-func (w whereHelpernull_String) IsNull() qm.QueryMod    { return qmhelper.WhereIsNull(w.field) }
-func (w whereHelpernull_String) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
 
 type whereHelperbool struct{ field string }
 
@@ -169,6 +118,7 @@ func (w whereHelpertypes_StringArray) GTE(x types.StringArray) qm.QueryMod {
 var UserWhere = struct {
 	ID                  whereHelperstring
 	Username            whereHelpernull_String
+	Email               whereHelperstring
 	Password            whereHelpernull_String
 	IsActive            whereHelperbool
 	Scopes              whereHelpertypes_StringArray
@@ -178,6 +128,7 @@ var UserWhere = struct {
 }{
 	ID:                  whereHelperstring{field: "\"users\".\"id\""},
 	Username:            whereHelpernull_String{field: "\"users\".\"username\""},
+	Email:               whereHelperstring{field: "\"users\".\"email\""},
 	Password:            whereHelpernull_String{field: "\"users\".\"password\""},
 	IsActive:            whereHelperbool{field: "\"users\".\"is_active\""},
 	Scopes:              whereHelpertypes_StringArray{field: "\"users\".\"scopes\""},
@@ -190,12 +141,16 @@ var UserWhere = struct {
 var UserRels = struct {
 	AppUserProfile      string
 	AccessTokens        string
+	Books               string
+	Lists               string
 	PasswordResetTokens string
 	PushTokens          string
 	RefreshTokens       string
 }{
 	AppUserProfile:      "AppUserProfile",
 	AccessTokens:        "AccessTokens",
+	Books:               "Books",
+	Lists:               "Lists",
 	PasswordResetTokens: "PasswordResetTokens",
 	PushTokens:          "PushTokens",
 	RefreshTokens:       "RefreshTokens",
@@ -205,6 +160,8 @@ var UserRels = struct {
 type userR struct {
 	AppUserProfile      *AppUserProfile         `boil:"AppUserProfile" json:"AppUserProfile" toml:"AppUserProfile" yaml:"AppUserProfile"`
 	AccessTokens        AccessTokenSlice        `boil:"AccessTokens" json:"AccessTokens" toml:"AccessTokens" yaml:"AccessTokens"`
+	Books               BookSlice               `boil:"Books" json:"Books" toml:"Books" yaml:"Books"`
+	Lists               ListSlice               `boil:"Lists" json:"Lists" toml:"Lists" yaml:"Lists"`
 	PasswordResetTokens PasswordResetTokenSlice `boil:"PasswordResetTokens" json:"PasswordResetTokens" toml:"PasswordResetTokens" yaml:"PasswordResetTokens"`
 	PushTokens          PushTokenSlice          `boil:"PushTokens" json:"PushTokens" toml:"PushTokens" yaml:"PushTokens"`
 	RefreshTokens       RefreshTokenSlice       `boil:"RefreshTokens" json:"RefreshTokens" toml:"RefreshTokens" yaml:"RefreshTokens"`
@@ -227,6 +184,20 @@ func (r *userR) GetAccessTokens() AccessTokenSlice {
 		return nil
 	}
 	return r.AccessTokens
+}
+
+func (r *userR) GetBooks() BookSlice {
+	if r == nil {
+		return nil
+	}
+	return r.Books
+}
+
+func (r *userR) GetLists() ListSlice {
+	if r == nil {
+		return nil
+	}
+	return r.Lists
 }
 
 func (r *userR) GetPasswordResetTokens() PasswordResetTokenSlice {
@@ -254,8 +225,8 @@ func (r *userR) GetRefreshTokens() RefreshTokenSlice {
 type userL struct{}
 
 var (
-	userAllColumns            = []string{"id", "username", "password", "is_active", "scopes", "last_authenticated_at", "created_at", "updated_at"}
-	userColumnsWithoutDefault = []string{"is_active", "scopes", "created_at", "updated_at"}
+	userAllColumns            = []string{"id", "username", "email", "password", "is_active", "scopes", "last_authenticated_at", "created_at", "updated_at"}
+	userColumnsWithoutDefault = []string{"email", "is_active", "scopes", "created_at", "updated_at"}
 	userColumnsWithDefault    = []string{"id", "username", "password", "last_authenticated_at"}
 	userPrimaryKeyColumns     = []string{"id"}
 	userGeneratedColumns      = []string{}
@@ -375,6 +346,34 @@ func (o *User) AccessTokens(mods ...qm.QueryMod) accessTokenQuery {
 	)
 
 	return AccessTokens(queryMods...)
+}
+
+// Books retrieves all the book's Books with an executor.
+func (o *User) Books(mods ...qm.QueryMod) bookQuery {
+	var queryMods []qm.QueryMod
+	if len(mods) != 0 {
+		queryMods = append(queryMods, mods...)
+	}
+
+	queryMods = append(queryMods,
+		qm.Where("\"books\".\"user_id\"=?", o.ID),
+	)
+
+	return Books(queryMods...)
+}
+
+// Lists retrieves all the list's Lists with an executor.
+func (o *User) Lists(mods ...qm.QueryMod) listQuery {
+	var queryMods []qm.QueryMod
+	if len(mods) != 0 {
+		queryMods = append(queryMods, mods...)
+	}
+
+	queryMods = append(queryMods,
+		qm.Where("\"lists\".\"user_id\"=?", o.ID),
+	)
+
+	return Lists(queryMods...)
 }
 
 // PasswordResetTokens retrieves all the password_reset_token's PasswordResetTokens with an executor.
@@ -624,6 +623,218 @@ func (userL) LoadAccessTokens(ctx context.Context, e boil.ContextExecutor, singu
 				local.R.AccessTokens = append(local.R.AccessTokens, foreign)
 				if foreign.R == nil {
 					foreign.R = &accessTokenR{}
+				}
+				foreign.R.User = local
+				break
+			}
+		}
+	}
+
+	return nil
+}
+
+// LoadBooks allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for a 1-M or N-M relationship.
+func (userL) LoadBooks(ctx context.Context, e boil.ContextExecutor, singular bool, maybeUser interface{}, mods queries.Applicator) error {
+	var slice []*User
+	var object *User
+
+	if singular {
+		var ok bool
+		object, ok = maybeUser.(*User)
+		if !ok {
+			object = new(User)
+			ok = queries.SetFromEmbeddedStruct(&object, &maybeUser)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", object, maybeUser))
+			}
+		}
+	} else {
+		s, ok := maybeUser.(*[]*User)
+		if ok {
+			slice = *s
+		} else {
+			ok = queries.SetFromEmbeddedStruct(&slice, maybeUser)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", slice, maybeUser))
+			}
+		}
+	}
+
+	args := make(map[interface{}]struct{})
+	if singular {
+		if object.R == nil {
+			object.R = &userR{}
+		}
+		args[object.ID] = struct{}{}
+	} else {
+		for _, obj := range slice {
+			if obj.R == nil {
+				obj.R = &userR{}
+			}
+			args[obj.ID] = struct{}{}
+		}
+	}
+
+	if len(args) == 0 {
+		return nil
+	}
+
+	argsSlice := make([]interface{}, len(args))
+	i := 0
+	for arg := range args {
+		argsSlice[i] = arg
+		i++
+	}
+
+	query := NewQuery(
+		qm.From(`books`),
+		qm.WhereIn(`books.user_id in ?`, argsSlice...),
+	)
+	if mods != nil {
+		mods.Apply(query)
+	}
+
+	results, err := query.QueryContext(ctx, e)
+	if err != nil {
+		return errors.Wrap(err, "failed to eager load books")
+	}
+
+	var resultSlice []*Book
+	if err = queries.Bind(results, &resultSlice); err != nil {
+		return errors.Wrap(err, "failed to bind eager loaded slice books")
+	}
+
+	if err = results.Close(); err != nil {
+		return errors.Wrap(err, "failed to close results in eager load on books")
+	}
+	if err = results.Err(); err != nil {
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for books")
+	}
+
+	if singular {
+		object.R.Books = resultSlice
+		for _, foreign := range resultSlice {
+			if foreign.R == nil {
+				foreign.R = &bookR{}
+			}
+			foreign.R.User = object
+		}
+		return nil
+	}
+
+	for _, foreign := range resultSlice {
+		for _, local := range slice {
+			if local.ID == foreign.UserID {
+				local.R.Books = append(local.R.Books, foreign)
+				if foreign.R == nil {
+					foreign.R = &bookR{}
+				}
+				foreign.R.User = local
+				break
+			}
+		}
+	}
+
+	return nil
+}
+
+// LoadLists allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for a 1-M or N-M relationship.
+func (userL) LoadLists(ctx context.Context, e boil.ContextExecutor, singular bool, maybeUser interface{}, mods queries.Applicator) error {
+	var slice []*User
+	var object *User
+
+	if singular {
+		var ok bool
+		object, ok = maybeUser.(*User)
+		if !ok {
+			object = new(User)
+			ok = queries.SetFromEmbeddedStruct(&object, &maybeUser)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", object, maybeUser))
+			}
+		}
+	} else {
+		s, ok := maybeUser.(*[]*User)
+		if ok {
+			slice = *s
+		} else {
+			ok = queries.SetFromEmbeddedStruct(&slice, maybeUser)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", slice, maybeUser))
+			}
+		}
+	}
+
+	args := make(map[interface{}]struct{})
+	if singular {
+		if object.R == nil {
+			object.R = &userR{}
+		}
+		args[object.ID] = struct{}{}
+	} else {
+		for _, obj := range slice {
+			if obj.R == nil {
+				obj.R = &userR{}
+			}
+			args[obj.ID] = struct{}{}
+		}
+	}
+
+	if len(args) == 0 {
+		return nil
+	}
+
+	argsSlice := make([]interface{}, len(args))
+	i := 0
+	for arg := range args {
+		argsSlice[i] = arg
+		i++
+	}
+
+	query := NewQuery(
+		qm.From(`lists`),
+		qm.WhereIn(`lists.user_id in ?`, argsSlice...),
+	)
+	if mods != nil {
+		mods.Apply(query)
+	}
+
+	results, err := query.QueryContext(ctx, e)
+	if err != nil {
+		return errors.Wrap(err, "failed to eager load lists")
+	}
+
+	var resultSlice []*List
+	if err = queries.Bind(results, &resultSlice); err != nil {
+		return errors.Wrap(err, "failed to bind eager loaded slice lists")
+	}
+
+	if err = results.Close(); err != nil {
+		return errors.Wrap(err, "failed to close results in eager load on lists")
+	}
+	if err = results.Err(); err != nil {
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for lists")
+	}
+
+	if singular {
+		object.R.Lists = resultSlice
+		for _, foreign := range resultSlice {
+			if foreign.R == nil {
+				foreign.R = &listR{}
+			}
+			foreign.R.User = object
+		}
+		return nil
+	}
+
+	for _, foreign := range resultSlice {
+		for _, local := range slice {
+			if local.ID == foreign.UserID {
+				local.R.Lists = append(local.R.Lists, foreign)
+				if foreign.R == nil {
+					foreign.R = &listR{}
 				}
 				foreign.R.User = local
 				break
@@ -1046,6 +1257,112 @@ func (o *User) AddAccessTokens(ctx context.Context, exec boil.ContextExecutor, i
 	for _, rel := range related {
 		if rel.R == nil {
 			rel.R = &accessTokenR{
+				User: o,
+			}
+		} else {
+			rel.R.User = o
+		}
+	}
+	return nil
+}
+
+// AddBooks adds the given related objects to the existing relationships
+// of the user, optionally inserting them as new records.
+// Appends related to o.R.Books.
+// Sets related.R.User appropriately.
+func (o *User) AddBooks(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*Book) error {
+	var err error
+	for _, rel := range related {
+		if insert {
+			rel.UserID = o.ID
+			if err = rel.Insert(ctx, exec, boil.Infer()); err != nil {
+				return errors.Wrap(err, "failed to insert into foreign table")
+			}
+		} else {
+			updateQuery := fmt.Sprintf(
+				"UPDATE \"books\" SET %s WHERE %s",
+				strmangle.SetParamNames("\"", "\"", 1, []string{"user_id"}),
+				strmangle.WhereClause("\"", "\"", 2, bookPrimaryKeyColumns),
+			)
+			values := []interface{}{o.ID, rel.BookID}
+
+			if boil.IsDebug(ctx) {
+				writer := boil.DebugWriterFrom(ctx)
+				fmt.Fprintln(writer, updateQuery)
+				fmt.Fprintln(writer, values)
+			}
+			if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
+				return errors.Wrap(err, "failed to update foreign table")
+			}
+
+			rel.UserID = o.ID
+		}
+	}
+
+	if o.R == nil {
+		o.R = &userR{
+			Books: related,
+		}
+	} else {
+		o.R.Books = append(o.R.Books, related...)
+	}
+
+	for _, rel := range related {
+		if rel.R == nil {
+			rel.R = &bookR{
+				User: o,
+			}
+		} else {
+			rel.R.User = o
+		}
+	}
+	return nil
+}
+
+// AddLists adds the given related objects to the existing relationships
+// of the user, optionally inserting them as new records.
+// Appends related to o.R.Lists.
+// Sets related.R.User appropriately.
+func (o *User) AddLists(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*List) error {
+	var err error
+	for _, rel := range related {
+		if insert {
+			rel.UserID = o.ID
+			if err = rel.Insert(ctx, exec, boil.Infer()); err != nil {
+				return errors.Wrap(err, "failed to insert into foreign table")
+			}
+		} else {
+			updateQuery := fmt.Sprintf(
+				"UPDATE \"lists\" SET %s WHERE %s",
+				strmangle.SetParamNames("\"", "\"", 1, []string{"user_id"}),
+				strmangle.WhereClause("\"", "\"", 2, listPrimaryKeyColumns),
+			)
+			values := []interface{}{o.ID, rel.ListID}
+
+			if boil.IsDebug(ctx) {
+				writer := boil.DebugWriterFrom(ctx)
+				fmt.Fprintln(writer, updateQuery)
+				fmt.Fprintln(writer, values)
+			}
+			if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
+				return errors.Wrap(err, "failed to update foreign table")
+			}
+
+			rel.UserID = o.ID
+		}
+	}
+
+	if o.R == nil {
+		o.R = &userR{
+			Lists: related,
+		}
+	} else {
+		o.R.Lists = append(o.R.Lists, related...)
+	}
+
+	for _, rel := range related {
+		if rel.R == nil {
+			rel.R = &listR{
 				User: o,
 			}
 		} else {

@@ -4,15 +4,15 @@ import (
 	"context"
 	"database/sql"
 
-	"allaboutapps.dev/aw/go-starter/internal/api"
-	"allaboutapps.dev/aw/go-starter/internal/config"
-	"allaboutapps.dev/aw/go-starter/internal/data"
-	"allaboutapps.dev/aw/go-starter/internal/util"
-	"allaboutapps.dev/aw/go-starter/internal/util/command"
-	dbutil "allaboutapps.dev/aw/go-starter/internal/util/db"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/volatiletech/sqlboiler/v4/boil"
+	"test-project/internal/api"
+	"test-project/internal/config"
+	"test-project/internal/data"
+	"test-project/internal/util"
+	"test-project/internal/util/command"
+	dbutil "test-project/internal/util/db"
 )
 
 func newSeed() *cobra.Command {

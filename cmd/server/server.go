@@ -8,15 +8,15 @@ import (
 	"os/signal"
 	"syscall"
 
-	"allaboutapps.dev/aw/go-starter/cmd/db"
-	"allaboutapps.dev/aw/go-starter/cmd/probe"
-	"allaboutapps.dev/aw/go-starter/internal/api"
-	"allaboutapps.dev/aw/go-starter/internal/api/router"
-	"allaboutapps.dev/aw/go-starter/internal/config"
-	"allaboutapps.dev/aw/go-starter/internal/util"
-	"allaboutapps.dev/aw/go-starter/internal/util/command"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
+	"test-project/cmd/db"
+	"test-project/cmd/probe"
+	"test-project/internal/api"
+	"test-project/internal/api/router"
+	"test-project/internal/config"
+	"test-project/internal/util"
+	"test-project/internal/util/command"
 )
 
 type Flags struct {

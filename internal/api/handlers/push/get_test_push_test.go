@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"testing"
 
-	"allaboutapps.dev/aw/go-starter/internal/api"
-	"allaboutapps.dev/aw/go-starter/internal/test"
 	"github.com/stretchr/testify/assert"
+	"test-project/internal/api"
+	"test-project/internal/test"
 )
 
 func TestGetTestPush(t *testing.T) {

@@ -6,9 +6,9 @@ import (
 	"sort"
 	"strings"
 
-	"allaboutapps.dev/aw/go-starter/internal/types"
 	"github.com/go-openapi/swag"
 	"github.com/labstack/echo/v4"
+	"test-project/internal/types"
 )
 
 const (
