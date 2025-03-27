@@ -5,31 +5,22 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"test-project/internal/config"
 	"test-project/internal/dto"
 
 	"net/http"
 	"net/url"
-	"os"
 
-	"github.com/joho/godotenv"
 	"github.com/rs/zerolog/log"
 )
-
-func init() {
-	err := godotenv.Load(".env.local")
-	if err != nil {
-		fmt.Println("No .env found")
-	}
-}
 
 type Service struct {
 	apiKey string
 }
 
-func NewService() *Service {
-	apiKey := os.Getenv("GOOGLE_BOOKS_API_KEY")
+func NewService(config config.GoogleBooks) *Service {
 	return &Service{
-		apiKey: apiKey,
+		apiKey: config.APIKey,
 	}
 }
 
@@ -82,6 +73,8 @@ func (s *Service) SearchBooks(ctx context.Context, query string, maxResults int)
 		return nil, fmt.Errorf("Failed to parse JSON response: %w", err)
 	}
 
+	logger.Info().Msg("succesful search")
+
 	return &apiResponse, nil
 }
 
@@ -127,6 +120,8 @@ func (s *Service) GetBookByID(ctx context.Context, bookID string) (*dto.BookSumm
 		logger.Error().Err(err).Msg("Failed to parse JSON responese")
 		return nil, fmt.Errorf("Failed to parse JSON response: %w", err)
 	}
+
+	logger.Info().Msg("book succesfully fetched")
 
 	return &apiResponse, nil
 }
