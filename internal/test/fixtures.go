@@ -41,9 +41,11 @@ type FixtureMap struct {
 	User1PushToken                *models.PushToken
 	User1PushTokenAPN             *models.PushToken
 	Book1                         *models.Book
+	Book2                         *models.Book
 	GoogleBookSummary1            *dto.BookSummary
 	GoogleBookDetails1            *dto.BookDetails
 	List1                         *models.List
+	List2                         *models.List
 }
 
 // Fixtures returns a function wrapping our fixtures, which tests are allowed to manipulate.
@@ -165,8 +167,26 @@ func Fixtures() FixtureMap {
 		UserID:          "f6ede5d8-e22a-4ca5-aa12-67821865a3e5",
 	}
 
+	f.Book2 = &models.Book{
+		BookID:          "f56eb44c-0ceb-401a-9f9d-c55402b2b3b9",
+		Title:           "Test Title",
+		Author:          "Testo",
+		Publisher:       null.StringFrom("TestReleases"),
+		BookDescription: null.StringFrom("This is a description"),
+		Genre:           null.StringFrom("Romance"),
+		Pages:           null.IntFrom(126),
+		Rating:          null.IntFrom(3),
+		UserNotes:       null.StringFrom("Valid test"),
+		UserID:          "f6ede5d8-e22a-4ca5-aa12-67821865a3e5",
+	}
+
 	f.List1 = &models.List{
 		ListID: "b9238b91-97e2-4837-97c5-a560761ffa81",
+		Name:   "Meh",
+		UserID: "f6ede5d8-e22a-4ca5-aa12-67821865a3e5",
+	}
+	f.List2 = &models.List{
+		ListID: "b9238b91-97a2-4837-97c5-a560761ffa81",
 		Name:   "Meh",
 		UserID: "f6ede5d8-e22a-4ca5-aa12-67821865a3e5",
 	}

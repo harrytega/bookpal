@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"test-project/internal/models"
 	"test-project/internal/services/googlebooks"
+	"test-project/internal/util/db"
 
 	"github.com/rs/zerolog/log"
 	"github.com/volatiletech/null/v8"
@@ -172,54 +173,33 @@ func (s *Service) AddGoogleBook(ctx context.Context, googleID, userID string) er
 		Str("userID", userID).
 		Logger()
 
-	exists, err := models.Books(
-		models.BookWhere.UserID.EQ(userID),
-	).Exists(ctx, s.db)
-
-	if err != nil {
-		logger.Error().Err(err).Msg("error checking book existence")
-		return fmt.Errorf("error checking book existence: %w", err)
-	}
-	if exists {
-		logger.Warn().Msg("book already exists in user's library")
-		return fmt.Errorf("book already exists in user's library")
-	}
-
 	googleBook, err := s.googleBooksService.GetBookByID(ctx, googleID)
 	if err != nil {
 		logger.Error().Err(err).Msg("error fetching book from the Google Books API")
 		return fmt.Errorf("error fetching book from the Google Books API: %w", err)
 	}
 
-	tx, err := s.db.BeginTx(ctx, nil)
-	if err != nil {
-		logger.Error().Err(err).Msg("error starting transaction")
-		return fmt.Errorf("error starting transaction: %w", err)
-	}
-	defer tx.Rollback()
+	if err := db.WithTransaction(ctx, s.db, func(tx boil.ContextExecutor) error {
 
-	newBook := &models.Book{
-		Title:           googleBook.BookDetails.Title,
-		Author:          googleBook.BookDetails.Authors[0],
-		Publisher:       null.StringFromPtr(&googleBook.BookDetails.Publisher),
-		BookDescription: null.StringFrom(googleBook.BookDetails.Description),
-		Genre:           null.StringFromPtr(&googleBook.BookDetails.Genre[0]),
-		Pages:           null.IntFrom(googleBook.BookDetails.Pages),
-		UserID:          userID,
-	}
+		newBook := &models.Book{
+			Title:           googleBook.BookDetails.Title,
+			Author:          googleBook.BookDetails.Authors[0],
+			Publisher:       null.StringFromPtr(&googleBook.BookDetails.Publisher),
+			BookDescription: null.StringFrom(googleBook.BookDetails.Description),
+			Genre:           null.StringFromPtr(&googleBook.BookDetails.Genre[0]),
+			Pages:           null.IntFrom(googleBook.BookDetails.Pages),
+			UserID:          userID,
+		}
 
-	if err := newBook.Insert(ctx, tx, boil.Infer()); err != nil {
-		logger.Error().Err(err).Msg("error inserting book")
-		return fmt.Errorf("error inserting book: %w", err)
+		if err := newBook.Insert(ctx, tx, boil.Infer()); err != nil {
+			logger.Error().Err(err).Msg("error inserting book")
+			return fmt.Errorf("error inserting book: %w", err)
+		}
+		return nil
+	}); err != nil {
+		return err
 	}
-
-	if err := tx.Commit(); err != nil {
-		logger.Error().Err(err).Msg("error commiting transaction")
-		return fmt.Errorf("error commiting transaction: %w", err)
-	}
-
 	logger.Info().
-		Str("bookID", newBook.BookID).
 		Msg("book succesfully added to database")
 
 	return nil

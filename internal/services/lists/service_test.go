@@ -11,87 +11,120 @@ import (
 )
 
 func TestCreateList(t *testing.T) {
-
 	test.WithTestServer(t, func(s *api.Server) {
 		ctx := context.Background()
+		userID := test.Fixtures().User1.ID
 
-		res, err := s.Lists.CreateList(ctx, "f6ede5d8-e22a-4ca5-aa12-67821865a3e5", "Favorites")
+		res, err := s.Lists.CreateList(ctx, userID, "Favorites")
 		require.NoError(t, err)
 		assert.NotNil(t, res)
 	})
 }
 
 func TestGetAllUserLists(t *testing.T) {
-
 	test.WithTestServer(t, func(s *api.Server) {
 		ctx := context.Background()
+		userID := test.Fixtures().User1.ID
 
-		res, err := s.Lists.GetAllUserLists(ctx, "f6ede5d8-e22a-4ca5-aa12-67821865a3e5")
+		res, err := s.Lists.GetAllUserLists(ctx, userID)
 		require.NoError(t, err)
 		assert.NotNil(t, res)
 	})
 }
 
 func TestGetListByID(t *testing.T) {
-
 	test.WithTestServer(t, func(s *api.Server) {
 		ctx := context.Background()
+		listID := test.Fixtures().List1.ListID
+		userID := test.Fixtures().User1.ID
 
-		res, err := s.Lists.GetListByID(ctx, "b9238b91-97e2-4837-97c5-a560761ffa81", "f6ede5d8-e22a-4ca5-aa12-67821865a3e5")
+		res, err := s.Lists.GetListByID(ctx, listID, userID)
 		require.NoError(t, err)
 		assert.NotNil(t, res)
 	})
 }
 
 func TestUpdateListName(t *testing.T) {
-
 	test.WithTestServer(t, func(s *api.Server) {
 		ctx := context.Background()
+		listID := test.Fixtures().List1.ListID
+		userID := test.Fixtures().User1.ID
+		newListName := "the worst"
 
-		err := s.Lists.UpdateListName(ctx, "b9238b91-97e2-4837-97c5-a560761ffa81", "f6ede5d8-e22a-4ca5-aa12-67821865a3e5", "the worst")
+		err := s.Lists.UpdateListName(ctx, listID, userID, newListName)
 		require.NoError(t, err)
 	})
 }
 
 func TestDeleteList(t *testing.T) {
-
 	test.WithTestServer(t, func(s *api.Server) {
 		ctx := context.Background()
+		listID := test.Fixtures().List1.ListID
+		userID := test.Fixtures().User1.ID
 
-		err := s.Lists.DeleteList(ctx, "b9238b91-97e2-4837-97c5-a560761ffa81", "f6ede5d8-e22a-4ca5-aa12-67821865a3e5")
+		err := s.Lists.DeleteList(ctx, listID, userID)
 		require.NoError(t, err)
 	})
 }
 
 func TestAddBookToList(t *testing.T) {
-
 	test.WithTestServer(t, func(s *api.Server) {
 		ctx := context.Background()
+		listID := test.Fixtures().List1.ListID
+		userID := test.Fixtures().User1.ID
+		bookID := test.Fixtures().Book1.BookID
 
-		err := s.Lists.AddBookToList(ctx, "b9238b91-97e2-4837-97c5-a560761ffa81", "f6ede5d8-e22a-4ca5-aa12-67821865a3e5", "f56eb34c-0ceb-401a-9f9d-c55402b2b3b9")
+		err := s.Lists.AddBookToList(ctx, listID, userID, bookID)
 		require.NoError(t, err)
 	})
 }
 
 func TestRemoveBookFromList(t *testing.T) {
-
 	test.WithTestServer(t, func(s *api.Server) {
 		ctx := context.Background()
-		err := s.Lists.RemoveBookFromList(ctx, "f6ede5d8-e22a-4ca5-aa12-67821865a3e5", "9238b91-97e2-4837-97c5-a560761ffa81", "f56eb34c-0ceb-401a-9f9d-c55402b2b3b9")
+		listID := test.Fixtures().List1.ListID
+		userID := test.Fixtures().User1.ID
+		bookID := test.Fixtures().Book1.BookID
+
+		errAddBook := s.Lists.AddBookToList(ctx, listID, userID, bookID)
+		require.NoError(t, errAddBook)
+
+		err := s.Lists.RemoveBookFromList(ctx, listID, userID, bookID)
 		require.NoError(t, err)
+
+		booksAfterRemoval, errAfter := s.Lists.GetAllBooksFromList(ctx, userID, listID)
+		require.NoError(t, errAfter)
+
+		bookStillExits := false
+		for _, b := range booksAfterRemoval {
+			if b.BookID == bookID {
+				bookStillExits = true
+				break
+			}
+		}
+		require.False(t, bookStillExits)
 	})
 }
 
 func TestGetAllBooksFromList(t *testing.T) {
 	test.WithTestServer(t, func(s *api.Server) {
 		ctx := context.Background()
+		listID := test.Fixtures().List2.ListID
+		userID := test.Fixtures().User1.ID
+		bookID := test.Fixtures().Book2.BookID
 
-		list, _ := s.Lists.GetListByID(ctx, "b9238b91-97e2-4837-97c5-a560761ffa81", "f6ede5d8-e22a-4ca5-aa12-67821865a3e5")
-		book, _ := s.Books.GetBookByID(ctx, "f56eb34c-0ceb-401a-9f9d-c55402b2b3b9")
-		list.AddBooks(ctx, s.DB, false, book)
-		res, err := s.Lists.GetAllBooksFromList(ctx, "f6ede5d8-e22a-4ca5-aa12-67821865a3e5", list.ListID)
-
+		list, err := s.Lists.GetListByID(ctx, listID, userID)
 		require.NoError(t, err)
-		assert.NotNil(t, res)
+
+		book, err := s.Books.GetBookByID(ctx, bookID)
+		require.NoError(t, err)
+		list.AddBooks(ctx, s.DB, false, book)
+
+		err = list.Reload(ctx, s.DB)
+		require.NoError(t, err)
+
+		books, err := s.Lists.GetAllBooksFromList(ctx, userID, listID)
+		require.NoError(t, err)
+		assert.Equal(t, 1, len(books))
 	})
 }
