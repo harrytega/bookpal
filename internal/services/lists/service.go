@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"test-project/internal/models"
+	"test-project/internal/util/db"
 
 	"github.com/rs/zerolog/log"
 	"github.com/volatiletech/sqlboiler/v4/boil"
@@ -156,26 +157,18 @@ func (s *Service) DeleteList(ctx context.Context, listID, userID string) error {
 		return err
 	}
 
-	tx, err := s.db.BeginTx(ctx, nil)
-	if err != nil {
-		logger.Error().Err(err).Msg("error starting transaction")
-		return fmt.Errorf("error starting transaction: %w", err)
-	}
-	defer tx.Rollback()
-
-	if err := list.RemoveBooks(ctx, tx, list.R.Books...); err != nil {
-		logger.Error().Err(err).Msg("error removing books from list")
-		return fmt.Errorf("error removing books from list: %w", err)
-	}
-
-	if _, err := list.Delete(ctx, tx); err != nil {
-		logger.Error().Err(err).Msg("error deleting list")
-		return fmt.Errorf("error deleting list: %w", err)
-	}
-
-	if err := tx.Commit(); err != nil {
-		logger.Error().Err(err).Msg("error commiting transaction")
-		return fmt.Errorf("error commiting transaction: %w", err)
+	if err := db.WithTransaction(ctx, s.db, func(tx boil.ContextExecutor) error {
+		if err := list.RemoveBooks(ctx, tx, list.R.Books...); err != nil {
+			logger.Error().Err(err).Msg("error removing books from list")
+			return fmt.Errorf("error removing books from list: %w", err)
+		}
+		if _, err := list.Delete(ctx, tx); err != nil {
+			logger.Error().Err(err).Msg("error deleting list")
+			return fmt.Errorf("error deleting list: %w", err)
+		}
+		return nil
+	}); err != nil {
+		return err
 	}
 
 	logger.Info().Msg("list deleted succesfully")
@@ -189,57 +182,50 @@ func (s *Service) AddBookToList(ctx context.Context, listID, userID, bookID stri
 		Str("bookID", bookID).
 		Logger()
 
-	tx, err := s.db.BeginTx(ctx, nil)
-	if err != nil {
-		logger.Error().Err(err).Msg("error starting transaction")
-		return fmt.Errorf("error startig transaction %w", err)
-	}
-	defer tx.Rollback()
+	if err := db.WithTransaction(ctx, s.db, func(tx boil.ContextExecutor) error {
+		list, err := models.Lists(
+			models.ListWhere.ListID.EQ(listID),
+			models.ListWhere.UserID.EQ(userID),
+			qm.Load("Books"),
+		).One(ctx, tx)
 
-	list, err := models.Lists(
-		models.ListWhere.ListID.EQ(listID),
-		models.ListWhere.UserID.EQ(userID),
-		qm.Load("Books"),
-	).One(ctx, tx)
-
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			logger.Warn().Msg("list not found or not owned by user")
-			return errors.New("list not found or not owned by user")
+		if err != nil {
+			if errors.Is(err, sql.ErrNoRows) {
+				logger.Warn().Msg("list not found or not owned by user")
+				return errors.New("list not found or not owned by user")
+			}
+			logger.Error().Err(err).Msg("error fetching list")
+			return fmt.Errorf("error fetching list: %w", err)
 		}
-		logger.Error().Err(err).Msg("error fetching list")
-		return fmt.Errorf("error fetching list: %w", err)
-	}
 
-	book, err := models.Books(
-		models.BookWhere.BookID.EQ(bookID),
-		models.BookWhere.UserID.EQ(userID),
-	).One(ctx, tx)
+		book, err := models.Books(
+			models.BookWhere.BookID.EQ(bookID),
+			models.BookWhere.UserID.EQ(userID),
+		).One(ctx, tx)
 
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			logger.Warn().Msg("book not found or not owned by user")
-			return errors.New("book not found or not owned by user")
+		if err != nil {
+			if errors.Is(err, sql.ErrNoRows) {
+				logger.Warn().Msg("book not found or not owned by user")
+				return errors.New("book not found or not owned by user")
+			}
+			logger.Error().Err(err).Msg("error fetching book")
+			return fmt.Errorf("error fetching book: %w", err)
 		}
-		logger.Error().Err(err).Msg("error fetching book")
-		return fmt.Errorf("error fetching book: %w", err)
-	}
 
-	for _, b := range list.R.Books {
-		if b.BookID == bookID {
-			logger.Warn().Msg("book is already in this list")
-			return errors.New("book is already in this list")
+		for _, b := range list.R.Books {
+			if b.BookID == bookID {
+				logger.Warn().Msg("book is already in this list")
+				return errors.New("book is already in this list")
+			}
 		}
-	}
 
-	if err := list.AddBooks(ctx, tx, false, book); err != nil {
-		logger.Error().Err(err).Msg("error adding book to list")
-		return fmt.Errorf("error adding book to list: %w", err)
-	}
-
-	if err := tx.Commit(); err != nil {
-		logger.Error().Err(err).Msg("error commiting transaction")
-		return fmt.Errorf("error commiting transaction: %w", err)
+		if err := list.AddBooks(ctx, tx, false, book); err != nil {
+			logger.Error().Err(err).Msg("error adding book to list")
+			return fmt.Errorf("error adding book to list: %w", err)
+		}
+		return nil
+	}); err != nil {
+		return err
 	}
 
 	logger.Info().
@@ -250,64 +236,57 @@ func (s *Service) AddBookToList(ctx context.Context, listID, userID, bookID stri
 	return nil
 }
 
-func (s *Service) RemoveBookFromList(ctx context.Context, userID, bookID, listID string) error {
+func (s *Service) RemoveBookFromList(ctx context.Context, listID, userID, bookID string) error {
 	logger := log.Ctx(ctx).With().
 		Str("listID", listID).
 		Str("userID", userID).
 		Str("bookID", bookID).
 		Logger()
 
-	tx, err := s.db.BeginTx(ctx, nil)
-	if err != nil {
-		logger.Error().Err(err).Msg("error starting transaction")
-		return fmt.Errorf("error starting transaction: %w", err)
-	}
-	defer tx.Rollback()
+	if err := db.WithTransaction(ctx, s.db, func(tx boil.ContextExecutor) error {
+		list, err := models.Lists(
+			models.ListWhere.ListID.EQ(listID),
+			models.ListWhere.UserID.EQ(userID),
+			qm.Load("Books"),
+		).One(ctx, tx)
+		if err != nil {
+			return err
+		}
 
-	list, err := models.Lists(
-		models.ListWhere.ListID.EQ(listID),
-		models.ListWhere.UserID.EQ(userID),
-		qm.Load("Books"),
-	).One(ctx, tx)
-	if err != nil {
+		book, err := models.Books(
+			models.BookWhere.BookID.EQ(bookID),
+			models.BookWhere.UserID.EQ(userID),
+		).One(ctx, tx)
+
+		if err != nil {
+			if errors.Is(err, sql.ErrNoRows) {
+				logger.Warn().Msg("book not found or not owned by user")
+				return errors.New("book not found or not owned by user")
+			}
+			logger.Error().Err(err).Msg("error fetching book")
+			return fmt.Errorf("error fetching book: %w", err)
+		}
+
+		found := false
+		for _, b := range list.R.Books {
+			if b.BookID == bookID {
+				found = true
+				break
+			}
+		}
+
+		if !found {
+			logger.Warn().Msg("book is not on the list")
+			return errors.New("book is not on the list")
+		}
+
+		if err := list.RemoveBooks(ctx, tx, book); err != nil {
+			logger.Error().Err(err).Msg("error removing book from list")
+			return fmt.Errorf("error removing book from list: %w", err)
+		}
+		return nil
+	}); err != nil {
 		return err
-	}
-
-	book, err := models.Books(
-		models.BookWhere.BookID.EQ(bookID),
-		models.BookWhere.UserID.EQ(userID),
-	).One(ctx, tx)
-
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			logger.Warn().Msg("book not found or not owned by user")
-			return errors.New("book not found or not owned by user")
-		}
-		logger.Error().Err(err).Msg("error fetching book")
-		return fmt.Errorf("error fetching book: %w", err)
-	}
-
-	found := false
-	for _, b := range list.R.Books {
-		if b.BookID == bookID {
-			found = true
-			break
-		}
-	}
-
-	if !found {
-		logger.Warn().Msg("book is not on the list")
-		return errors.New("book is not on the list")
-	}
-
-	if err := list.RemoveBooks(ctx, tx, book); err != nil {
-		logger.Error().Err(err).Msg("error removing book from list")
-		return fmt.Errorf("error removing book from list: %w", err)
-	}
-
-	if err := tx.Commit(); err != nil {
-		logger.Error().Err(err).Msg("error commiting transaction")
-		return fmt.Errorf("error commiting transaction: %w", err)
 	}
 
 	logger.Info().
