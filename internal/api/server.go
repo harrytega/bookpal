@@ -27,11 +27,12 @@ import (
 )
 
 type Router struct {
-	Routes     []*echo.Route
-	Root       *echo.Group
-	Management *echo.Group
-	APIV1Auth  *echo.Group
-	APIV1Push  *echo.Group
+	Routes      []*echo.Route
+	Root        *echo.Group
+	Management  *echo.Group
+	APIV1Auth   *echo.Group
+	APIV1Push   *echo.Group
+	APIV1Google *echo.Group
 }
 
 type Server struct {

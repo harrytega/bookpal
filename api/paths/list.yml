@@ -115,7 +115,7 @@ paths:
               allOf:
                 - type: array
                   items: 
-                    $ref: '../definitions/book.yml#/definitions/Book'
+                    $ref: '../definitions/book.yml#/definitions/BookInMyDb'
                 - type: object
                   properties: 
                     pagination:
@@ -136,7 +136,7 @@ paths:
             description: Book to add to the list.
             required: true
             schema:
-              $ref: '../definitions/book.yml#/definitions/Book'
+              $ref: '../definitions/book.yml#/definitions/BookInMyDb'
         responses:
           201:
             description: Book succesfully added to list.
@@ -166,7 +166,7 @@ paths:
           200:
             description: Found book.
             schema: 
-              $ref: '../definitions/book.yml#/definitions/Book'
+              $ref: '../definitions/book.yml#/definitions/BookInMyDb'
           400:
             description: Invalid IDs
           404:

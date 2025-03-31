@@ -30,9 +30,8 @@ type ListBooksItems struct {
 
 	// book id
 	// Example: d6764ee3-bf09-40c3-97c5-8f78b7de7ec3
-	// Required: true
 	// Format: uuid4
-	BookID *strfmt.UUID4 `json:"book_id"`
+	BookID strfmt.UUID4 `json:"book_id,omitempty"`
 
 	// genre
 	// Example: Novel, Fantasy Fiction, Young adult literature
@@ -92,9 +91,8 @@ func (m *ListBooksItems) validateAuthor(formats strfmt.Registry) error {
 }
 
 func (m *ListBooksItems) validateBookID(formats strfmt.Registry) error {
-
-	if err := validate.Required("book_id", "body", m.BookID); err != nil {
-		return err
+	if swag.IsZero(m.BookID) { // not required
+		return nil
 	}
 
 	if err := validate.FormatOf("book_id", "body", "uuid4", m.BookID.String(), formats); err != nil {

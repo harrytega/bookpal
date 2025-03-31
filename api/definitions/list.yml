@@ -16,7 +16,7 @@ definitions:
       books:
         type: array
         items:
-          $ref: 'book.yml#/definitions/Book'
+          $ref: 'book.yml#/definitions/BookInMyDb'
     required:
       - list_id
       - name

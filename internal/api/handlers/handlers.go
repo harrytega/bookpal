@@ -6,6 +6,7 @@ import (
 	"test-project/internal/api"
 	"test-project/internal/api/handlers/auth"
 	"test-project/internal/api/handlers/common"
+	"test-project/internal/api/handlers/googlebooks"
 	"test-project/internal/api/handlers/push"
 )
 
@@ -24,6 +25,8 @@ func AttachAllRoutes(s *api.Server) {
 		common.GetReadyRoute(s),
 		common.GetSwaggerRoute(s),
 		common.GetVersionRoute(s),
+		googlebooks.GetGoogleBookByIDRoute(s),
+		googlebooks.GetGoogleBooksRoute(s),
 		push.GetPushTestRoute(s),
 		push.PostUpdatePushTokenRoute(s),
 	}
