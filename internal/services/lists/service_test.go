@@ -118,7 +118,9 @@ func TestGetAllBooksFromList(t *testing.T) {
 
 		book, err := s.Books.GetBookByID(ctx, bookID)
 		require.NoError(t, err)
-		list.AddBooks(ctx, s.DB, false, book)
+		// list.AddBooks(ctx, s.DB, false, book)
+		errAdding := list.AddBooks(ctx, s.DB, false, book)
+		require.NoError(t, errAdding, "Failed to add book to list")
 
 		err = list.Reload(ctx, s.DB)
 		require.NoError(t, err)

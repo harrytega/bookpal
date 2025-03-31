@@ -1,0 +1,69 @@
+swagger: "2.0"
+info:
+  title: bookpal
+  version: 0.1.0
+paths:
+
+  /api/v1/google/search:
+    get:
+
+      summary: Searches for books from the Google Books API.
+      description: Searches for books from the Google Books API. You can search by title, author or publisher.
+      operationId: searchGoogleBooks
+      parameters: 
+        - name: query
+          in: query
+          description: Search term for searching books. (title, author or publisher)
+          required: true
+          type: string
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          type: integer
+          default: 1
+        - name: pageSize
+          in: query
+          description: amount of books per page
+          required: false
+          type: integer
+          default: 10
+          maximum: 30
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            allOf:
+              - type: array
+                items: 
+                  $ref: '../definitions/book.yml#/definitions/GoogleBook'
+              - type: object
+                properties: 
+                  pagination:
+                    $ref: '../definitions/pagination.yml#/definitions/Pagination'
+        400:
+          description: Invalid status value
+
+
+  /api/v1/google/{google_book_id}:
+    get:
+      summary: Gets additional details about a book.
+      description: Gets additional details about a book. (title, author, publisher, description, pages, genre)
+      operationId: getGoogleBookDetails
+      parameters:
+        - name: google_book_id
+          in: path
+          description: Id of book to return.
+          required: true
+          type: string
+          format: uuid
+      responses:
+       200:
+        description: Successful operation
+        schema:
+          $ref: '../definitions/book.yml#/definitions/GoogleBook'
+       400: 
+        description: Invalid ID supplied
+       404:
+        description: Book not found
+

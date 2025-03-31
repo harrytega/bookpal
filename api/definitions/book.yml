@@ -37,13 +37,12 @@ definitions:
         - title
         - author
 
-     Book:
+     GoogleBook:
       type: object
       properties:
-        book_id:
+        googleID:
           type: string
-          format: uuid4
-          example: "d6764ee3-bf09-40c3-97c5-8f78b7de7ec3"
+          example: "P3LFEAAAQBAJ"
         title:
           type: string
           example: "Harry Potter"
@@ -72,6 +71,6 @@ definitions:
           type: string
           example: "Amazing Character Development from the main character."
       required:
-        - book_id
+        - googleID
         - title
         - author

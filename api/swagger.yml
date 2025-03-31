@@ -290,7 +290,7 @@ paths:
         in: body
         required: true
         schema:
-          $ref: '#/definitions/bookInMyDb'
+          $ref: '#/definitions/listBooksItems'
       responses:
         "201":
           description: Added book to database
@@ -298,9 +298,9 @@ paths:
           description: Invalid input
   /api/v1/books/search:
     get:
-      description: Searches for books using the Google Books API. You can search by
-        title, author or publisher.
-      summary: Searches for books using the Google Books API.
+      description: Searches for books from the user. You can search by title, author
+        or publisher.
+      summary: Searches for books from the user.
       operationId: searchBooks
       parameters:
       - type: string
@@ -326,7 +326,7 @@ paths:
             allOf:
             - type: array
               items:
-                $ref: '#/definitions/book'
+                $ref: '#/definitions/bookInMyDb'
             - type: object
               properties:
                 pagination:
@@ -378,6 +378,102 @@ paths:
           description: Successful operation
           schema:
             $ref: '#/definitions/listBooksItems'
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Book not found
+  /api/v1/google/search:
+    get:
+      description: Searches for books from the Google Books API. You can search by
+        title, author or publisher.
+      summary: Searches for books from the Google Books API.
+      operationId: searchGoogleBooks
+      parameters:
+      - type: string
+        description: Search term for searching books. (title, author or publisher)
+        name: query
+        in: query
+        required: true
+      - type: integer
+        default: 1
+        description: Page number
+        name: page
+        in: query
+      - maximum: 30
+        type: integer
+        default: 10
+        description: amount of books per page
+        name: pageSize
+        in: query
+      responses:
+        "200":
+          description: Successful operation
+          schema:
+            allOf:
+            - type: array
+              items:
+                $ref: '#/definitions/googleBook'
+            - type: object
+              properties:
+                pagination:
+                  $ref: '#/definitions/pagination'
+        "400":
+          description: Invalid status value
+  /api/v1/google/{google_book_id}:
+    get:
+      description: Gets additional details about a book. (title, author, publisher,
+        description, pages, genre)
+      summary: Gets additional details about a book.
+      operationId: getGoogleBookDetails
+      parameters:
+      - type: string
+        format: uuid
+        description: Id of book to return.
+        name: google_book_id
+        in: path
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          schema:
+            type: object
+            required:
+            - googleID
+            - title
+            - author
+            properties:
+              author:
+                type: string
+                example: J. K. Rowling
+              book_description:
+                type: string
+                example: Dark times have come to Hogwarts. After the Dementors' attack
+                  on his cousin Dudley, Harry Potter knows that Voldemort will stop
+                  at nothing to find him. ...
+              genre:
+                type: string
+                example: Novel, Fantasy Fiction, Young adult literature
+              googleID:
+                type: string
+                example: P3LFEAAAQBAJ
+              pages:
+                type: integer
+                format: int32
+                example: 409
+              publisher:
+                type: string
+                example: Bloomsbury
+              rating:
+                description: Ratings are from 1 to 5.
+                type: integer
+                format: int32
+                example: 3
+              title:
+                type: string
+                example: Harry Potter
+              user_notes:
+                type: string
+                example: Amazing Character Development from the main character.
         "400":
           description: Invalid ID supplied
         "404":
@@ -496,7 +592,7 @@ paths:
             allOf:
             - type: array
               items:
-                $ref: '#/definitions/book'
+                $ref: '#/definitions/bookInMyDb'
             - type: object
               properties:
                 pagination:
@@ -627,46 +723,6 @@ paths:
         "200":
           description: OK
 definitions:
-  book:
-    type: object
-    required:
-    - book_id
-    - title
-    - author
-    properties:
-      author:
-        type: string
-        example: J. K. Rowling
-      book_description:
-        type: string
-        example: Dark times have come to Hogwarts. After the Dementors' attack on
-          his cousin Dudley, Harry Potter knows that Voldemort will stop at nothing
-          to find him. ...
-      book_id:
-        type: string
-        format: uuid4
-        example: d6764ee3-bf09-40c3-97c5-8f78b7de7ec3
-      genre:
-        type: string
-        example: Novel, Fantasy Fiction, Young adult literature
-      pages:
-        type: integer
-        format: int32
-        example: 409
-      publisher:
-        type: string
-        example: Bloomsbury
-      rating:
-        description: Ratings are from 1 to 5.
-        type: integer
-        format: int32
-        example: 3
-      title:
-        type: string
-        example: Harry Potter
-      user_notes:
-        type: string
-        example: Amazing Character Development from the main character.
   bookInMyDb:
     type: object
     required:
@@ -736,6 +792,45 @@ definitions:
         description: Unix timestamp the user's info was last updated at
         type: integer
         example: 1591960808
+  googleBook:
+    type: object
+    required:
+    - googleID
+    - title
+    - author
+    properties:
+      author:
+        type: string
+        example: J. K. Rowling
+      book_description:
+        type: string
+        example: Dark times have come to Hogwarts. After the Dementors' attack on
+          his cousin Dudley, Harry Potter knows that Voldemort will stop at nothing
+          to find him. ...
+      genre:
+        type: string
+        example: Novel, Fantasy Fiction, Young adult literature
+      googleID:
+        type: string
+        example: P3LFEAAAQBAJ
+      pages:
+        type: integer
+        format: int32
+        example: 409
+      publisher:
+        type: string
+        example: Bloomsbury
+      rating:
+        description: Ratings are from 1 to 5.
+        type: integer
+        format: int32
+        example: 3
+      title:
+        type: string
+        example: Harry Potter
+      user_notes:
+        type: string
+        example: Amazing Character Development from the main character.
   httpValidationErrorDetail:
     type: object
     required:
@@ -777,7 +872,6 @@ definitions:
   listBooksItems:
     type: object
     required:
-    - book_id
     - title
     - author
     properties:

@@ -14,10 +14,10 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// Book book
+// GoogleBook google book
 //
-// swagger:model book
-type Book struct {
+// swagger:model googleBook
+type GoogleBook struct {
 
 	// author
 	// Example: J. K. Rowling
@@ -28,15 +28,14 @@ type Book struct {
 	// Example: Dark times have come to Hogwarts. After the Dementors' attack on his cousin Dudley, Harry Potter knows that Voldemort will stop at nothing to find him. ...
 	BookDescription string `json:"book_description,omitempty"`
 
-	// book id
-	// Example: d6764ee3-bf09-40c3-97c5-8f78b7de7ec3
-	// Required: true
-	// Format: uuid4
-	BookID *strfmt.UUID4 `json:"book_id"`
-
 	// genre
 	// Example: Novel, Fantasy Fiction, Young adult literature
 	Genre string `json:"genre,omitempty"`
+
+	// google ID
+	// Example: P3LFEAAAQBAJ
+	// Required: true
+	GoogleID *string `json:"googleID"`
 
 	// pages
 	// Example: 409
@@ -60,15 +59,15 @@ type Book struct {
 	UserNotes string `json:"user_notes,omitempty"`
 }
 
-// Validate validates this book
-func (m *Book) Validate(formats strfmt.Registry) error {
+// Validate validates this google book
+func (m *GoogleBook) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateAuthor(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateBookID(formats); err != nil {
+	if err := m.validateGoogleID(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -82,7 +81,7 @@ func (m *Book) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Book) validateAuthor(formats strfmt.Registry) error {
+func (m *GoogleBook) validateAuthor(formats strfmt.Registry) error {
 
 	if err := validate.Required("author", "body", m.Author); err != nil {
 		return err
@@ -91,20 +90,16 @@ func (m *Book) validateAuthor(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Book) validateBookID(formats strfmt.Registry) error {
+func (m *GoogleBook) validateGoogleID(formats strfmt.Registry) error {
 
-	if err := validate.Required("book_id", "body", m.BookID); err != nil {
-		return err
-	}
-
-	if err := validate.FormatOf("book_id", "body", "uuid4", m.BookID.String(), formats); err != nil {
+	if err := validate.Required("googleID", "body", m.GoogleID); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (m *Book) validateTitle(formats strfmt.Registry) error {
+func (m *GoogleBook) validateTitle(formats strfmt.Registry) error {
 
 	if err := validate.Required("title", "body", m.Title); err != nil {
 		return err
@@ -113,13 +108,13 @@ func (m *Book) validateTitle(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validates this book based on context it is used
-func (m *Book) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validates this google book based on context it is used
+func (m *GoogleBook) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 
 // MarshalBinary interface implementation
-func (m *Book) MarshalBinary() ([]byte, error) {
+func (m *GoogleBook) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -127,8 +122,8 @@ func (m *Book) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *Book) UnmarshalBinary(b []byte) error {
-	var res Book
+func (m *GoogleBook) UnmarshalBinary(b []byte) error {
+	var res GoogleBook
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
