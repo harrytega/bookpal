@@ -1,48 +1,45 @@
-package googlebooks
+package books
 
 import (
 	"net/http"
 	"strconv"
 	"test-project/internal/api"
-	"test-project/internal/services/googlebooks"
-	"test-project/internal/types"
+	"test-project/internal/api/auth"
+	"test-project/internal/services/books"
 	"test-project/internal/util"
 
+	"test-project/internal/types"
+
+	"github.com/go-openapi/strfmt"
 	"github.com/labstack/echo/v4"
 )
 
 type Handler struct {
-	service *googlebooks.Service
+	service *books.Service
 }
 
-func NewHandler(service *googlebooks.Service) *Handler {
+func newHandler(service *books.Service) *Handler {
 	return &Handler{
 		service: service,
 	}
 }
 
-func GetGoogleBooksRoute(s *api.Server) *echo.Route {
-	handler := NewHandler(s.GoogleBooks)
-	return s.Router.APIV1Google.GET("/search", handler.SearchBooks())
+func GetUserBooksRoute(s *api.Server) *echo.Route {
+	handler := newHandler(s.Books)
+	return s.Router.APIV1Book.GET("", handler.GetUserBooks())
 }
 
-func (h *Handler) SearchBooks() echo.HandlerFunc {
+func (h *Handler) GetUserBooks() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
-		query := c.QueryParam("q")
-		if query == "" {
-			return c.JSON(http.StatusBadRequest, map[string]string{
-				"error": "search query is required",
-			})
-		}
-
+		userID := auth.UserFromContext(ctx).ID
 		page := 1
 		pageSize := 10
 
 		if pageParam := c.QueryParam("page"); pageParam != "" {
 			var err error
 			page, err = strconv.Atoi(pageParam)
-			if err != nil || page < 1 {
+			if err != nil || page < 0 {
 				return c.JSON(http.StatusBadRequest, map[string]string{
 					"error": "page must be a positive number",
 				})
@@ -54,28 +51,30 @@ func (h *Handler) SearchBooks() echo.HandlerFunc {
 			pageSize, err = strconv.Atoi(pageSizeParam)
 			if err != nil || pageSize < 1 || pageSize > 30 {
 				return c.JSON(http.StatusBadRequest, map[string]string{
-					"error": "pageSize must be a number between 1 and 30",
+					"error": "page size must be between 1 and 30",
 				})
 			}
 		}
 
-		res, totalItems, err := h.service.SearchBooks(ctx, query, pageSize, page)
+		res, totalItems, err := h.service.GetUserBooks(ctx, userID, pageSize, page)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{
-				"error": "Failed to search books " + err.Error(),
+				"error": "Failed to fetch user books" + err.Error(),
 			})
 		}
 
-		convertedBooks := []*types.GoogleBook{}
-		for _, book := range res.Books {
-			convertedBook := &types.GoogleBook{
-				GoogleID:        &book.GoogleID,
-				Title:           &book.BookDetails.Title,
-				Author:          &book.BookDetails.Authors[0],
-				Publisher:       book.BookDetails.Publisher,
-				BookDescription: book.BookDetails.Description,
-				Genre:           book.BookDetails.Genre[0],
-				Pages:           SafeInt32(book.BookDetails.Pages),
+		convertedBooks := []*types.BookInMyDb{}
+		for _, book := range res {
+			convertedBook := &types.BookInMyDb{
+				BookID:          strfmt.UUID4(book.BookID),
+				Author:          &book.Author,
+				BookDescription: book.BookDescription.String,
+				Genre:           book.Genre.String,
+				Pages:           SafeInt32(book.Pages.Int),
+				Publisher:       book.Publisher.String,
+				Rating:          SafeInt32(book.Rating.Int),
+				Title:           &book.Title,
+				UserNotes:       book.UserNotes.String,
 			}
 			convertedBooks = append(convertedBooks, convertedBook)
 		}
@@ -87,11 +86,11 @@ func (h *Handler) SearchBooks() echo.HandlerFunc {
 			TotalPages:      totalPages,
 			PageSize:        int64(pageSize),
 			TotalItems:      totalItems,
-			HasNextPage:     int64(page) < totalPages,
+			HasNextPage:     page < int(totalPages),
 			HasPreviousPage: page > 1,
 		}
 
-		response := &types.GetGoogleBooksResponse{
+		response := &types.GetUserBooksResponse{
 			Data:       convertedBooks,
 			Pagination: pagination,
 		}

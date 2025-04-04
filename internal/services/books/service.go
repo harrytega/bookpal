@@ -46,26 +46,40 @@ func (s *Service) GetBookByID(ctx context.Context, bookID string) (*models.Book,
 	return book, nil
 }
 
-func (s *Service) GetUserBooks(ctx context.Context, userID string) (models.BookSlice, error) {
+func (s *Service) GetUserBooks(ctx context.Context, userID string, pageSize, page int) (models.BookSlice, int64, error) {
 	logger := log.Ctx(ctx).With().
 		Str("userID", userID).
+		Int("page", page).
+		Int("pageSize", pageSize).
 		Logger()
+
+	offset := (page - 1) * pageSize
+
+	totalCount, err := models.Books(
+		models.BookWhere.UserID.EQ(userID),
+	).Count(ctx, s.db)
+	if err != nil {
+		logger.Error().Err(err).Msg("error counting user books")
+		return nil, 0, fmt.Errorf("Error counting user books: %w", err)
+	}
 
 	books, err := models.Books(
 		models.BookWhere.UserID.EQ(userID),
 		qm.OrderBy("title ASC"),
+		qm.Limit(pageSize),
+		qm.Offset(offset),
 	).All(ctx, s.db)
 
 	if err != nil {
 		logger.Error().Err(err).Msg("error fetching user books")
-		return nil, fmt.Errorf("Error fetching user books: %w", err)
+		return nil, 0, fmt.Errorf("Error fetching user books: %w", err)
 	}
 
 	logger.Info().
-		Int("bookCount", len(books)).
-		Msg("Succesfully fetched all books from user")
+		Int64("totalBooks", totalCount).
+		Msg("Successfully fetched paginated books from user")
 
-	return books, nil
+	return books, totalCount, nil
 }
 
 func (s *Service) DeleteBook(ctx context.Context, bookID, userID string) error {
@@ -205,29 +219,48 @@ func (s *Service) AddGoogleBook(ctx context.Context, googleID, userID string) er
 	return nil
 }
 
-func (s *Service) SearchUserBooks(ctx context.Context, searchTerm, userID string) (models.BookSlice, error) {
+func (s *Service) SearchUserBooks(ctx context.Context, searchTerm, userID string, pageSize, page int) (models.BookSlice, int64, error) {
 	logger := log.Ctx(ctx).With().
 		Str("searchTerm", searchTerm).
 		Str("userID", userID).
+		Int("pageSize", pageSize).
+		Int("page", page).
 		Logger()
 
-	books, err := models.Books(
+	offset := (page - 1) * pageSize
+
+	baseQuery := []qm.QueryMod{
 		models.BookWhere.UserID.EQ(userID),
 		qm.Where("(title ILIKE ? OR author ILIKE ?)",
 			"%"+searchTerm+"%", "%"+searchTerm+"%"),
-		qm.OrderBy("title ASC"),
+	}
+
+	totalCount, err := models.Books(
+		baseQuery...,
+	).Count(ctx, s.db)
+	if err != nil {
+		logger.Error().Err(err).Msg("error counting user books for search")
+		return nil, 0, fmt.Errorf("error counting user books for search: %w", err)
+	}
+
+	books, err := models.Books(
+		append(baseQuery,
+			qm.OrderBy("title ASC"),
+			qm.Limit(pageSize),
+			qm.Offset(offset),
+		)...,
 	).All(ctx, s.db)
 
 	if err != nil {
 		logger.Error().Err(err).Msg("error searching user books")
-		return nil, fmt.Errorf("error searching user books: %w", err)
+		return nil, 0, fmt.Errorf("error searching user books: %w", err)
 	}
 
 	logger.Info().
-		Int("bookCount", len(books)).
-		Msg("books of user were succesfully fetched")
+		Int64("totalBooks", totalCount).
+		Msg("books of user were successfully searched and fetched")
 
-	return books, nil
+	return books, totalCount, nil
 }
 
 func (s *Service) GetBooksByGenre(ctx context.Context, genre, userID string) (models.BookSlice, error) {

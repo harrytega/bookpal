@@ -24,58 +24,67 @@ func NewService(config config.GoogleBooks) *Service {
 	}
 }
 
-func (s *Service) SearchBooks(ctx context.Context, query string, maxResults int) (*dto.BookSearchResult, error) {
+func (s *Service) SearchBooks(ctx context.Context, query string, pageSize, page int) (*dto.BookSearchResult, int64, error) {
 	logger := log.Ctx(ctx).With().
 		Str("query", query).
-		Int("maxresults", maxResults).
+		Int("pageSize", pageSize).
+		Int("page", page).
 		Logger()
 
 	baseURL := "https://www.googleapis.com/books/v1/volumes"
 
 	if s.apiKey == "" {
 		logger.Warn().Msg("Google Books API Key not configured.")
-		return nil, fmt.Errorf("Google Books API Key not configured")
+		return nil, 0, fmt.Errorf("Google Books API Key not configured")
 	}
+
+	startIndex := (page - 1) * pageSize
 
 	params := url.Values{}
 	params.Add("q", query)
 	params.Add("key", s.apiKey)
-	params.Add("maxResults", fmt.Sprintf("%d", maxResults))
+	params.Add("maxResults", fmt.Sprintf("%d", pageSize))
+	params.Add("startIndex", fmt.Sprintf("%d", startIndex))
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, baseURL+"?"+params.Encode(), nil)
 	if err != nil {
 		logger.Error().Err(err).Msg("Failed to create HTTP request")
-		return nil, fmt.Errorf("failed to create HTTP request: %w", err)
+		return nil, 0, fmt.Errorf("failed to create HTTP request: %w", err)
 	}
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
 		logger.Error().Err(err).Msg("HTTP request failed")
-		return nil, fmt.Errorf("HTTP request failed: %w", err)
+		return nil, 0, fmt.Errorf("HTTP request failed: %w", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
 		logger.Error().Int("statusCode", resp.StatusCode).Msg("Google Books API returned non-OK status")
-		return nil, fmt.Errorf("Google Books API returned status code %d", resp.StatusCode)
+		return nil, 0, fmt.Errorf("Google Books API returned status code %d", resp.StatusCode)
 	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		logger.Error().Err(err).Msg("Failed to read response body")
-		return nil, fmt.Errorf("Failed to read respone body: %w", err)
+		return nil, 0, fmt.Errorf("Failed to read response body: %w", err)
 	}
 
 	var apiResponse dto.BookSearchResult
 	if err := json.Unmarshal(body, &apiResponse); err != nil {
 		logger.Error().Err(err).Msg("Failed to parse JSON response")
-		return nil, fmt.Errorf("Failed to parse JSON response: %w", err)
+		return nil, 0, fmt.Errorf("Failed to parse JSON response: %w", err)
 	}
 
-	logger.Info().Msg("succesful search")
+	totalItems := int64(apiResponse.TotalItems)
 
-	return &apiResponse, nil
+	logger.Info().
+		Int64("totalItems", totalItems).
+		Int("resultsReturned", len(apiResponse.Books)).
+		Msg("successful search")
+
+	return &apiResponse, totalItems, nil
 }
 
 func (s *Service) GetBookByID(ctx context.Context, bookID string) (*dto.BookSummary, error) {

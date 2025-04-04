@@ -33,6 +33,8 @@ type Router struct {
 	APIV1Auth   *echo.Group
 	APIV1Push   *echo.Group
 	APIV1Google *echo.Group
+	APIV1Book   *echo.Group
+	APIV1Lists  *echo.Group
 }
 
 type Server struct {

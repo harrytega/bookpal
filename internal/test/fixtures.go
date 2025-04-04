@@ -186,8 +186,8 @@ func Fixtures() FixtureMap {
 		UserID: "f6ede5d8-e22a-4ca5-aa12-67821865a3e5",
 	}
 	f.List2 = &models.List{
-		ListID: "b9238b91-97a2-4837-97c5-a560761ffa81",
-		Name:   "Meh",
+		ListID: "4ff14f63-957f-4de5-a25d-155caa6427b3",
+		Name:   "Fantastic",
 		UserID: "f6ede5d8-e22a-4ca5-aa12-67821865a3e5",
 	}
 

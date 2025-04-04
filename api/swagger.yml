@@ -281,6 +281,16 @@ paths:
           schema:
             $ref: '#/definitions/getUserInfoResponse'
   /api/v1/books:
+    get:
+      summary: Fetches all the books from the user.
+      operationId: getUserBooks
+      responses:
+        "200":
+          description: GetUserBooksResponse
+          schema:
+            $ref: '#/definitions/getUserBooksResponse'
+        "400":
+          description: Bad Request
     post:
       summary: Creates a book.
       operationId: createBook
@@ -290,7 +300,7 @@ paths:
         in: body
         required: true
         schema:
-          $ref: '#/definitions/listBooksItems'
+          $ref: '#/definitions/bookInMyDb'
       responses:
         "201":
           description: Added book to database
@@ -321,16 +331,9 @@ paths:
         in: query
       responses:
         "200":
-          description: Successful operation
+          description: GetUserBooksResponse
           schema:
-            allOf:
-            - type: array
-              items:
-                $ref: '#/definitions/bookInMyDb'
-            - type: object
-              properties:
-                pagination:
-                  $ref: '#/definitions/pagination'
+            $ref: '#/definitions/getUserBooksResponse'
         "400":
           description: Invalid status value
   /api/v1/books/{book_id}:
@@ -350,7 +353,7 @@ paths:
         "200":
           description: Successful operation
           schema:
-            $ref: '#/definitions/listBooksItems'
+            $ref: '#/definitions/bookInMyDb'
         "400":
           description: Invalid ID supplied
         "404":
@@ -372,12 +375,12 @@ paths:
         in: body
         required: true
         schema:
-          $ref: '#/definitions/listBooksItems'
+          $ref: '#/definitions/bookInMyDb'
       responses:
         "200":
           description: Successful operation
           schema:
-            $ref: '#/definitions/listBooksItems'
+            $ref: '#/definitions/bookInMyDb'
         "400":
           description: Invalid ID supplied
         "404":
@@ -409,14 +412,7 @@ paths:
         "200":
           description: Successful operation
           schema:
-            allOf:
-            - type: array
-              items:
-                $ref: '#/definitions/googleBook'
-            - type: object
-              properties:
-                pagination:
-                  $ref: '#/definitions/pagination'
+            $ref: '#/definitions/getGoogleBooksResponse'
         "400":
           description: Invalid status value
   /api/v1/google/{google_book_id}:
@@ -436,44 +432,7 @@ paths:
         "200":
           description: Successful operation
           schema:
-            type: object
-            required:
-            - googleID
-            - title
-            - author
-            properties:
-              author:
-                type: string
-                example: J. K. Rowling
-              book_description:
-                type: string
-                example: Dark times have come to Hogwarts. After the Dementors' attack
-                  on his cousin Dudley, Harry Potter knows that Voldemort will stop
-                  at nothing to find him. ...
-              genre:
-                type: string
-                example: Novel, Fantasy Fiction, Young adult literature
-              googleID:
-                type: string
-                example: P3LFEAAAQBAJ
-              pages:
-                type: integer
-                format: int32
-                example: 409
-              publisher:
-                type: string
-                example: Bloomsbury
-              rating:
-                description: Ratings are from 1 to 5.
-                type: integer
-                format: int32
-                example: 3
-              title:
-                type: string
-                example: Harry Potter
-              user_notes:
-                type: string
-                example: Amazing Character Development from the main character.
+            $ref: '#/definitions/googleBook'
         "400":
           description: Invalid ID supplied
         "404":
@@ -495,15 +454,6 @@ paths:
           description: List has been created.
         "400":
           description: Invalid input
-  /api/v1/lists/rated:
-    get:
-      summary: Returns all rated books.
-      operationId: getAllRatedBooks
-      responses:
-        "200":
-          description: Successful operation.
-          schema:
-            $ref: '#/definitions/list'
   /api/v1/lists/{list_id}:
     get:
       description: Returns a list from its list_id.
@@ -587,16 +537,11 @@ paths:
         in: query
       responses:
         "200":
-          description: Succesful Operation
+          description: GetUserBooksResponse
           schema:
-            allOf:
-            - type: array
-              items:
-                $ref: '#/definitions/bookInMyDb'
-            - type: object
-              properties:
-                pagination:
-                  $ref: '#/definitions/pagination'
+            $ref: '#/definitions/getUserBooksResponse'
+        "400":
+          description: Invalid list id
     post:
       summary: Saves a book to an existing list.
       operationId: saveBookToList
@@ -612,7 +557,7 @@ paths:
         in: body
         required: true
         schema:
-          $ref: '#/definitions/listBooksItems'
+          $ref: '#/definitions/bookInMyDb'
       responses:
         "201":
           description: Book succesfully added to list.
@@ -621,31 +566,6 @@ paths:
         "404":
           description: List not found.
   /api/v1/lists/{list_id}/{book_id}:
-    get:
-      summary: Returns a book from a list.
-      operationId: getBookFromList
-      parameters:
-      - type: string
-        format: uuid
-        description: ID for the List that is searched on.
-        name: list_id
-        in: path
-        required: true
-      - type: string
-        format: uuid
-        description: ID for the book that is searched for.
-        name: book_id
-        in: path
-        required: true
-      responses:
-        "200":
-          description: Found book.
-          schema:
-            $ref: '#/definitions/listBooksItems'
-        "400":
-          description: Invalid IDs
-        "404":
-          description: Book or list couldn't be found.
     delete:
       summary: Deletes a specific book from the list.
       operationId: deleteBookFromList
@@ -762,6 +682,31 @@ definitions:
       user_notes:
         type: string
         example: Amazing Character Development from the main character.
+  getGoogleBooksResponse:
+    type: object
+    required:
+    - data
+    - pagination
+    properties:
+      data:
+        description: list of googlebooks
+        type: array
+        items:
+          $ref: '#/definitions/googleBook'
+      pagination:
+        $ref: '#/definitions/pagination'
+  getUserBooksResponse:
+    type: object
+    required:
+    - data
+    properties:
+      data:
+        description: list of books of user
+        type: array
+        items:
+          $ref: '#/definitions/bookInMyDb'
+      pagination:
+        $ref: '#/definitions/pagination'
   getUserInfoResponse:
     type: object
     required:
@@ -857,7 +802,7 @@ definitions:
       books:
         type: array
         items:
-          $ref: '#/definitions/listBooksItems'
+          $ref: '#/definitions/bookInMyDb'
       list_id:
         type: string
         format: uuid
@@ -869,46 +814,6 @@ definitions:
         type: string
         format: uuid
         example: d6764ee3-bf09-40c3-97c5-8f78b7de7ec3
-  listBooksItems:
-    type: object
-    required:
-    - title
-    - author
-    properties:
-      author:
-        type: string
-        example: J. K. Rowling
-      book_description:
-        type: string
-        example: Dark times have come to Hogwarts. After the Dementors' attack on
-          his cousin Dudley, Harry Potter knows that Voldemort will stop at nothing
-          to find him. ...
-      book_id:
-        type: string
-        format: uuid4
-        example: d6764ee3-bf09-40c3-97c5-8f78b7de7ec3
-      genre:
-        type: string
-        example: Novel, Fantasy Fiction, Young adult literature
-      pages:
-        type: integer
-        format: int32
-        example: 409
-      publisher:
-        type: string
-        example: Bloomsbury
-      rating:
-        description: Ratings are from 1 to 5.
-        type: integer
-        format: int32
-        example: 3
-      title:
-        type: string
-        example: Harry Potter
-      user_notes:
-        type: string
-        example: Amazing Character Development from the main character.
-    x-go-gen-location: models
   nullableBool:
     type: boolean
     x-go-type:

@@ -21,6 +21,18 @@ paths:
           description: Added book to database
         400:
           description: Invalid input
+    
+    get:
+      summary: Fetches all the books from the user.
+      operationId: getUserBooks
+      responses:
+        200:
+          description: GetUserBooksResponse
+          schema:
+            $ref: '../definitions/book.yml#/definitions/GetUserBooksResponse'
+        400:
+          description: Bad Request
+
 
   /api/v1/books/search:
     get:
@@ -48,16 +60,9 @@ paths:
           maximum: 30
       responses:
         200:
-          description: Successful operation
+          description: GetUserBooksResponse
           schema:
-            allOf:
-              - type: array
-                items: 
-                  $ref: '../definitions/book.yml#/definitions/BookInMyDb'
-              - type: object
-                properties: 
-                  pagination:
-                    $ref: '../definitions/pagination.yml#/definitions/Pagination'
+            $ref: '../definitions/book.yml#/definitions/GetUserBooksResponse'
         400:
           description: Invalid status value
 

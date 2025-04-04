@@ -11,7 +11,6 @@ import (
 )
 
 func TestGetBookByID(t *testing.T) {
-	test.DotEnvLoadLocalOrSkipTest(t)
 
 	test.WithTestServer(t, func(s *api.Server) {
 		ctx := context.Background()
@@ -25,20 +24,28 @@ func TestGetBookByID(t *testing.T) {
 }
 
 func TestGetUserBooks(t *testing.T) {
-	test.DotEnvLoadLocalOrSkipTest(t)
 
 	test.WithTestServer(t, func(s *api.Server) {
 		ctx := context.Background()
 		userID := test.Fixtures().User1.ID
 
-		res, err := s.Books.GetUserBooks(ctx, userID)
+		res, total, err := s.Books.GetUserBooks(ctx, userID, 10, 1)
 		require.NoError(t, err)
 		assert.NotNil(t, res)
+		assert.True(t, len(res) > 0)
+
+		if total > 10 {
+			page2Books, page2Total, err := s.Books.GetUserBooks(ctx, userID, 10, 2)
+			require.NoError(t, err)
+			assert.Equal(t, total, page2Total)
+			if len(page2Books) > 0 {
+				assert.NotEqual(t, res[0].BookID, page2Books[0].BookID)
+			}
+		}
 	})
 }
 
 func TestDeleteBook(t *testing.T) {
-	test.DotEnvLoadLocalOrSkipTest(t)
 
 	test.WithTestServer(t, func(s *api.Server) {
 		ctx := context.Background()
@@ -51,7 +58,6 @@ func TestDeleteBook(t *testing.T) {
 }
 
 func TestUpdateBookRatingAndNotes(t *testing.T) {
-	test.DotEnvLoadLocalOrSkipTest(t)
 	test.WithTestServer(t, func(s *api.Server) {
 		ctx := context.Background()
 		bookID := test.Fixtures().Book1.BookID
@@ -77,21 +83,20 @@ func TestAddGoogleBook(t *testing.T) {
 }
 
 func TestSearchUserBooks(t *testing.T) {
-	test.DotEnvLoadLocalOrSkipTest(t)
 
 	test.WithTestServer(t, func(s *api.Server) {
 		ctx := context.Background()
 		searchTerm := "test"
 		userID := test.Fixtures().User1.ID
 
-		res, err := s.Books.SearchUserBooks(ctx, searchTerm, userID)
+		res, total, err := s.Books.SearchUserBooks(ctx, searchTerm, userID, 10, 1)
 		require.NoError(t, err)
 		assert.NotNil(t, res)
+		assert.Greater(t, total, int64(0))
 	})
 }
 
 func TestGetBooksByGenre(t *testing.T) {
-	test.DotEnvLoadLocalOrSkipTest(t)
 
 	test.WithTestServer(t, func(s *api.Server) {
 		ctx := context.Background()
@@ -105,7 +110,6 @@ func TestGetBooksByGenre(t *testing.T) {
 }
 
 func TestGetTopRatedBooks(t *testing.T) {
-	test.DotEnvLoadLocalOrSkipTest(t)
 
 	test.WithTestServer(t, func(s *api.Server) {
 		ctx := context.Background()
