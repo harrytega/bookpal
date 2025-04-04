@@ -43,7 +43,7 @@ type AddBookRatingParams struct {
 	  Required: true
 	  In: body
 	*/
-	NewBook *types.ListBooksItems
+	NewBook *types.BookInMyDb
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -62,7 +62,7 @@ func (o *AddBookRatingParams) BindRequest(r *http.Request, route *middleware.Mat
 
 	if runtime.HasBody(r) {
 		defer r.Body.Close()
-		var body types.ListBooksItems
+		var body types.BookInMyDb
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
 			if err == io.EOF {
 				res = append(res, errors.Required("newBook", "body", ""))

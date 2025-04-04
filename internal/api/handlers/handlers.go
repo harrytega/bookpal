@@ -5,8 +5,10 @@ import (
 	"github.com/labstack/echo/v4"
 	"test-project/internal/api"
 	"test-project/internal/api/handlers/auth"
+	"test-project/internal/api/handlers/books"
 	"test-project/internal/api/handlers/common"
 	"test-project/internal/api/handlers/googlebooks"
+	"test-project/internal/api/handlers/lists"
 	"test-project/internal/api/handlers/push"
 )
 
@@ -21,12 +23,25 @@ func AttachAllRoutes(s *api.Server) {
 		auth.PostLogoutRoute(s),
 		auth.PostRefreshRoute(s),
 		auth.PostRegisterRoute(s),
+		books.GetBookByIDRoute(s),
+		books.GetSearchUserBooksRoute(s),
+		books.GetUserBooksRoute(s),
+		books.PostAddGoogleBookRoute(s),
+		books.PutUpdateBookRatingAndNotesRoute(s),
+		books.PutUpdateBookRatingAndNotesRoute(s),
 		common.GetHealthyRoute(s),
 		common.GetReadyRoute(s),
 		common.GetSwaggerRoute(s),
 		common.GetVersionRoute(s),
 		googlebooks.GetGoogleBookByIDRoute(s),
 		googlebooks.GetGoogleBooksRoute(s),
+		lists.DeleteBookFromListRoute(s),
+		lists.DeleteListRoute(s),
+		lists.GetAllBooksFromListRoute(s),
+		lists.GetListByIDRoute(s),
+		lists.PostAddBookToListRoute(s),
+		lists.PostCreateListRoute(s),
+		lists.PutUpdateListNameRoute(s),
 		push.GetPushTestRoute(s),
 		push.PostUpdatePushTokenRoute(s),
 	}

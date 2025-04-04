@@ -1,4 +1,4 @@
-package googlebooks
+package books
 
 import (
 	"math"
@@ -8,25 +8,26 @@ import (
 	"test-project/internal/types"
 	"test-project/internal/util"
 
+	"github.com/go-openapi/strfmt"
 	"github.com/labstack/echo/v4"
 )
 
-func GetGoogleBookByIDRoute(s *api.Server) *echo.Route {
-	handler := NewHandler(s.GoogleBooks)
-	return s.Router.APIV1Google.GET("/:google_book_id", handler.GetBookByID())
+func GetBookByIDRoute(s *api.Server) *echo.Route {
+	handler := newHandler(s.Books)
+	return s.Router.APIV1Book.GET("/:book_id", handler.GetBookByID())
 }
 
 func (h *Handler) GetBookByID() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
-		id := c.Param("google_book_id")
-		if id == "" {
+		bookID := c.Param("book_id")
+		if bookID == "" {
 			return c.JSON(http.StatusBadRequest, map[string]string{
 				"error": "book ID is required",
 			})
 		}
 
-		book, err := h.service.GetBookByID(ctx, id)
+		res, err := h.service.GetBookByID(ctx, bookID)
 		if err != nil {
 			if strings.Contains(err.Error(), "not found") {
 				return c.JSON(http.StatusNotFound, map[string]string{
@@ -34,18 +35,20 @@ func (h *Handler) GetBookByID() echo.HandlerFunc {
 				})
 			}
 			return c.JSON(http.StatusInternalServerError, map[string]string{
-				"error": "Failed to get book details " + err.Error(),
+				"error": "Failed to get book details",
 			})
 		}
 
-		response := &types.GoogleBook{
-			GoogleID:        &id,
-			Title:           &book.BookDetails.Title,
-			Author:          &book.BookDetails.Authors[0],
-			Publisher:       book.BookDetails.Publisher,
-			BookDescription: book.BookDetails.Description,
-			Genre:           book.BookDetails.Genre[0],
-			Pages:           SafeInt32(book.BookDetails.Pages),
+		response := &types.BookInMyDb{
+			BookID:          strfmt.UUID4(res.BookID),
+			Author:          &res.Author,
+			BookDescription: res.BookDescription.String,
+			Genre:           res.Genre.String,
+			Pages:           SafeInt32(res.Pages.Int),
+			Publisher:       res.Publisher.String,
+			Rating:          SafeInt32(res.Rating.Int),
+			Title:           &res.Title,
+			UserNotes:       res.UserNotes.String,
 		}
 		return util.ValidateAndReturn(c, http.StatusOK, response)
 	}

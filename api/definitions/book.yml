@@ -1,5 +1,5 @@
 definitions:
-     BookInMyDb:
+  BookInMyDb:
       type: object
       properties:
         book_id:
@@ -37,7 +37,7 @@ definitions:
         - title
         - author
 
-     GoogleBook:
+  GoogleBook:
       type: object
       properties:
         googleID:
@@ -74,3 +74,31 @@ definitions:
         - googleID
         - title
         - author
+
+  GetUserBooksResponse:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/BookInMyDb'
+        description: list of books of user
+      pagination:
+        $ref: '../definitions/pagination.yml#/definitions/Pagination'
+    required:
+      - data
+
+
+  GetGoogleBooksResponse:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/GoogleBook'
+        description: list of googlebooks
+      pagination:
+        $ref: '../definitions/pagination.yml#/definitions/Pagination'
+    required:
+      - data
+      - pagination

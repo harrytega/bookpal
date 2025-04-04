@@ -13,18 +13,18 @@ import (
 	"github.com/go-openapi/strfmt"
 )
 
-// NewGetAllRatedBooksParams creates a new GetAllRatedBooksParams object
+// NewGetUserBooksParams creates a new GetUserBooksParams object
 // no default values defined in spec.
-func NewGetAllRatedBooksParams() GetAllRatedBooksParams {
+func NewGetUserBooksParams() GetUserBooksParams {
 
-	return GetAllRatedBooksParams{}
+	return GetUserBooksParams{}
 }
 
-// GetAllRatedBooksParams contains all the bound params for the get all rated books operation
+// GetUserBooksParams contains all the bound params for the get user books operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters getAllRatedBooks
-type GetAllRatedBooksParams struct {
+// swagger:parameters getUserBooks
+type GetUserBooksParams struct {
 
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
@@ -33,8 +33,8 @@ type GetAllRatedBooksParams struct {
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
 // for simple values it will use straight method calls.
 //
-// To ensure default values, the struct must have been initialized with NewGetAllRatedBooksParams() beforehand.
-func (o *GetAllRatedBooksParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
+// To ensure default values, the struct must have been initialized with NewGetUserBooksParams() beforehand.
+func (o *GetUserBooksParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
 
 	o.HTTPRequest = r
@@ -45,7 +45,7 @@ func (o *GetAllRatedBooksParams) BindRequest(r *http.Request, route *middleware.
 	return nil
 }
 
-func (o *GetAllRatedBooksParams) Validate(formats strfmt.Registry) error {
+func (o *GetUserBooksParams) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if len(res) > 0 {

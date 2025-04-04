@@ -1,7 +1,8 @@
 package dto
 
 type BookSearchResult struct {
-	Books []BookSummary `json:"items"`
+	Books      []BookSummary `json:"items"`
+	TotalItems int           `json:"totalItems"`
 }
 
 type BookSummary struct {

@@ -16,10 +16,17 @@ func TestSearchBooks(t *testing.T) {
 	test.WithTestServer(t, func(s *api.Server) {
 		ctx := context.Background()
 
-		res, err := s.GoogleBooks.SearchBooks(ctx, "harry potter", 10)
+		res, total, err := s.GoogleBooks.SearchBooks(ctx, "harry potter", 10, 1)
 		require.NoError(t, err)
-
 		assert.NotNil(t, res)
+		assert.Greater(t, total, int64(0))
+
+		if total > 10 {
+			page2, page2Total, err := s.GoogleBooks.SearchBooks(ctx, "harry potter", 10, 2)
+			require.NoError(t, err)
+			assert.NotNil(t, page2)
+			assert.Equal(t, total, page2Total)
+		}
 	})
 }
 

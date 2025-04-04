@@ -110,16 +110,11 @@ paths:
             maximum: 30
         responses:
           200:
-            description: "Succesful Operation"
+            description: GetUserBooksResponse
             schema:
-              allOf:
-                - type: array
-                  items: 
-                    $ref: '../definitions/book.yml#/definitions/BookInMyDb'
-                - type: object
-                  properties: 
-                    pagination:
-                      $ref: '../definitions/pagination.yml#/definitions/Pagination'
+              $ref: '../definitions/book.yml#/definitions/GetUserBooksResponse'
+          400:
+            description: Invalid list id
               
       post:
         summary: Saves a book to an existing list.
@@ -146,32 +141,6 @@ paths:
             description: List not found.
     
     /api/v1/lists/{list_id}/{book_id}:
-      get:
-        summary: Returns a book from a list.
-        operationId: getBookFromList
-        parameters:
-          - name: list_id
-            in: path
-            description: ID for the List that is searched on.
-            required: true
-            type: string
-            format: uuid
-          - name: book_id
-            in: path
-            description: ID for the book that is searched for.
-            required: true
-            type: string
-            format: uuid
-        responses:
-          200:
-            description: Found book.
-            schema: 
-              $ref: '../definitions/book.yml#/definitions/BookInMyDb'
-          400:
-            description: Invalid IDs
-          404:
-            description: Book or list couldn't be found.
-      
       delete:
         summary: Deletes a specific book from the list.
         operationId: deleteBookFromList
@@ -194,15 +163,6 @@ paths:
           400:
             description: Invalid list or book ID.
 
-    /api/v1/lists/rated:
-      get:
-        summary: Returns all rated books.
-        operationId: getAllRatedBooks
-        responses:
-          200:
-            description: Successful operation.
-            schema:
-              $ref: '../definitions/list.yml#/definitions/List'
 
 
 

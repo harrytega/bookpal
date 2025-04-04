@@ -33,14 +33,7 @@ paths:
         200:
           description: Successful operation
           schema:
-            allOf:
-              - type: array
-                items: 
-                  $ref: '../definitions/book.yml#/definitions/GoogleBook'
-              - type: object
-                properties: 
-                  pagination:
-                    $ref: '../definitions/pagination.yml#/definitions/Pagination'
+            $ref: '../definitions/book.yml#/definitions/GetGoogleBooksResponse'
         400:
           description: Invalid status value
 
