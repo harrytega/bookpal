@@ -282,6 +282,8 @@ paths:
             $ref: '#/definitions/getUserInfoResponse'
   /api/v1/books:
     get:
+      security:
+      - Bearer: []
       summary: Fetches all the books from the user.
       operationId: getUserBooks
       responses:
@@ -292,6 +294,8 @@ paths:
         "400":
           description: Bad Request
     post:
+      security:
+      - Bearer: []
       summary: Creates a book.
       operationId: createBook
       parameters:
@@ -308,6 +312,8 @@ paths:
           description: Invalid input
   /api/v1/books/search:
     get:
+      security:
+      - Bearer: []
       description: Searches for books from the user. You can search by title, author
         or publisher.
       summary: Searches for books from the user.
@@ -338,6 +344,8 @@ paths:
           description: Invalid status value
   /api/v1/books/{book_id}:
     get:
+      security:
+      - Bearer: []
       description: Gets additional details about a book. (title, author, publisher,
         description, pages, genre)
       summary: Gets additional details about a book.
@@ -359,6 +367,8 @@ paths:
         "404":
           description: Book not found
     put:
+      security:
+      - Bearer: []
       description: Adds or edits a rating and eventually some notes to the book. A
         book can be rated 1-5 stars.
       summary: Adds or edits a rating and eventually some notes to the book.
@@ -387,6 +397,8 @@ paths:
           description: Book not found
   /api/v1/google/search:
     get:
+      security:
+      - Bearer: []
       description: Searches for books from the Google Books API. You can search by
         title, author or publisher.
       summary: Searches for books from the Google Books API.
@@ -417,13 +429,14 @@ paths:
           description: Invalid status value
   /api/v1/google/{google_book_id}:
     get:
+      security:
+      - Bearer: []
       description: Gets additional details about a book. (title, author, publisher,
         description, pages, genre)
       summary: Gets additional details about a book.
       operationId: getGoogleBookDetails
       parameters:
       - type: string
-        format: uuid
         description: Id of book to return.
         name: google_book_id
         in: path
@@ -439,6 +452,8 @@ paths:
           description: Book not found
   /api/v1/lists:
     post:
+      security:
+      - Bearer: []
       description: Creates a new book list with a name.
       summary: Creates a new book list.
       operationId: createList
@@ -456,6 +471,8 @@ paths:
           description: Invalid input
   /api/v1/lists/{list_id}:
     get:
+      security:
+      - Bearer: []
       description: Returns a list from its list_id.
       summary: Returns a list.
       operationId: getList
@@ -476,6 +493,8 @@ paths:
         "404":
           description: List not found.
     put:
+      security:
+      - Bearer: []
       summary: Changes the name of a list.
       operationId: changeListName
       parameters:
@@ -499,6 +518,8 @@ paths:
         "400":
           description: Invalid list ID.
     delete:
+      security:
+      - Bearer: []
       summary: Deletes a list.
       operationId: deleteList
       parameters:
@@ -515,6 +536,8 @@ paths:
           description: Invalid list ID
   /api/v1/lists/{list_id}/books:
     get:
+      security:
+      - Bearer: []
       summary: Returns all the books from the list
       operationId: getAllBooksFromList
       parameters:
@@ -543,6 +566,8 @@ paths:
         "400":
           description: Invalid list id
     post:
+      security:
+      - Bearer: []
       summary: Saves a book to an existing list.
       operationId: saveBookToList
       parameters:
@@ -567,6 +592,8 @@ paths:
           description: List not found.
   /api/v1/lists/{list_id}/{book_id}:
     delete:
+      security:
+      - Bearer: []
       summary: Deletes a specific book from the list.
       operationId: deleteBookFromList
       parameters:

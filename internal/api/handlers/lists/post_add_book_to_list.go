@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"test-project/internal/api"
 	"test-project/internal/api/auth"
+	"test-project/internal/api/httperrors"
 	"test-project/internal/types"
 	"test-project/internal/util"
 
@@ -26,15 +27,11 @@ func (h *Handler) AddBookToList() echo.HandlerFunc {
 		}
 
 		if listID == "" {
-			return c.JSON(http.StatusBadRequest, map[string]string{
-				"error": "list ID required",
-			})
+			return httperrors.ErrBadRequestMissingListID
 		}
 
 		if err := h.service.AddBookToList(ctx, listID, userID, string(body.BookID)); err != nil {
-			return c.JSON(http.StatusInternalServerError, map[string]string{
-				"error": "failed to add book to list" + err.Error(),
-			})
+			return httperrors.ErrInternalServerFailedAddBookToList
 		}
 
 		return c.JSON(http.StatusCreated, map[string]string{

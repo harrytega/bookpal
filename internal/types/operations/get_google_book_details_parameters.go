@@ -11,7 +11,6 @@ import (
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/go-openapi/strfmt"
-	"github.com/go-openapi/validate"
 )
 
 // NewGetGoogleBookDetailsParams creates a new GetGoogleBookDetailsParams object
@@ -34,7 +33,7 @@ type GetGoogleBookDetailsParams struct {
 	  Required: true
 	  In: path
 	*/
-	GoogleBookID strfmt.UUID `param:"google_book_id"`
+	GoogleBookID string `param:"google_book_id"`
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -64,10 +63,6 @@ func (o *GetGoogleBookDetailsParams) Validate(formats strfmt.Registry) error {
 	// Required: true
 	// Parameter is provided by construction from the route
 
-	if err := o.validateGoogleBookID(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
@@ -84,25 +79,7 @@ func (o *GetGoogleBookDetailsParams) bindGoogleBookID(rawData []string, hasKey b
 	// Required: true
 	// Parameter is provided by construction from the route
 
-	// Format: uuid
-	value, err := formats.Parse("uuid", raw)
-	if err != nil {
-		return errors.InvalidType("google_book_id", "path", "strfmt.UUID", raw)
-	}
-	o.GoogleBookID = *(value.(*strfmt.UUID))
+	o.GoogleBookID = raw
 
-	if err := o.validateGoogleBookID(formats); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// validateGoogleBookID carries on validations for parameter GoogleBookID
-func (o *GetGoogleBookDetailsParams) validateGoogleBookID(formats strfmt.Registry) error {
-
-	if err := validate.FormatOf("google_book_id", "path", "uuid", o.GoogleBookID.String(), formats); err != nil {
-		return err
-	}
 	return nil
 }

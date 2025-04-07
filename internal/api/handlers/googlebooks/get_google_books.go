@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strconv"
 	"test-project/internal/api"
+	"test-project/internal/api/httperrors"
 	"test-project/internal/services/googlebooks"
 	"test-project/internal/types"
 	"test-project/internal/util"
@@ -29,11 +30,9 @@ func GetGoogleBooksRoute(s *api.Server) *echo.Route {
 func (h *Handler) SearchBooks() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
-		query := c.QueryParam("q")
+		query := c.QueryParam("query")
 		if query == "" {
-			return c.JSON(http.StatusBadRequest, map[string]string{
-				"error": "search query is required",
-			})
+			return httperrors.ErrBadRequestMissingSearchQuery
 		}
 
 		page := 1
@@ -43,9 +42,7 @@ func (h *Handler) SearchBooks() echo.HandlerFunc {
 			var err error
 			page, err = strconv.Atoi(pageParam)
 			if err != nil || page < 1 {
-				return c.JSON(http.StatusBadRequest, map[string]string{
-					"error": "page must be a positive number",
-				})
+				return httperrors.ErrBadRequestInvalidPageNumber
 			}
 		}
 
@@ -53,17 +50,13 @@ func (h *Handler) SearchBooks() echo.HandlerFunc {
 			var err error
 			pageSize, err = strconv.Atoi(pageSizeParam)
 			if err != nil || pageSize < 1 || pageSize > 30 {
-				return c.JSON(http.StatusBadRequest, map[string]string{
-					"error": "pageSize must be a number between 1 and 30",
-				})
+				return httperrors.ErrBadRequestInvalidPageSizeNumber
 			}
 		}
 
 		res, totalItems, err := h.service.SearchBooks(ctx, query, pageSize, page)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, map[string]string{
-				"error": "Failed to search books " + err.Error(),
-			})
+			return httperrors.ErrInternalServerFailedBookSearch
 		}
 
 		convertedBooks := []*types.GoogleBook{}

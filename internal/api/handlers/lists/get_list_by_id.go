@@ -6,6 +6,7 @@ import (
 	"strings"
 	"test-project/internal/api"
 	"test-project/internal/api/auth"
+	"test-project/internal/api/httperrors"
 	"test-project/internal/types"
 	"test-project/internal/util"
 
@@ -23,21 +24,15 @@ func (h *Handler) GetListByID() echo.HandlerFunc {
 		ctx := c.Request().Context()
 		listID := c.Param("list_id")
 		if listID == "" {
-			return c.JSON(http.StatusBadRequest, map[string]string{
-				"error": "list ID required",
-			})
+			return httperrors.ErrBadRequestMissingListID
 		}
 		userID := auth.UserFromContext(ctx).ID
 		res, err := h.service.GetListByID(ctx, listID, userID)
 		if err != nil {
 			if strings.Contains(err.Error(), "not found") {
-				return c.JSON(http.StatusNotFound, map[string]string{
-					"error": "book not found",
-				})
+				return httperrors.ErrNotFoundListNotFound
 			}
-			return c.JSON(http.StatusInternalServerError, map[string]string{
-				"error": "failed to fetch book" + err.Error(),
-			})
+			return httperrors.ErrInternalServerFailedFetchList
 		}
 		convertedBooks := []*types.BookInMyDb{}
 

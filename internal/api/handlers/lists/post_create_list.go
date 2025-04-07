@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"test-project/internal/api"
 	"test-project/internal/api/auth"
+	"test-project/internal/api/httperrors"
 	"test-project/internal/services/lists"
 	"test-project/internal/types"
 	"test-project/internal/util"
@@ -38,9 +39,7 @@ func (h *Handler) CreateList() echo.HandlerFunc {
 
 		res, err := h.service.CreateList(ctx, userID, *body.Name)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, map[string]string{
-				"error": "failed to create list" + err.Error(),
-			})
+			return httperrors.ErrInternalServerFailedCreateList
 		}
 
 		response := &types.List{

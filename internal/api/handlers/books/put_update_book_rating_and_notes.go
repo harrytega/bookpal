@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"test-project/internal/api"
 	"test-project/internal/api/auth"
+	"test-project/internal/api/httperrors"
 	"test-project/internal/types"
 	"test-project/internal/util"
 
@@ -24,18 +25,14 @@ func (h *Handler) PutUpdateBookRatingAndNotesRoute() echo.HandlerFunc {
 		}
 		bookID := c.Param("book_id")
 		if bookID == "" {
-			return c.JSON(http.StatusBadRequest, map[string]string{
-				"error": "book id is required",
-			})
+			return httperrors.ErrBadRequestMissingBookID
 		}
 		userID := auth.UserFromContext(ctx).ID
 		rating := int(body.Rating)
 		ratingPtr := &rating
 		err := h.service.UpdateBookRatingAndNotes(ctx, bookID, userID, &body.UserNotes, ratingPtr)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, map[string]string{
-				"error": "failed to add rating/notes" + err.Error(),
-			})
+			return httperrors.ErrInternalServerFailedRatingNotes
 		}
 		return c.JSON(http.StatusOK, map[string]string{
 			"message": "Rating/Notes has been added to the book",

@@ -6,6 +6,9 @@ info:
 paths:
     /api/v1/lists:
       post:
+        security:
+        - Bearer: []
+      
         summary: Creates a new book list.
         description: Creates a new book list with a name.
         operationId: createList
@@ -24,6 +27,9 @@ paths:
 
     /api/v1/lists/{list_id}:
       get:
+        security:
+        - Bearer: []
+      
         summary: Returns a list.
         description: Returns a list from its list_id.
         operationId: getList
@@ -45,6 +51,10 @@ paths:
             description: List not found.
 
       put:
+
+        security:
+        - Bearer: []
+      
         summary: Changes the name of a list.
         operationId: changeListName
         parameters:
@@ -69,6 +79,9 @@ paths:
             description: Invalid list ID.
 
       delete:
+        security:
+        - Bearer: []
+      
         summary: Deletes a list.
         operationId: deleteList
         parameters:
@@ -86,6 +99,9 @@ paths:
 
     /api/v1/lists/{list_id}/books:
       get:
+        security:
+        - Bearer: []
+      
         summary: Returns all the books from the list
         operationId: getAllBooksFromList
         parameters:
@@ -117,6 +133,9 @@ paths:
             description: Invalid list id
               
       post:
+        security:
+        - Bearer: []
+      
         summary: Saves a book to an existing list.
         operationId: saveBookToList
         parameters:
@@ -142,6 +161,9 @@ paths:
     
     /api/v1/lists/{list_id}/{book_id}:
       delete:
+        security:
+        - Bearer: []
+      
         summary: Deletes a specific book from the list.
         operationId: deleteBookFromList
         parameters:

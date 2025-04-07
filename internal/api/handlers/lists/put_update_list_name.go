@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"test-project/internal/api"
 	"test-project/internal/api/auth"
+	"test-project/internal/api/httperrors"
 	"test-project/internal/types"
 	"test-project/internal/util"
 
@@ -21,9 +22,7 @@ func (h *Handler) UpdateListName() echo.HandlerFunc {
 		userID := auth.UserFromContext(ctx).ID
 		listID := c.Param("list_id")
 		if listID == "" {
-			return c.JSON(http.StatusBadRequest, map[string]string{
-				"error": "list id is required",
-			})
+			return httperrors.ErrBadRequestMissingListID
 		}
 		var body types.List
 		if err := util.BindAndValidateBody(c, &body); err != nil {
@@ -32,9 +31,7 @@ func (h *Handler) UpdateListName() echo.HandlerFunc {
 
 		err := h.service.UpdateListName(ctx, listID, userID, *body.Name)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, map[string]string{
-				"error": "failed to update list name",
-			})
+			return httperrors.ErrInternalServerFailedUpdateListName
 		}
 		return c.JSON(http.StatusOK, map[string]string{
 			"message": "List name has been changed",

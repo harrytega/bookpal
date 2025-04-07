@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"test-project/internal/api"
 	"test-project/internal/api/auth"
+	"test-project/internal/api/httperrors"
 	"test-project/internal/types"
 	"test-project/internal/util"
 
@@ -27,9 +28,7 @@ func (h *Handler) AddGoogleBook() echo.HandlerFunc {
 		err := h.service.AddGoogleBook(ctx, *body.GoogleID, userID)
 
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, map[string]string{
-				"error": "failed to add book" + err.Error(),
-			})
+			return httperrors.ErrInternalServerFailedAddGoogleBook
 		}
 
 		return c.JSON(http.StatusCreated, map[string]string{
