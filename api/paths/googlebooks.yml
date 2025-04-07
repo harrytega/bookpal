@@ -6,6 +6,9 @@ paths:
 
   /api/v1/google/search:
     get:
+      security:
+        - Bearer: []
+      
 
       summary: Searches for books from the Google Books API.
       description: Searches for books from the Google Books API. You can search by title, author or publisher.
@@ -40,6 +43,10 @@ paths:
 
   /api/v1/google/{google_book_id}:
     get:
+
+      security:
+        - Bearer: []
+      
       summary: Gets additional details about a book.
       description: Gets additional details about a book. (title, author, publisher, description, pages, genre)
       operationId: getGoogleBookDetails
@@ -49,7 +56,6 @@ paths:
           description: Id of book to return.
           required: true
           type: string
-          format: uuid
       responses:
        200:
         description: Successful operation

@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"test-project/internal/api"
 	"test-project/internal/api/auth"
+	"test-project/internal/api/httperrors"
 	"test-project/internal/types"
 	"test-project/internal/util"
 
@@ -21,15 +22,11 @@ func (h *Handler) RemoveBookFromList() echo.HandlerFunc {
 		user := auth.UserFromContext(ctx)
 		listID := c.Param("list_id")
 		if listID == "" {
-			return c.JSON(http.StatusBadRequest, map[string]string{
-				"error": "list id is required",
-			})
+			return httperrors.ErrBadRequestMissingListID
 		}
 		bookID := c.Param("book_id")
 		if bookID == "" {
-			return c.JSON(http.StatusBadRequest, map[string]string{
-				"error": "book id is required",
-			})
+			return httperrors.ErrBadRequestMissingBookID
 		}
 		var body types.List
 		if err := util.BindAndValidateBody(c, &body); err != nil {
@@ -37,9 +34,7 @@ func (h *Handler) RemoveBookFromList() echo.HandlerFunc {
 		}
 
 		if err := h.service.RemoveBookFromList(ctx, listID, user.ID, bookID); err != nil {
-			return c.JSON(http.StatusInternalServerError, map[string]string{
-				"error": "failed to remove book from the list",
-			})
+			return httperrors.ErrInternalServerDeletingBookFromList
 		}
 
 		return c.JSON(http.StatusNoContent, map[string]string{

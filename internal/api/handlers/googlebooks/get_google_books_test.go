@@ -12,7 +12,7 @@ import (
 func TestSearchBooks(t *testing.T) {
 	test.DotEnvLoadLocalOrSkipTest(t)
 	test.WithTestServer(t, func(s *api.Server) {
-		res := test.PerformRequest(t, s, "GET", "/api/v1/google/search?q=harry", nil, test.HeadersWithAuth(t, test.Fixtures().User1AccessToken1.Token))
+		res := test.PerformRequest(t, s, "GET", "/api/v1/google/search?query=harry", nil, test.HeadersWithAuth(t, test.Fixtures().User1AccessToken1.Token))
 		require.Equal(t, http.StatusOK, res.Result().StatusCode)
 	})
 }

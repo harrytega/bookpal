@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"test-project/internal/api"
 	"test-project/internal/api/auth"
+	"test-project/internal/api/httperrors"
 	"test-project/internal/services/books"
 	"test-project/internal/util"
 
@@ -40,9 +41,7 @@ func (h *Handler) GetUserBooks() echo.HandlerFunc {
 			var err error
 			page, err = strconv.Atoi(pageParam)
 			if err != nil || page < 0 {
-				return c.JSON(http.StatusBadRequest, map[string]string{
-					"error": "page must be a positive number",
-				})
+				return httperrors.ErrBadRequestInvalidPageNumber
 			}
 		}
 
@@ -50,17 +49,13 @@ func (h *Handler) GetUserBooks() echo.HandlerFunc {
 			var err error
 			pageSize, err = strconv.Atoi(pageSizeParam)
 			if err != nil || pageSize < 1 || pageSize > 30 {
-				return c.JSON(http.StatusBadRequest, map[string]string{
-					"error": "page size must be between 1 and 30",
-				})
+				return httperrors.ErrBadRequestInvalidPageSizeNumber
 			}
 		}
 
 		res, totalItems, err := h.service.GetUserBooks(ctx, userID, pageSize, page)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, map[string]string{
-				"error": "Failed to fetch user books" + err.Error(),
-			})
+			return httperrors.ErrInternalServerFailedFetchUserBooks
 		}
 
 		convertedBooks := []*types.BookInMyDb{}

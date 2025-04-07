@@ -7,6 +7,9 @@ paths:
 
   /api/v1/books:
     post:
+      security:
+        - Bearer: []
+      
       summary: Creates a book.
       operationId: createBook
       parameters:
@@ -23,6 +26,9 @@ paths:
           description: Invalid input
     
     get:
+      security:
+        - Bearer: []
+      
       summary: Fetches all the books from the user.
       operationId: getUserBooks
       responses:
@@ -36,6 +42,10 @@ paths:
 
   /api/v1/books/search:
     get:
+
+      security:
+        - Bearer: []
+      
       summary: Searches for books from the user.
       description: Searches for books from the user. You can search by title, author or publisher.
       operationId: searchBooks
@@ -68,6 +78,9 @@ paths:
 
   /api/v1/books/{book_id}:
     get:
+      security:
+        - Bearer: []
+      
       summary: Gets additional details about a book.
       description: Gets additional details about a book. (title, author, publisher, description, pages, genre)
       operationId: getBookDetails
@@ -90,6 +103,9 @@ paths:
 
 
     put:
+      security:
+        - Bearer: []
+      
       summary: Adds or edits a rating and eventually some notes to the book.
       description: Adds or edits a rating and eventually some notes to the book. A book can be rated 1-5 stars.
       operationId: addBookRating

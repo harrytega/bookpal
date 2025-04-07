@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"test-project/internal/api"
 	"test-project/internal/api/auth"
+	"test-project/internal/api/httperrors"
 	"test-project/internal/types"
 	"test-project/internal/util"
 
@@ -23,16 +24,12 @@ func (h *Handler) GetAllBooksFromList() echo.HandlerFunc {
 		listID := c.Param("list_id")
 
 		if listID == "" {
-			return c.JSON(http.StatusBadRequest, map[string]string{
-				"error": "list id is required",
-			})
+			return httperrors.ErrBadRequestMissingListID
 		}
 
 		res, err := h.service.GetAllBooksFromList(ctx, userID, listID)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, map[string]string{
-				"error": "failed to fetch books from user" + err.Error(),
-			})
+			return httperrors.ErrInternalServerFailedFetchBooksFromList
 		}
 
 		convertedBooks := []*types.BookInMyDb{}

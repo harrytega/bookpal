@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strings"
 	"test-project/internal/api"
+	"test-project/internal/api/httperrors"
 	"test-project/internal/types"
 	"test-project/internal/util"
 
@@ -22,21 +23,15 @@ func (h *Handler) GetBookByID() echo.HandlerFunc {
 		ctx := c.Request().Context()
 		bookID := c.Param("book_id")
 		if bookID == "" {
-			return c.JSON(http.StatusBadRequest, map[string]string{
-				"error": "book ID is required",
-			})
+			return httperrors.ErrBadRequestMissingBookID
 		}
 
 		res, err := h.service.GetBookByID(ctx, bookID)
 		if err != nil {
 			if strings.Contains(err.Error(), "not found") {
-				return c.JSON(http.StatusNotFound, map[string]string{
-					"error": "book not found",
-				})
+				return httperrors.ErrNotFoundBookNotFound
 			}
-			return c.JSON(http.StatusInternalServerError, map[string]string{
-				"error": "Failed to get book details",
-			})
+			return httperrors.ErrInternalServerFailedFetchBookDetails
 		}
 
 		response := &types.BookInMyDb{
