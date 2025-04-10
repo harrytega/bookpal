@@ -62,14 +62,6 @@ definitions:
           type: integer
           format: int32
           example: 409
-        rating:
-          type: integer
-          format: int32
-          example: 3
-          description: Ratings are from 1 to 5.
-        user_notes:
-          type: string
-          example: "Amazing Character Development from the main character."
       required:
         - google_book_ID
         - title
