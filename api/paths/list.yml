@@ -12,18 +12,36 @@ paths:
         summary: Creates a new book list.
         description: Creates a new book list with a name.
         operationId: createList
+        tags:
+          - lists
         parameters:
           - name: newList
             in: body
             description: Creates a new book list with a name.
             required: true
             schema:
-              $ref: '../definitions/list.yml#/definitions/List'
+              $ref: '../definitions/list.yml#/definitions/ListRequest'
         responses:
           201: 
             description: List has been created.
           400:
             description: Invalid input
+      
+      get:
+        security:
+          - Bearer: []
+
+        summary: Fetches all lists from the user.
+        operationId: getAllLists
+        tags:
+          - lists
+        responses:
+          200:
+            description: Successful operation.
+            schema:
+              $ref: '../definitions/list.yml#/definitions/GetAllListsResponse'
+
+        
 
     /api/v1/lists/{list_id}:
       get:
@@ -33,6 +51,8 @@ paths:
         summary: Returns a list.
         description: Returns a list from its list_id.
         operationId: getList
+        tags:
+          - lists
         parameters:
           - name: list_id
             in: path
@@ -57,6 +77,8 @@ paths:
       
         summary: Changes the name of a list.
         operationId: changeListName
+        tags:
+          - lists
         parameters:
           - name: list_id
             in: path
@@ -69,7 +91,7 @@ paths:
             description: updated List with a new name.
             required: true
             schema:
-              $ref: '../definitions/list.yml#/definitions/List'
+              $ref: '../definitions/list.yml#/definitions/ListRequest'
         responses:
           200:
             description: Successful operation.
@@ -84,6 +106,8 @@ paths:
       
         summary: Deletes a list.
         operationId: deleteList
+        tags:
+          - lists
         parameters:
           - name: list_id
             in: path
@@ -104,6 +128,8 @@ paths:
       
         summary: Returns all the books from the list
         operationId: getAllBooksFromList
+        tags:
+          - lists
         parameters:
           - name: list_id
             in: path
@@ -138,6 +164,8 @@ paths:
       
         summary: Saves a book to an existing list.
         operationId: saveBookToList
+        tags:
+          - lists
         parameters:
           - name: list_id
             in: path
@@ -166,6 +194,8 @@ paths:
       
         summary: Deletes a specific book from the list.
         operationId: deleteBookFromList
+        tags:
+          - lists
         parameters:
           - name: list_id
             in: path

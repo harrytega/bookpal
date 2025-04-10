@@ -62,14 +62,24 @@ func (h *Handler) SearchBooks() echo.HandlerFunc {
 		convertedBooks := []*types.GoogleBook{}
 		for _, book := range res.Books {
 			convertedBook := &types.GoogleBook{
-				GoogleID:        &book.GoogleID,
-				Title:           &book.BookDetails.Title,
-				Author:          &book.BookDetails.Authors[0],
-				Publisher:       book.BookDetails.Publisher,
-				BookDescription: book.BookDetails.Description,
-				Genre:           book.BookDetails.Genre[0],
-				Pages:           SafeInt32(book.BookDetails.Pages),
+				GoogleBookID: &book.GoogleID,
+				Title:        &book.BookDetails.Title,
 			}
+			if len(book.BookDetails.Authors) > 0 {
+				convertedBook.Author = &book.BookDetails.Authors[0]
+			} else {
+				unknownAuthor := "Unknown"
+				convertedBook.Author = &unknownAuthor
+			}
+
+			convertedBook.Publisher = book.BookDetails.Publisher
+			convertedBook.BookDescription = book.BookDetails.Description
+
+			if len(book.BookDetails.Genre) > 0 {
+				convertedBook.Genre = book.BookDetails.Genre[0]
+			}
+
+			convertedBook.Pages = SafeInt32(book.BookDetails.Pages)
 			convertedBooks = append(convertedBooks, convertedBook)
 		}
 

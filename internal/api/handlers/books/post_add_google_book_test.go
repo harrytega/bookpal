@@ -13,9 +13,9 @@ func TestAddGoogleBook(t *testing.T) {
 	test.DotEnvLoadLocalOrSkipTest(t)
 	test.WithTestServer(t, func(s *api.Server) {
 		payload := test.GenericPayload{
-			"googleID": "LipZDwAAQBAJ",
-			"title":    "The Three Musketeers",
-			"author":   "Alexandre Dumas",
+			"google_book_ID": "LipZDwAAQBAJ",
+			"title":          "The Three Musketeers",
+			"author":         "Alexandre Dumas",
 		}
 		token := test.Fixtures().User1AccessToken1.Token
 		res := test.PerformRequest(t, s, "POST", "/api/v1/books", payload, test.HeadersWithAuth(t, token))

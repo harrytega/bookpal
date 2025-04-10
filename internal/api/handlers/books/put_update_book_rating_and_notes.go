@@ -19,7 +19,7 @@ func PutUpdateBookRatingAndNotesRoute(s *api.Server) *echo.Route {
 func (h *Handler) PutUpdateBookRatingAndNotesRoute() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
-		var body types.BookInMyDb
+		var body types.UpdateRatingNotesRequest
 		if err := util.BindAndValidateBody(c, &body); err != nil {
 			return err
 		}
@@ -28,6 +28,7 @@ func (h *Handler) PutUpdateBookRatingAndNotesRoute() echo.HandlerFunc {
 			return httperrors.ErrBadRequestMissingBookID
 		}
 		userID := auth.UserFromContext(ctx).ID
+
 		rating := int(body.Rating)
 		ratingPtr := &rating
 		err := h.service.UpdateBookRatingAndNotes(ctx, bookID, userID, &body.UserNotes, ratingPtr)

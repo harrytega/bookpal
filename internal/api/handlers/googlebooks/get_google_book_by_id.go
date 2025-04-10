@@ -34,7 +34,7 @@ func (h *Handler) GetBookByID() echo.HandlerFunc {
 		}
 
 		response := &types.GoogleBook{
-			GoogleID:        &id,
+			GoogleBookID:    &id,
 			Title:           &book.BookDetails.Title,
 			Author:          &book.BookDetails.Authors[0],
 			Publisher:       book.BookDetails.Publisher,

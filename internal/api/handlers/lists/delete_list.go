@@ -3,9 +3,8 @@ package lists
 import (
 	"net/http"
 	"test-project/internal/api"
+	"test-project/internal/api/auth"
 	"test-project/internal/api/httperrors"
-	"test-project/internal/types"
-	"test-project/internal/util"
 
 	"github.com/labstack/echo/v4"
 )
@@ -19,12 +18,10 @@ func (h *Handler) DeleteList() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
 
-		var body types.List
-		if err := util.BindAndValidateBody(c, &body); err != nil {
-			return err
-		}
+		listID := c.Param("list_id")
+		userID := auth.UserFromContext(ctx).ID
 
-		err := h.service.DeleteList(ctx, body.ListID.String(), body.UserID.String())
+		err := h.service.DeleteList(ctx, listID, userID)
 
 		if err != nil {
 			return httperrors.ErrInternalServerDeletingList

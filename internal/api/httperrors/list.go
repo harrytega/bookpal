@@ -12,4 +12,5 @@ var (
 	ErrInternalServerFailedFetchList          = NewHTTPError(http.StatusInternalServerError, "ERROR_FETCHING_LIST", "Failed to fetch list")
 	ErrInternalServerFailedCreateList         = NewHTTPError(http.StatusInternalServerError, "ERROR_CREATING_LIST", "Failed to create list")
 	ErrInternalServerFailedUpdateListName     = NewHTTPError(http.StatusInternalServerError, "FAILED_TO_UPDATE_LIST_NAME", "Failed to update list name")
+	ErrInternalServerFailedFetchAllLists      = NewHTTPError(http.StatusInternalServerError, "ERROR_FETCHING_ALL_USER_LISTS", "Failed to fetch all lists from user")
 )

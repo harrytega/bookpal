@@ -38,6 +38,7 @@ func AttachAllRoutes(s *api.Server) {
 		lists.DeleteBookFromListRoute(s),
 		lists.DeleteListRoute(s),
 		lists.GetAllBooksFromListRoute(s),
+		lists.GetAllUserListsRoute(s),
 		lists.GetListByIDRoute(s),
 		lists.PostAddBookToListRoute(s),
 		lists.PostCreateListRoute(s),

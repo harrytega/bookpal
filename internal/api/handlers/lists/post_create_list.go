@@ -9,7 +9,6 @@ import (
 	"test-project/internal/types"
 	"test-project/internal/util"
 
-	"github.com/go-openapi/strfmt"
 	"github.com/labstack/echo/v4"
 )
 
@@ -32,7 +31,7 @@ func (h *Handler) CreateList() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
 		userID := auth.UserFromContext(ctx).ID
-		var body types.List
+		var body types.ListRequest
 		if err := util.BindAndValidateBody(c, &body); err != nil {
 			return err
 		}
@@ -42,10 +41,8 @@ func (h *Handler) CreateList() echo.HandlerFunc {
 			return httperrors.ErrInternalServerFailedCreateList
 		}
 
-		response := &types.List{
-			ListID: (*strfmt.UUID)(&res.ListID),
-			Name:   &res.Name,
-			UserID: (*strfmt.UUID)(&res.UserID),
+		response := &types.ListRequest{
+			Name: &res.Name,
 		}
 		return util.ValidateAndReturn(c, http.StatusCreated, response)
 	}

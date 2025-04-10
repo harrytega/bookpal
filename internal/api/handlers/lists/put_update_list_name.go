@@ -24,7 +24,7 @@ func (h *Handler) UpdateListName() echo.HandlerFunc {
 		if listID == "" {
 			return httperrors.ErrBadRequestMissingListID
 		}
-		var body types.List
+		var body types.ListRequest
 		if err := util.BindAndValidateBody(c, &body); err != nil {
 			return err
 		}

@@ -5,8 +5,6 @@ import (
 	"test-project/internal/api"
 	"test-project/internal/api/auth"
 	"test-project/internal/api/httperrors"
-	"test-project/internal/types"
-	"test-project/internal/util"
 
 	"github.com/labstack/echo/v4"
 )
@@ -27,10 +25,6 @@ func (h *Handler) RemoveBookFromList() echo.HandlerFunc {
 		bookID := c.Param("book_id")
 		if bookID == "" {
 			return httperrors.ErrBadRequestMissingBookID
-		}
-		var body types.List
-		if err := util.BindAndValidateBody(c, &body); err != nil {
-			return err
 		}
 
 		if err := h.service.RemoveBookFromList(ctx, listID, user.ID, bookID); err != nil {

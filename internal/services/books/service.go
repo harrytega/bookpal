@@ -28,7 +28,10 @@ func NewService(db *sql.DB, googleBooksService *googlebooks.Service) *Service {
 }
 
 func (s *Service) GetBookByID(ctx context.Context, bookID string) (*models.Book, error) {
-	logger := log.Ctx(ctx).With().Str("bookID", bookID).Logger()
+	logger := log.Ctx(ctx).With().
+		Str("bookID", bookID).
+		Logger()
+
 	book, err := models.FindBook(ctx, s.db, bookID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -40,9 +43,7 @@ func (s *Service) GetBookByID(ctx context.Context, bookID string) (*models.Book,
 	}
 
 	logger.Info().
-		Str("bookID", bookID).
 		Msg("book succesfully fetched")
-
 	return book, nil
 }
 
