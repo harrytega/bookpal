@@ -1,0 +1,104 @@
+(*httptest.ResponseRecorder)({
+  Code: (int) 200,
+  HeaderMap: (http.Header) (len=6) {
+    (string) (len=12) "Content-Type": ([]string) (len=1) {
+      (string) (len=16) "application/json"
+    },
+    (string) (len=4) "Vary": ([]string) (len=1) {
+      (string) (len=6) "Origin"
+    },
+    (string) (len=22) "X-Content-Type-Options": ([]string) (len=1) {
+      (string) (len=7) "nosniff"
+    },
+    (string) (len=15) "X-Frame-Options": ([]string) (len=1) {
+      (string) (len=10) "SAMEORIGIN"
+    },
+    (string) (len=12) "X-Request-Id": ([]string) (len=1) {
+      (string) (len=32) "FOdXKfdnHXuncFbkRvoZPSIyNRuvnNav"
+    },
+    (string) (len=16) "X-Xss-Protection": ([]string) (len=1) {
+      (string) (len=13) "1; mode=block"
+    }
+  },
+  Body: (*bytes.Buffer)({"author":"Testo","book_description":"This is a description","book_id":"f56eb34c-0ceb-401a-9f9d-c55402b2b3b9","genre":"Romance","pages":126,"publisher":"TestReleases","rating":3,"title":"Test Title","user_notes":"Valid test"}
+),
+  Flushed: (bool) false,
+  result: (*http.Response)({
+    Status: (string) (len=6) "200 OK",
+    StatusCode: (int) 200,
+    Proto: (string) (len=8) "HTTP/1.1",
+    ProtoMajor: (int) 1,
+    ProtoMinor: (int) 1,
+    Header: (http.Header) (len=6) {
+      (string) (len=12) "Content-Type": ([]string) (len=1) {
+        (string) (len=16) "application/json"
+      },
+      (string) (len=4) "Vary": ([]string) (len=1) {
+        (string) (len=6) "Origin"
+      },
+      (string) (len=22) "X-Content-Type-Options": ([]string) (len=1) {
+        (string) (len=7) "nosniff"
+      },
+      (string) (len=15) "X-Frame-Options": ([]string) (len=1) {
+        (string) (len=10) "SAMEORIGIN"
+      },
+      (string) (len=12) "X-Request-Id": ([]string) (len=1) {
+        (string) (len=32) "FOdXKfdnHXuncFbkRvoZPSIyNRuvnNav"
+      },
+      (string) (len=16) "X-Xss-Protection": ([]string) (len=1) {
+        (string) (len=13) "1; mode=block"
+      }
+    },
+    Body: (io.nopCloserWriterTo) {
+      Reader: (*bytes.Reader)({
+        s: ([]uint8) (len=226) {
+          00000000  7b 22 61 75 74 68 6f 72  22 3a 22 54 65 73 74 6f  |{"author":"Testo|
+          00000010  22 2c 22 62 6f 6f 6b 5f  64 65 73 63 72 69 70 74  |","book_descript|
+          00000020  69 6f 6e 22 3a 22 54 68  69 73 20 69 73 20 61 20  |ion":"This is a |
+          00000030  64 65 73 63 72 69 70 74  69 6f 6e 22 2c 22 62 6f  |description","bo|
+          00000040  6f 6b 5f 69 64 22 3a 22  66 35 36 65 62 33 34 63  |ok_id":"f56eb34c|
+          00000050  2d 30 63 65 62 2d 34 30  31 61 2d 39 66 39 64 2d  |-0ceb-401a-9f9d-|
+          00000060  63 35 35 34 30 32 62 32  62 33 62 39 22 2c 22 67  |c55402b2b3b9","g|
+          00000070  65 6e 72 65 22 3a 22 52  6f 6d 61 6e 63 65 22 2c  |enre":"Romance",|
+          00000080  22 70 61 67 65 73 22 3a  31 32 36 2c 22 70 75 62  |"pages":126,"pub|
+          00000090  6c 69 73 68 65 72 22 3a  22 54 65 73 74 52 65 6c  |lisher":"TestRel|
+          000000a0  65 61 73 65 73 22 2c 22  72 61 74 69 6e 67 22 3a  |eases","rating":|
+          000000b0  33 2c 22 74 69 74 6c 65  22 3a 22 54 65 73 74 20  |3,"title":"Test |
+          000000c0  54 69 74 6c 65 22 2c 22  75 73 65 72 5f 6e 6f 74  |Title","user_not|
+          000000d0  65 73 22 3a 22 56 61 6c  69 64 20 74 65 73 74 22  |es":"Valid test"|
+          000000e0  7d 0a                                             |}.|
+        },
+        i: (int64) 0,
+        prevRune: (int) -1
+      })
+    },
+    ContentLength: (int64) -1,
+    TransferEncoding: ([]string) <nil>,
+    Close: (bool) false,
+    Uncompressed: (bool) false,
+    Trailer: (http.Header) <nil>,
+    Request: (*http.Request)(<nil>),
+    TLS: (*tls.ConnectionState)(<nil>)
+  }),
+  snapHeader: (http.Header) (len=6) {
+    (string) (len=12) "Content-Type": ([]string) (len=1) {
+      (string) (len=16) "application/json"
+    },
+    (string) (len=4) "Vary": ([]string) (len=1) {
+      (string) (len=6) "Origin"
+    },
+    (string) (len=22) "X-Content-Type-Options": ([]string) (len=1) {
+      (string) (len=7) "nosniff"
+    },
+    (string) (len=15) "X-Frame-Options": ([]string) (len=1) {
+      (string) (len=10) "SAMEORIGIN"
+    },
+    (string) (len=12) "X-Request-Id": ([]string) (len=1) {
+      (string) (len=32) "FOdXKfdnHXuncFbkRvoZPSIyNRuvnNav"
+    },
+    (string) (len=16) "X-Xss-Protection": ([]string) (len=1) {
+      (string) (len=13) "1; mode=block"
+    }
+  },
+  wroteHeader: (bool) true
+})

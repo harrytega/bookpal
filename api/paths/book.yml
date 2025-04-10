@@ -12,13 +12,15 @@ paths:
       
       summary: Creates a book.
       operationId: createBook
+      tags:
+        - books
       parameters:
         - name: body
           in: body
           description: book to create
           required: true
           schema:
-            $ref: '../definitions/book.yml#/definitions/BookInMyDb'
+            $ref: '../definitions/book.yml#/definitions/CreateBookRequest'
       responses:
         201:
           description: Added book to database
@@ -31,6 +33,8 @@ paths:
       
       summary: Fetches all the books from the user.
       operationId: getUserBooks
+      tags:
+        - books
       responses:
         200:
           description: GetUserBooksResponse
@@ -49,6 +53,8 @@ paths:
       summary: Searches for books from the user.
       description: Searches for books from the user. You can search by title, author or publisher.
       operationId: searchBooks
+      tags:
+        - books
       parameters: 
         - name: query
           in: query
@@ -84,6 +90,8 @@ paths:
       summary: Gets additional details about a book.
       description: Gets additional details about a book. (title, author, publisher, description, pages, genre)
       operationId: getBookDetails
+      tags:
+        - books
       parameters:
         - name: book_id
           in: path
@@ -109,6 +117,8 @@ paths:
       summary: Adds or edits a rating and eventually some notes to the book.
       description: Adds or edits a rating and eventually some notes to the book. A book can be rated 1-5 stars.
       operationId: addBookRating
+      tags:
+        - books
       parameters:
         - name: book_id
           in: path
@@ -121,7 +131,7 @@ paths:
           description: Book with rating/notes.
           required: true
           schema: 
-            $ref: '../definitions/book.yml#/definitions/BookInMyDb'
+            $ref: '../definitions/book.yml#/definitions/UpdateRatingNotesRequest'
       responses:
         200:
           description: Successful operation

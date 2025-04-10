@@ -74,8 +74,40 @@ func TestAddBookToList(t *testing.T) {
 		userID := test.Fixtures().User1.ID
 		bookID := test.Fixtures().Book1.BookID
 
-		err := s.Lists.AddBookToList(ctx, listID, userID, bookID)
+		initialList, err := s.Lists.GetListByID(ctx, listID, userID)
 		require.NoError(t, err)
+
+		isInitiallyInList := false
+		if initialList.R != nil && initialList.R.Books != nil {
+			for _, book := range initialList.R.Books {
+				if book.BookID == bookID {
+					isInitiallyInList = true
+					break
+				}
+			}
+		}
+
+		if isInitiallyInList {
+			err := s.Lists.RemoveBookFromList(ctx, listID, userID, bookID)
+			require.NoError(t, err)
+		}
+
+		err = s.Lists.AddBookToList(ctx, listID, userID, bookID)
+		require.NoError(t, err)
+
+		updatedList, err := s.Lists.GetListByID(ctx, listID, userID)
+		require.NoError(t, err)
+
+		require.NotNil(t, updatedList.R)
+		require.NotNil(t, updatedList.R.Books)
+
+		bookFound := false
+		for _, book := range updatedList.R.Books {
+			if book.BookID == bookID {
+				bookFound = true
+			}
+		}
+		assert.True(t, bookFound)
 	})
 }
 

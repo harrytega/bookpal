@@ -12,7 +12,6 @@ import (
 func TestCreateList(t *testing.T) {
 	test.WithTestServer(t, func(s *api.Server) {
 		payload := test.GenericPayload{
-			"list_ID": "b9238b91-97e2-4837-97c5-a560761ffa81",
 			"name":    "uhhhh",
 			"user_ID": test.Fixtures().User1.ID,
 		}

@@ -1,6 +1,8 @@
 package books
 
 import (
+	"database/sql"
+	"errors"
 	"math"
 	"net/http"
 	"strings"
@@ -27,8 +29,9 @@ func (h *Handler) GetBookByID() echo.HandlerFunc {
 		}
 
 		res, err := h.service.GetBookByID(ctx, bookID)
+
 		if err != nil {
-			if strings.Contains(err.Error(), "not found") {
+			if errors.Is(err, sql.ErrNoRows) || strings.Contains(err.Error(), "not found") {
 				return httperrors.ErrNotFoundBookNotFound
 			}
 			return httperrors.ErrInternalServerFailedFetchBookDetails

@@ -21,3 +21,25 @@ definitions:
       - list_id
       - name
       - user_id
+
+  GetAllListsResponse:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/List'
+        description: lists of all lists of user
+    required:
+      - data
+
+
+  ListRequest:
+    type: object
+    properties:
+      name:
+        type: string
+        example: Favorites
+    required:
+      - name
+

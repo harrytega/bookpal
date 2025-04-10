@@ -284,6 +284,8 @@ paths:
     get:
       security:
       - Bearer: []
+      tags:
+      - books
       summary: Fetches all the books from the user.
       operationId: getUserBooks
       responses:
@@ -296,6 +298,8 @@ paths:
     post:
       security:
       - Bearer: []
+      tags:
+      - books
       summary: Creates a book.
       operationId: createBook
       parameters:
@@ -304,7 +308,7 @@ paths:
         in: body
         required: true
         schema:
-          $ref: '#/definitions/bookInMyDb'
+          $ref: '#/definitions/createBookRequest'
       responses:
         "201":
           description: Added book to database
@@ -316,6 +320,8 @@ paths:
       - Bearer: []
       description: Searches for books from the user. You can search by title, author
         or publisher.
+      tags:
+      - books
       summary: Searches for books from the user.
       operationId: searchBooks
       parameters:
@@ -348,6 +354,8 @@ paths:
       - Bearer: []
       description: Gets additional details about a book. (title, author, publisher,
         description, pages, genre)
+      tags:
+      - books
       summary: Gets additional details about a book.
       operationId: getBookDetails
       parameters:
@@ -371,6 +379,8 @@ paths:
       - Bearer: []
       description: Adds or edits a rating and eventually some notes to the book. A
         book can be rated 1-5 stars.
+      tags:
+      - books
       summary: Adds or edits a rating and eventually some notes to the book.
       operationId: addBookRating
       parameters:
@@ -385,7 +395,7 @@ paths:
         in: body
         required: true
         schema:
-          $ref: '#/definitions/bookInMyDb'
+          $ref: '#/definitions/updateRatingNotesRequest'
       responses:
         "200":
           description: Successful operation
@@ -401,6 +411,8 @@ paths:
       - Bearer: []
       description: Searches for books from the Google Books API. You can search by
         title, author or publisher.
+      tags:
+      - google books
       summary: Searches for books from the Google Books API.
       operationId: searchGoogleBooks
       parameters:
@@ -433,6 +445,8 @@ paths:
       - Bearer: []
       description: Gets additional details about a book. (title, author, publisher,
         description, pages, genre)
+      tags:
+      - google books
       summary: Gets additional details about a book.
       operationId: getGoogleBookDetails
       parameters:
@@ -451,10 +465,24 @@ paths:
         "404":
           description: Book not found
   /api/v1/lists:
+    get:
+      security:
+      - Bearer: []
+      tags:
+      - lists
+      summary: Fetches all lists from the user.
+      operationId: getAllLists
+      responses:
+        "200":
+          description: Successful operation.
+          schema:
+            $ref: '#/definitions/getAllListsResponse'
     post:
       security:
       - Bearer: []
       description: Creates a new book list with a name.
+      tags:
+      - lists
       summary: Creates a new book list.
       operationId: createList
       parameters:
@@ -463,7 +491,7 @@ paths:
         in: body
         required: true
         schema:
-          $ref: '#/definitions/list'
+          $ref: '#/definitions/listRequest'
       responses:
         "201":
           description: List has been created.
@@ -474,6 +502,8 @@ paths:
       security:
       - Bearer: []
       description: Returns a list from its list_id.
+      tags:
+      - lists
       summary: Returns a list.
       operationId: getList
       parameters:
@@ -495,6 +525,8 @@ paths:
     put:
       security:
       - Bearer: []
+      tags:
+      - lists
       summary: Changes the name of a list.
       operationId: changeListName
       parameters:
@@ -509,7 +541,7 @@ paths:
         in: body
         required: true
         schema:
-          $ref: '#/definitions/list'
+          $ref: '#/definitions/listRequest'
       responses:
         "200":
           description: Successful operation.
@@ -520,6 +552,8 @@ paths:
     delete:
       security:
       - Bearer: []
+      tags:
+      - lists
       summary: Deletes a list.
       operationId: deleteList
       parameters:
@@ -538,6 +572,8 @@ paths:
     get:
       security:
       - Bearer: []
+      tags:
+      - lists
       summary: Returns all the books from the list
       operationId: getAllBooksFromList
       parameters:
@@ -568,6 +604,8 @@ paths:
     post:
       security:
       - Bearer: []
+      tags:
+      - lists
       summary: Saves a book to an existing list.
       operationId: saveBookToList
       parameters:
@@ -594,6 +632,8 @@ paths:
     delete:
       security:
       - Bearer: []
+      tags:
+      - lists
       summary: Deletes a specific book from the list.
       operationId: deleteBookFromList
       parameters:
@@ -709,6 +749,47 @@ definitions:
       user_notes:
         type: string
         example: Amazing Character Development from the main character.
+  createBookRequest:
+    type: object
+    required:
+    - google_book_ID
+    - title
+    - author
+    properties:
+      author:
+        type: string
+        example: J. K. Rowling
+      book_description:
+        type: string
+        example: Dark times have come to Hogwarts. After the Dementors' attack on
+          his cousin Dudley, Harry Potter knows that Voldemort will stop at nothing
+          to find him. ...
+      genre:
+        type: string
+        example: Novel, Fantasy Fiction, Young adult literature
+      google_book_ID:
+        type: string
+        example: P3LFEAAAQBAJ
+      pages:
+        type: integer
+        format: int32
+        example: 409
+      publisher:
+        type: string
+        example: Bloomsbury
+      title:
+        type: string
+        example: Harry Potter
+  getAllListsResponse:
+    type: object
+    required:
+    - data
+    properties:
+      data:
+        description: lists of all lists of user
+        type: array
+        items:
+          $ref: '#/definitions/list'
   getGoogleBooksResponse:
     type: object
     required:
@@ -767,7 +848,7 @@ definitions:
   googleBook:
     type: object
     required:
-    - googleID
+    - google_book_ID
     - title
     - author
     properties:
@@ -782,7 +863,7 @@ definitions:
       genre:
         type: string
         example: Novel, Fantasy Fiction, Young adult literature
-      googleID:
+      google_book_ID:
         type: string
         example: P3LFEAAAQBAJ
       pages:
@@ -841,6 +922,14 @@ definitions:
         type: string
         format: uuid
         example: d6764ee3-bf09-40c3-97c5-8f78b7de7ec3
+  listRequest:
+    type: object
+    required:
+    - name
+    properties:
+      name:
+        type: string
+        example: Favorites
   nullableBool:
     type: boolean
     x-go-type:
@@ -1247,6 +1336,17 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/httpValidationErrorDetail'
+  updateRatingNotesRequest:
+    type: object
+    properties:
+      rating:
+        description: Ratings are from 1 - 5.
+        type: integer
+        format: int32
+        example: 3
+      user_notes:
+        type: string
+        example: Amazing
 responses:
   AuthForbiddenResponse:
     description: PublicHTTPError, type `USER_DEACTIVATED`/`NOT_LOCAL_USER`

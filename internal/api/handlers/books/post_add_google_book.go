@@ -19,13 +19,13 @@ func PostAddGoogleBookRoute(s *api.Server) *echo.Route {
 func (h *Handler) AddGoogleBook() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
-		var body types.GoogleBook
+		var body types.CreateBookRequest
 		if err := util.BindAndValidateBody(c, &body); err != nil {
 			return err
 		}
 
 		userID := auth.UserFromContext(ctx).ID
-		err := h.service.AddGoogleBook(ctx, *body.GoogleID, userID)
+		err := h.service.AddGoogleBook(ctx, *body.GoogleBookID, userID)
 
 		if err != nil {
 			return httperrors.ErrInternalServerFailedAddGoogleBook

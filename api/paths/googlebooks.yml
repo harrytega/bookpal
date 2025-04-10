@@ -13,6 +13,8 @@ paths:
       summary: Searches for books from the Google Books API.
       description: Searches for books from the Google Books API. You can search by title, author or publisher.
       operationId: searchGoogleBooks
+      tags:
+        - google books
       parameters: 
         - name: query
           in: query
@@ -50,6 +52,8 @@ paths:
       summary: Gets additional details about a book.
       description: Gets additional details about a book. (title, author, publisher, description, pages, genre)
       operationId: getGoogleBookDetails
+      tags:
+        - google books
       parameters:
         - name: google_book_id
           in: path
