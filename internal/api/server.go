@@ -8,37 +8,47 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/dropbox/godropbox/time2"
-	"github.com/labstack/echo/v4"
-	"github.com/rs/zerolog/log"
 	"test-project/internal/config"
 	"test-project/internal/i18n"
 	"test-project/internal/mailer"
 	"test-project/internal/mailer/transport"
 	"test-project/internal/push"
 	"test-project/internal/push/provider"
+	"test-project/internal/services/books"
+	"test-project/internal/services/googlebooks"
+	"test-project/internal/services/lists"
+
+	"github.com/dropbox/godropbox/time2"
+	"github.com/labstack/echo/v4"
+	"github.com/rs/zerolog/log"
 
 	// Import postgres driver for database/sql package
 	_ "github.com/lib/pq"
 )
 
 type Router struct {
-	Routes     []*echo.Route
-	Root       *echo.Group
-	Management *echo.Group
-	APIV1Auth  *echo.Group
-	APIV1Push  *echo.Group
+	Routes      []*echo.Route
+	Root        *echo.Group
+	Management  *echo.Group
+	APIV1Auth   *echo.Group
+	APIV1Push   *echo.Group
+	APIV1Google *echo.Group
+	APIV1Book   *echo.Group
+	APIV1Lists  *echo.Group
 }
 
 type Server struct {
-	Config config.Server
-	DB     *sql.DB
-	Echo   *echo.Echo
-	Router *Router
-	Mailer *mailer.Mailer
-	Push   *push.Service
-	I18n   *i18n.Service
-	Clock  time2.Clock
+	Config      config.Server
+	DB          *sql.DB
+	Echo        *echo.Echo
+	Router      *Router
+	Mailer      *mailer.Mailer
+	Push        *push.Service
+	I18n        *i18n.Service
+	Clock       time2.Clock
+	GoogleBooks *googlebooks.Service
+	Books       *books.Service
+	Lists       *lists.Service
 }
 
 func NewServer(config config.Server) *Server {
@@ -88,6 +98,17 @@ func (s *Server) InitCmd() *Server {
 		log.Fatal().Err(err).Msg("Failed to initialize i18n service")
 	}
 
+	if err := s.InitGoogleBooks(); err != nil {
+		log.Fatal().Err(err).Msg("Failed to initialize google books service")
+	}
+
+	if err := s.InitBooks(); err != nil {
+		log.Fatal().Err(err).Msg("Failed to initialize books service")
+	}
+
+	if err := s.InitLists(); err != nil {
+		log.Fatal().Err(err).Msg("Failed to initialize lists service")
+	}
 	return s
 }
 
@@ -133,6 +154,23 @@ func (s *Server) InitMailer() error {
 	}
 
 	return s.Mailer.ParseTemplates()
+}
+
+func (s *Server) InitGoogleBooks() error {
+	s.GoogleBooks = googlebooks.NewService(s.Config.Google)
+
+	return nil
+}
+
+func (s *Server) InitBooks() error {
+	s.Books = books.NewService(s.DB, s.GoogleBooks)
+
+	return nil
+}
+
+func (s *Server) InitLists() error {
+	s.Lists = lists.NewService(s.DB)
+	return nil
 }
 
 func (s *Server) InitPush() error {

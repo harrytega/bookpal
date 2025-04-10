@@ -14,7 +14,6 @@ import (
 	"time"
 
 	"github.com/friendsofgo/errors"
-	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 	"github.com/volatiletech/sqlboiler/v4/queries"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
@@ -24,9 +23,9 @@ import (
 
 // List is an object representing the database table.
 type List struct {
-	ListID string      `boil:"list_id" json:"list_id" toml:"list_id" yaml:"list_id"`
-	Name   null.String `boil:"name" json:"name,omitempty" toml:"name" yaml:"name,omitempty"`
-	UserID string      `boil:"user_id" json:"user_id" toml:"user_id" yaml:"user_id"`
+	ListID string `boil:"list_id" json:"list_id" toml:"list_id" yaml:"list_id"`
+	Name   string `boil:"name" json:"name" toml:"name" yaml:"name"`
+	UserID string `boil:"user_id" json:"user_id" toml:"user_id" yaml:"user_id"`
 
 	R *listR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L listL  `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -56,11 +55,11 @@ var ListTableColumns = struct {
 
 var ListWhere = struct {
 	ListID whereHelperstring
-	Name   whereHelpernull_String
+	Name   whereHelperstring
 	UserID whereHelperstring
 }{
 	ListID: whereHelperstring{field: "\"lists\".\"list_id\""},
-	Name:   whereHelpernull_String{field: "\"lists\".\"name\""},
+	Name:   whereHelperstring{field: "\"lists\".\"name\""},
 	UserID: whereHelperstring{field: "\"lists\".\"user_id\""},
 }
 
@@ -103,8 +102,8 @@ type listL struct{}
 
 var (
 	listAllColumns            = []string{"list_id", "name", "user_id"}
-	listColumnsWithoutDefault = []string{"user_id"}
-	listColumnsWithDefault    = []string{"list_id", "name"}
+	listColumnsWithoutDefault = []string{"name", "user_id"}
+	listColumnsWithDefault    = []string{"list_id"}
 	listPrimaryKeyColumns     = []string{"list_id"}
 	listGeneratedColumns      = []string{}
 )

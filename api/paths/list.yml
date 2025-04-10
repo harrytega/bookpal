@@ -6,27 +6,53 @@ info:
 paths:
     /api/v1/lists:
       post:
+        security:
+        - Bearer: []
+      
         summary: Creates a new book list.
         description: Creates a new book list with a name.
         operationId: createList
+        tags:
+          - lists
         parameters:
           - name: newList
             in: body
             description: Creates a new book list with a name.
             required: true
             schema:
-              $ref: '../definitions/list.yml#/definitions/List'
+              $ref: '../definitions/list.yml#/definitions/ListRequest'
         responses:
           201: 
             description: List has been created.
           400:
             description: Invalid input
+      
+      get:
+        security:
+          - Bearer: []
+
+        summary: Fetches all lists from the user.
+        operationId: getAllLists
+        tags:
+          - lists
+        responses:
+          200:
+            description: Successful operation.
+            schema:
+              $ref: '../definitions/list.yml#/definitions/GetAllListsResponse'
+
+        
 
     /api/v1/lists/{list_id}:
       get:
+        security:
+        - Bearer: []
+      
         summary: Returns a list.
         description: Returns a list from its list_id.
         operationId: getList
+        tags:
+          - lists
         parameters:
           - name: list_id
             in: path
@@ -45,8 +71,14 @@ paths:
             description: List not found.
 
       put:
+
+        security:
+        - Bearer: []
+      
         summary: Changes the name of a list.
         operationId: changeListName
+        tags:
+          - lists
         parameters:
           - name: list_id
             in: path
@@ -59,7 +91,7 @@ paths:
             description: updated List with a new name.
             required: true
             schema:
-              $ref: '../definitions/list.yml#/definitions/List'
+              $ref: '../definitions/list.yml#/definitions/ListRequest'
         responses:
           200:
             description: Successful operation.
@@ -69,8 +101,13 @@ paths:
             description: Invalid list ID.
 
       delete:
+        security:
+        - Bearer: []
+      
         summary: Deletes a list.
         operationId: deleteList
+        tags:
+          - lists
         parameters:
           - name: list_id
             in: path
@@ -86,8 +123,13 @@ paths:
 
     /api/v1/lists/{list_id}/books:
       get:
+        security:
+        - Bearer: []
+      
         summary: Returns all the books from the list
         operationId: getAllBooksFromList
+        tags:
+          - lists
         parameters:
           - name: list_id
             in: path
@@ -110,20 +152,20 @@ paths:
             maximum: 30
         responses:
           200:
-            description: "Succesful Operation"
+            description: GetUserBooksResponse
             schema:
-              allOf:
-                - type: array
-                  items: 
-                    $ref: '../definitions/book.yml#/definitions/Book'
-                - type: object
-                  properties: 
-                    pagination:
-                      $ref: '../definitions/pagination.yml#/definitions/Pagination'
+              $ref: '../definitions/book.yml#/definitions/GetUserBooksResponse'
+          400:
+            description: Invalid list id
               
       post:
+        security:
+        - Bearer: []
+      
         summary: Saves a book to an existing list.
         operationId: saveBookToList
+        tags:
+          - lists
         parameters:
           - name: list_id
             in: path
@@ -136,7 +178,7 @@ paths:
             description: Book to add to the list.
             required: true
             schema:
-              $ref: '../definitions/book.yml#/definitions/Book'
+              $ref: '../definitions/book.yml#/definitions/BookInMyDb'
         responses:
           201:
             description: Book succesfully added to list.
@@ -146,35 +188,14 @@ paths:
             description: List not found.
     
     /api/v1/lists/{list_id}/{book_id}:
-      get:
-        summary: Returns a book from a list.
-        operationId: getBookFromList
-        parameters:
-          - name: list_id
-            in: path
-            description: ID for the List that is searched on.
-            required: true
-            type: string
-            format: uuid
-          - name: book_id
-            in: path
-            description: ID for the book that is searched for.
-            required: true
-            type: string
-            format: uuid
-        responses:
-          200:
-            description: Found book.
-            schema: 
-              $ref: '../definitions/book.yml#/definitions/Book'
-          400:
-            description: Invalid IDs
-          404:
-            description: Book or list couldn't be found.
-      
       delete:
+        security:
+        - Bearer: []
+      
         summary: Deletes a specific book from the list.
         operationId: deleteBookFromList
+        tags:
+          - lists
         parameters:
           - name: list_id
             in: path
@@ -194,15 +215,6 @@ paths:
           400:
             description: Invalid list or book ID.
 
-    /api/v1/lists/rated:
-      get:
-        summary: Returns all rated books.
-        operationId: getAllRatedBooks
-        responses:
-          200:
-            description: Successful operation.
-            schema:
-              $ref: '../definitions/list.yml#/definitions/List'
 
 
 

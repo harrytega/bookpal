@@ -6,10 +6,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/dropbox/godropbox/time2"
 	"test-project/internal/api"
 	"test-project/internal/api/router"
 	"test-project/internal/config"
+
+	"github.com/dropbox/godropbox/time2"
 )
 
 // WithTestServer returns a fully configured server (using the default server config).
@@ -83,6 +84,18 @@ func execClosureNewTestServer(ctx context.Context, t *testing.T, config config.S
 
 	if err := s.InitI18n(); err != nil {
 		t.Fatalf("Failed to init i18n service: %v", err)
+	}
+
+	if err := s.InitGoogleBooks(); err != nil {
+		t.Fatalf("Failed to init google books service: %v", err)
+	}
+
+	if err := s.InitBooks(); err != nil {
+		t.Fatalf("Failed to init books service: %v", err)
+	}
+
+	if err := s.InitLists(); err != nil {
+		t.Fatalf("Failed to init lists service %v", err)
 	}
 
 	router.Init(s)

@@ -7,26 +7,54 @@ paths:
 
   /api/v1/books:
     post:
+      security:
+        - Bearer: []
+      
       summary: Creates a book.
       operationId: createBook
+      tags:
+        - books
       parameters:
         - name: body
           in: body
           description: book to create
           required: true
           schema:
-            $ref: '../definitions/book.yml#/definitions/BookInMyDb'
+            $ref: '../definitions/book.yml#/definitions/CreateBookRequest'
       responses:
         201:
           description: Added book to database
         400:
           description: Invalid input
+    
+    get:
+      security:
+        - Bearer: []
+      
+      summary: Fetches all the books from the user.
+      operationId: getUserBooks
+      tags:
+        - books
+      responses:
+        200:
+          description: GetUserBooksResponse
+          schema:
+            $ref: '../definitions/book.yml#/definitions/GetUserBooksResponse'
+        400:
+          description: Bad Request
+
 
   /api/v1/books/search:
     get:
-      summary: Searches for books using the Google Books API.
-      description: Searches for books using the Google Books API. You can search by title, author or publisher.
+
+      security:
+        - Bearer: []
+      
+      summary: Searches for books from the user.
+      description: Searches for books from the user. You can search by title, author or publisher.
       operationId: searchBooks
+      tags:
+        - books
       parameters: 
         - name: query
           in: query
@@ -48,24 +76,22 @@ paths:
           maximum: 30
       responses:
         200:
-          description: Successful operation
+          description: GetUserBooksResponse
           schema:
-            allOf:
-              - type: array
-                items: 
-                  $ref: '../definitions/book.yml#/definitions/Book'
-              - type: object
-                properties: 
-                  pagination:
-                    $ref: '../definitions/pagination.yml#/definitions/Pagination'
+            $ref: '../definitions/book.yml#/definitions/GetUserBooksResponse'
         400:
           description: Invalid status value
 
   /api/v1/books/{book_id}:
     get:
+      security:
+        - Bearer: []
+      
       summary: Gets additional details about a book.
       description: Gets additional details about a book. (title, author, publisher, description, pages, genre)
       operationId: getBookDetails
+      tags:
+        - books
       parameters:
         - name: book_id
           in: path
@@ -77,7 +103,7 @@ paths:
        200:
         description: Successful operation
         schema:
-          $ref: '../definitions/book.yml#/definitions/Book'
+          $ref: '../definitions/book.yml#/definitions/BookInMyDb'
        400: 
         description: Invalid ID supplied
        404:
@@ -85,9 +111,14 @@ paths:
 
 
     put:
+      security:
+        - Bearer: []
+      
       summary: Adds or edits a rating and eventually some notes to the book.
       description: Adds or edits a rating and eventually some notes to the book. A book can be rated 1-5 stars.
       operationId: addBookRating
+      tags:
+        - books
       parameters:
         - name: book_id
           in: path
@@ -100,13 +131,38 @@ paths:
           description: Book with rating/notes.
           required: true
           schema: 
-            $ref: '../definitions/book.yml#/definitions/Book'
+            $ref: '../definitions/book.yml#/definitions/UpdateRatingNotesRequest'
       responses:
         200:
           description: Successful operation
           schema:
-            $ref: '../definitions/book.yml#/definitions/Book'
+            $ref: '../definitions/book.yml#/definitions/BookInMyDb'
         400:
           description: Invalid ID supplied
         404:
           description: Book not found 
+
+
+    delete:
+      security:
+        - Bearer: []
+      
+      summary: deletes a book from user
+      description: deletes a book from user by book ID
+      operationId: deleteUserBook
+      tags:
+        - books
+      parameters:
+        - name: book_id
+          in: path
+          description: ID of book to delete
+          required: true
+          type: string
+          format: uuid
+      responses:
+        204:
+          description: Book has been deleted
+        400:
+          description: Invalid ID supplied
+        404:
+          description: Book not found

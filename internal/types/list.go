@@ -21,7 +21,7 @@ import (
 type List struct {
 
 	// books
-	Books []*ListBooksItems `json:"books"`
+	Books []*BookInMyDb `json:"books"`
 
 	// list id
 	// Example: d6764ee3-bf09-40c3-97c5-8f78b7de7ec3

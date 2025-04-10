@@ -5,12 +5,13 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/labstack/echo/v4"
-	echoMiddleware "github.com/labstack/echo/v4/middleware"
-	"github.com/rs/zerolog/log"
 	"test-project/internal/api"
 	"test-project/internal/api/handlers"
 	"test-project/internal/api/middleware"
+
+	"github.com/labstack/echo/v4"
+	echoMiddleware "github.com/labstack/echo/v4/middleware"
+	"github.com/rs/zerolog/log"
 
 	// #nosec G108 - pprof handlers (conditionally made available via http.DefaultServeMux)
 	"net/http/pprof"
@@ -190,6 +191,18 @@ func Init(s *api.Server) {
 
 		// Your other endpoints, typically secured by bearer auth, available at /api/v1/**
 		APIV1Push: s.Echo.Group("/api/v1/push", middleware.Auth(s)),
+		APIV1Google: s.Echo.Group("/api/v1/google", middleware.AuthWithConfig(middleware.AuthConfig{
+			S:    s,
+			Mode: middleware.AuthModeRequired,
+		})),
+		APIV1Book: s.Echo.Group("/api/v1/books", middleware.AuthWithConfig(middleware.AuthConfig{
+			S:    s,
+			Mode: middleware.AuthModeRequired,
+		})),
+		APIV1Lists: s.Echo.Group("/api/v1/lists", middleware.AuthWithConfig(middleware.AuthConfig{
+			S:    s,
+			Mode: middleware.AuthModeRequired,
+		})),
 	}
 
 	// ---
