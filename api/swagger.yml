@@ -405,6 +405,28 @@ paths:
           description: Invalid ID supplied
         "404":
           description: Book not found
+    delete:
+      security:
+      - Bearer: []
+      description: deletes a book from user by book ID
+      tags:
+      - books
+      summary: deletes a book from user
+      operationId: deleteUserBook
+      parameters:
+      - type: string
+        format: uuid
+        description: ID of book to delete
+        name: book_id
+        in: path
+        required: true
+      responses:
+        "204":
+          description: Book has been deleted
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Book not found
   /api/v1/google/search:
     get:
       security:
@@ -873,17 +895,9 @@ definitions:
       publisher:
         type: string
         example: Bloomsbury
-      rating:
-        description: Ratings are from 1 to 5.
-        type: integer
-        format: int32
-        example: 3
       title:
         type: string
         example: Harry Potter
-      user_notes:
-        type: string
-        example: Amazing Character Development from the main character.
   httpValidationErrorDetail:
     type: object
     required:

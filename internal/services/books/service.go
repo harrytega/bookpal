@@ -197,13 +197,30 @@ func (s *Service) AddGoogleBook(ctx context.Context, googleID, userID string) er
 	if err := db.WithTransaction(ctx, s.db, func(tx boil.ContextExecutor) error {
 
 		newBook := &models.Book{
-			Title:           googleBook.BookDetails.Title,
-			Author:          googleBook.BookDetails.Authors[0],
-			Publisher:       null.StringFromPtr(&googleBook.BookDetails.Publisher),
-			BookDescription: null.StringFrom(googleBook.BookDetails.Description),
-			Genre:           null.StringFromPtr(&googleBook.BookDetails.Genre[0]),
-			Pages:           null.IntFrom(googleBook.BookDetails.Pages),
-			UserID:          userID,
+			Title:  googleBook.BookDetails.Title,
+			UserID: userID,
+		}
+
+		if len(googleBook.BookDetails.Authors) > 0 {
+			newBook.Author = googleBook.BookDetails.Authors[0]
+		} else {
+			newBook.Author = "Unknown"
+		}
+
+		if googleBook.BookDetails.Publisher != "" {
+			newBook.Publisher = null.StringFrom(googleBook.BookDetails.Publisher)
+		}
+
+		if googleBook.BookDetails.Description != "" {
+			newBook.BookDescription = null.StringFrom(googleBook.BookDetails.Description)
+		}
+
+		if len(googleBook.BookDetails.Genre) > 0 {
+			newBook.Genre = null.StringFrom(googleBook.BookDetails.Genre[0])
+		}
+
+		if googleBook.BookDetails.Pages > 0 {
+			newBook.Pages = null.IntFrom(googleBook.BookDetails.Pages)
 		}
 
 		if err := newBook.Insert(ctx, tx, boil.Infer()); err != nil {

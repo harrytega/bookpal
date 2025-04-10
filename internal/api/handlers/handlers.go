@@ -23,6 +23,7 @@ func AttachAllRoutes(s *api.Server) {
 		auth.PostLogoutRoute(s),
 		auth.PostRefreshRoute(s),
 		auth.PostRegisterRoute(s),
+		books.DeleteBookRoute(s),
 		books.GetBookByIDRoute(s),
 		books.GetSearchUserBooksRoute(s),
 		books.GetUserBooksRoute(s),

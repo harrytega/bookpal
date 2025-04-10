@@ -17,6 +17,7 @@ var (
 	ErrInternalServerFailedFetchUserBooks   = NewHTTPError(http.StatusInternalServerError, "ERROR_FETCHING_USER_BOOKS", "Failed to fetch user books")
 	ErrInternalServerFailedAddGoogleBook    = NewHTTPError(http.StatusInternalServerError, "ERROR_ADDING_GOOGLE_BOOK", "Failed to add book")
 	ErrInternalServerFailedRatingNotes      = NewHTTPError(http.StatusInternalServerError, "ERROR_ADDING_RATING_NOTES", "Failed to add rating/notes")
+	ErrInternalServerFailedDeleteBook       = NewHTTPError(http.StatusInternalServerError, "ERROR_DELETING_USER_BOOK", "Failed to delete user book")
 
 	ErrBadRequestInvalidRating = NewHTTPError(http.StatusBadRequest, "INVALID_RATING", "Rating mus be between 1 - 5")
 )

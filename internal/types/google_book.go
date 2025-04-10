@@ -45,18 +45,10 @@ type GoogleBook struct {
 	// Example: Bloomsbury
 	Publisher string `json:"publisher,omitempty"`
 
-	// Ratings are from 1 to 5.
-	// Example: 3
-	Rating int32 `json:"rating,omitempty"`
-
 	// title
 	// Example: Harry Potter
 	// Required: true
 	Title *string `json:"title"`
-
-	// user notes
-	// Example: Amazing Character Development from the main character.
-	UserNotes string `json:"user_notes,omitempty"`
 }
 
 // Validate validates this google book
