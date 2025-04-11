@@ -43,7 +43,6 @@ paths:
         400:
           description: Bad Request
 
-
   /api/v1/books/search:
     get:
 
@@ -166,3 +165,19 @@ paths:
           description: Invalid ID supplied
         404:
           description: Book not found
+
+  /api/v1/books/rated:
+    get:
+      security:
+        - Bearer: []
+      summary: Gets all rated books
+      description: Gets all the rated books from the user
+      operationId: getTopRated
+      tags:
+        - books
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            $ref: '../definitions/book.yml#/definitions/GetUserBooksResponse'
+        

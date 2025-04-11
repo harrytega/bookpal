@@ -314,6 +314,20 @@ paths:
           description: Added book to database
         "400":
           description: Invalid input
+  /api/v1/books/rated:
+    get:
+      security:
+      - Bearer: []
+      description: Gets all the rated books from the user
+      tags:
+      - books
+      summary: Gets all rated books
+      operationId: getTopRated
+      responses:
+        "200":
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/getUserBooksResponse'
   /api/v1/books/search:
     get:
       security:

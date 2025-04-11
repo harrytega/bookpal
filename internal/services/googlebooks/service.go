@@ -15,12 +15,14 @@ import (
 )
 
 type Service struct {
-	apiKey string
+	apiKey  string
+	baseURL string
 }
 
 func NewService(config config.GoogleBooks) *Service {
 	return &Service{
-		apiKey: config.APIKey,
+		apiKey:  config.APIKey,
+		baseURL: config.BaseURL,
 	}
 }
 
@@ -31,7 +33,7 @@ func (s *Service) SearchBooks(ctx context.Context, query string, pageSize, page 
 		Int("page", page).
 		Logger()
 
-	baseURL := "https://www.googleapis.com/books/v1/volumes"
+	baseURL := s.baseURL
 
 	if s.apiKey == "" {
 		logger.Warn().Msg("Google Books API Key not configured.")
@@ -90,7 +92,7 @@ func (s *Service) SearchBooks(ctx context.Context, query string, pageSize, page 
 func (s *Service) GetBookByID(ctx context.Context, bookID string) (*dto.BookSummary, error) {
 	logger := log.Ctx(ctx).With().Str("book_id", bookID).Logger()
 
-	baseURL := "https://www.googleapis.com/books/v1/volumes"
+	baseURL := s.baseURL
 
 	if s.apiKey == "" {
 		logger.Warn().Msg("Google Books API Key not configured")

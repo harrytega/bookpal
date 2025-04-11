@@ -113,7 +113,8 @@ type Server struct {
 }
 
 type GoogleBooks struct {
-	APIKey string
+	APIKey  string
+	BaseURL string
 }
 
 // DefaultServiceConfigFromEnv returns the server config as parsed from environment variables
@@ -138,7 +139,8 @@ func DefaultServiceConfigFromEnv() Server {
 
 	return Server{
 		Google: GoogleBooks{
-			APIKey: util.GetEnv("GOOGLE_BOOKS_API_KEY", ""),
+			APIKey:  util.GetEnv("GOOGLE_BOOKS_API_KEY", ""),
+			BaseURL: util.GetEnv("BASE_URL", ""),
 		},
 		Database: Database{
 			Host:     util.GetEnv("PGHOST", "postgres"),

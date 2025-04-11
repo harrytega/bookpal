@@ -4,9 +4,9 @@
   "settings": {
     "width": 2000,
     "height": 2000,
-    "scrollTop": -346.7121,
-    "scrollLeft": -107.3648,
-    "zoomLevel": 0.75,
+    "scrollTop": -193.4229,
+    "scrollLeft": -84.2296,
+    "zoomLevel": 0.84,
     "show": 431,
     "database": 4,
     "databaseName": "Bookpal",
@@ -103,7 +103,7 @@
           "Rfvqk2aHX-2OodeeozKot"
         ],
         "ui": {
-          "x": 22,
+          "x": 13.6665,
           "y": 609,
           "zIndex": 21,
           "widthName": 60,
@@ -111,7 +111,7 @@
           "color": ""
         },
         "meta": {
-          "updateAt": 1741880218808,
+          "updateAt": 1744360303863,
           "createAt": 1741864121264
         }
       },
@@ -176,15 +176,15 @@
           "PRPb4sxGBxCG4Z5XIYEm_"
         ],
         "ui": {
-          "x": 590,
-          "y": 667,
+          "x": 682.1433,
+          "y": 619.762,
           "zIndex": 87,
           "widthName": 60,
           "widthComment": 60,
           "color": ""
         },
         "meta": {
-          "updateAt": 1742204865721,
+          "updateAt": 1744360288154,
           "createAt": 1741865613210
         }
       }
@@ -971,7 +971,7 @@
           "columnIds": [
             "Rfvqk2aHX-2OodeeozKot"
           ],
-          "x": 216,
+          "x": 207.66649999999998,
           "y": 609,
           "direction": 4
         },
@@ -999,8 +999,8 @@
           "columnIds": [
             "b7L967ETBrv3XM6hkT-A8"
           ],
-          "x": 772.5,
-          "y": 667,
+          "x": 864.6433,
+          "y": 619.762,
           "direction": 4
         },
         "meta": {
@@ -1018,7 +1018,7 @@
           "columnIds": [
             "CzOBBYiutjMGs8sHea8pD"
           ],
-          "x": 410,
+          "x": 401.6665,
           "y": 673,
           "direction": 2
         },
@@ -1027,8 +1027,8 @@
           "columnIds": [
             "PRPb4sxGBxCG4Z5XIYEm_"
           ],
-          "x": 590,
-          "y": 719,
+          "x": 682.1433,
+          "y": 671.762,
           "direction": 1
         },
         "meta": {

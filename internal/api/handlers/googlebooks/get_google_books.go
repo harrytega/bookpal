@@ -2,7 +2,6 @@ package googlebooks
 
 import (
 	"net/http"
-	"strconv"
 	"test-project/internal/api"
 	"test-project/internal/api/httperrors"
 	"test-project/internal/services/googlebooks"
@@ -35,23 +34,17 @@ func (h *Handler) SearchBooks() echo.HandlerFunc {
 			return httperrors.ErrBadRequestMissingSearchQuery
 		}
 
-		page := 1
 		pageSize := 10
-
-		if pageParam := c.QueryParam("page"); pageParam != "" {
-			var err error
-			page, err = strconv.Atoi(pageParam)
-			if err != nil || page < 1 {
-				return httperrors.ErrBadRequestInvalidPageNumber
-			}
+		page := 1
+		pagination := new(types.Pagination)
+		if err := c.Bind(pagination); err != nil {
+			return httperrors.ErrBadRequestInvalidPaginationParameters
 		}
-
-		if pageSizeParam := c.QueryParam("pageSize"); pageSizeParam != "" {
-			var err error
-			pageSize, err = strconv.Atoi(pageSizeParam)
-			if err != nil || pageSize < 1 || pageSize > 30 {
-				return httperrors.ErrBadRequestInvalidPageSizeNumber
-			}
+		if pagination.PageSize > 0 && pagination.PageSize <= 30 {
+			pageSize = int(pagination.PageSize)
+		}
+		if pagination.CurrentPage > 0 {
+			page = int(pagination.CurrentPage)
 		}
 
 		res, totalItems, err := h.service.SearchBooks(ctx, query, pageSize, page)
@@ -83,16 +76,16 @@ func (h *Handler) SearchBooks() echo.HandlerFunc {
 			convertedBooks = append(convertedBooks, convertedBook)
 		}
 
-		totalPages := (totalItems + int64(pageSize) - 1) / int64(pageSize)
-
-		pagination := &types.Pagination{
-			CurrentPage:     int64(page),
-			TotalPages:      totalPages,
-			PageSize:        int64(pageSize),
-			TotalItems:      totalItems,
-			HasNextPage:     int64(page) < totalPages,
-			HasPreviousPage: page > 1,
+		if pageSize <= 0 {
+			pageSize = 1
 		}
+
+		pagination.CurrentPage = int64(page)
+		pagination.PageSize = int64(pageSize)
+		pagination.TotalPages = (totalItems + pagination.PageSize - 1) / pagination.PageSize
+		pagination.HasNextPage = pagination.CurrentPage < pagination.TotalPages
+		pagination.HasPreviousPage = pagination.CurrentPage > 1
+		pagination.TotalItems = totalItems
 
 		response := &types.GetGoogleBooksResponse{
 			Data:       convertedBooks,

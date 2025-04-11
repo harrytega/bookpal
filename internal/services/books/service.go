@@ -305,21 +305,15 @@ func (s *Service) GetBooksByGenre(ctx context.Context, genre, userID string) (mo
 	return books, nil
 }
 
-func (s *Service) GetTopRatedBooks(ctx context.Context, bookLimit int, userID string) (models.BookSlice, error) {
+func (s *Service) GetTopRatedBooks(ctx context.Context, userID string) (models.BookSlice, error) {
 	logger := log.Ctx(ctx).With().
-		Int("bookLimit", bookLimit).
 		Str("userID", userID).
 		Logger()
-
-	if bookLimit < 0 {
-		bookLimit = 10
-	}
 
 	books, err := models.Books(
 		models.BookWhere.UserID.EQ(userID),
 		models.BookWhere.Rating.IsNotNull(),
 		qm.OrderBy("rating DESC"),
-		qm.Limit(bookLimit),
 	).All(ctx, s.db)
 
 	if err != nil {

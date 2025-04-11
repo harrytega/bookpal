@@ -26,6 +26,7 @@ func AttachAllRoutes(s *api.Server) {
 		books.DeleteBookRoute(s),
 		books.GetBookByIDRoute(s),
 		books.GetSearchUserBooksRoute(s),
+		books.GetTopRatedBooksRoute(s),
 		books.GetUserBooksRoute(s),
 		books.PostAddGoogleBookRoute(s),
 		books.PutUpdateBookRatingAndNotesRoute(s),

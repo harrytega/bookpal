@@ -1,7 +1,6 @@
 package books
 
 import (
-	"fmt"
 	"net/http"
 	"test-project/internal/api"
 	"test-project/internal/api/auth"
@@ -31,21 +30,13 @@ func (h *Handler) SearchUserBooks() echo.HandlerFunc {
 		page := 1
 		pagination := new(types.Pagination)
 		if err := c.Bind(pagination); err != nil {
-			fmt.Print("failed")
-		} else {
-			if pagination.PageSize > 0 && pagination.PageSize <= 30 {
-				pageSize = int(pagination.PageSize)
-			}
-			if pagination.CurrentPage > 0 {
-				page = int(pagination.CurrentPage)
-			}
+			return httperrors.ErrBadRequestInvalidPaginationParameters
 		}
-
-		if pagination.CurrentPage < 0 {
-			pagination.CurrentPage = 1
+		if pagination.PageSize > 0 && pagination.PageSize <= 30 {
+			pageSize = int(pagination.PageSize)
 		}
-		if pagination.PageSize < 0 || pagination.PageSize > 30 {
-			pagination.PageSize = 10
+		if pagination.CurrentPage > 0 {
+			page = int(pagination.CurrentPage)
 		}
 
 		res, totalItems, err := h.service.SearchUserBooks(ctx, query, userID, pageSize, page)

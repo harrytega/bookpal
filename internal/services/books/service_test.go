@@ -113,10 +113,9 @@ func TestGetTopRatedBooks(t *testing.T) {
 
 	test.WithTestServer(t, func(s *api.Server) {
 		ctx := context.Background()
-		bookLimit := 5
 		userID := test.Fixtures().User1.ID
 
-		res, err := s.Books.GetTopRatedBooks(ctx, bookLimit, userID)
+		res, err := s.Books.GetTopRatedBooks(ctx, userID)
 		require.NoError(t, err)
 		assert.NotNil(t, res)
 	})
