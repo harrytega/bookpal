@@ -2,6 +2,7 @@ package googlebooks
 
 import (
 	"net/http"
+	"strconv"
 	"test-project/internal/api"
 	"test-project/internal/api/httperrors"
 	"test-project/internal/services/googlebooks"
@@ -36,15 +37,25 @@ func (h *Handler) SearchBooks() echo.HandlerFunc {
 
 		pageSize := 10
 		page := 1
-		pagination := new(types.Pagination)
-		if err := c.Bind(pagination); err != nil {
-			return httperrors.ErrBadRequestInvalidPaginationParameters
+
+		pageSizeStr := c.QueryParam("pageSize")
+		if pageSizeStr != "" {
+			pageSizeInt, err := strconv.ParseInt(pageSizeStr, 10, 64)
+			if err == nil && pageSizeInt > 0 {
+				if pageSizeInt <= 30 {
+					pageSize = int(pageSizeInt)
+				} else {
+					pageSize = 30
+				}
+			}
 		}
-		if pagination.PageSize > 0 && pagination.PageSize <= 30 {
-			pageSize = int(pagination.PageSize)
-		}
-		if pagination.CurrentPage > 0 {
-			page = int(pagination.CurrentPage)
+
+		pageStr := c.QueryParam("page")
+		if pageStr != "" {
+			pageInt, err := strconv.ParseInt(pageStr, 10, 64)
+			if err == nil && pageInt > 0 {
+				page = int(pageInt)
+			}
 		}
 
 		res, totalItems, err := h.service.SearchBooks(ctx, query, pageSize, page)
@@ -64,34 +75,28 @@ func (h *Handler) SearchBooks() echo.HandlerFunc {
 				unknownAuthor := "Unknown"
 				convertedBook.Author = &unknownAuthor
 			}
-
 			convertedBook.Publisher = book.BookDetails.Publisher
 			convertedBook.BookDescription = book.BookDetails.Description
-
 			if len(book.BookDetails.Genre) > 0 {
 				convertedBook.Genre = book.BookDetails.Genre[0]
 			}
-
 			convertedBook.Pages = SafeInt32(book.BookDetails.Pages)
 			convertedBooks = append(convertedBooks, convertedBook)
 		}
 
-		if pageSize <= 0 {
-			pageSize = 1
+		pagination := &types.Pagination{
+			CurrentPage: int64(page),
+			PageSize:    int64(pageSize),
+			TotalItems:  totalItems,
+			TotalPages:  (totalItems + int64(pageSize) - 1) / int64(pageSize),
 		}
-
-		pagination.CurrentPage = int64(page)
-		pagination.PageSize = int64(pageSize)
-		pagination.TotalPages = (totalItems + pagination.PageSize - 1) / pagination.PageSize
 		pagination.HasNextPage = pagination.CurrentPage < pagination.TotalPages
 		pagination.HasPreviousPage = pagination.CurrentPage > 1
-		pagination.TotalItems = totalItems
 
 		response := &types.GetGoogleBooksResponse{
 			Data:       convertedBooks,
 			Pagination: pagination,
 		}
-
 		return util.ValidateAndReturn(c, http.StatusOK, response)
 	}
 }
