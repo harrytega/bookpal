@@ -32,6 +32,7 @@ type Book struct {
 	Genre           null.String `boil:"genre" json:"genre,omitempty" toml:"genre" yaml:"genre,omitempty"`
 	Pages           null.Int    `boil:"pages" json:"pages,omitempty" toml:"pages" yaml:"pages,omitempty"`
 	Rating          null.Int    `boil:"rating" json:"rating,omitempty" toml:"rating" yaml:"rating,omitempty"`
+	ImageLink       null.String `boil:"image_link" json:"image_link,omitempty" toml:"image_link" yaml:"image_link,omitempty"`
 	UserNotes       null.String `boil:"user_notes" json:"user_notes,omitempty" toml:"user_notes" yaml:"user_notes,omitempty"`
 	UserID          string      `boil:"user_id" json:"user_id" toml:"user_id" yaml:"user_id"`
 
@@ -48,6 +49,7 @@ var BookColumns = struct {
 	Genre           string
 	Pages           string
 	Rating          string
+	ImageLink       string
 	UserNotes       string
 	UserID          string
 }{
@@ -59,6 +61,7 @@ var BookColumns = struct {
 	Genre:           "genre",
 	Pages:           "pages",
 	Rating:          "rating",
+	ImageLink:       "image_link",
 	UserNotes:       "user_notes",
 	UserID:          "user_id",
 }
@@ -72,6 +75,7 @@ var BookTableColumns = struct {
 	Genre           string
 	Pages           string
 	Rating          string
+	ImageLink       string
 	UserNotes       string
 	UserID          string
 }{
@@ -83,6 +87,7 @@ var BookTableColumns = struct {
 	Genre:           "books.genre",
 	Pages:           "books.pages",
 	Rating:          "books.rating",
+	ImageLink:       "books.image_link",
 	UserNotes:       "books.user_notes",
 	UserID:          "books.user_id",
 }
@@ -192,6 +197,7 @@ var BookWhere = struct {
 	Genre           whereHelpernull_String
 	Pages           whereHelpernull_Int
 	Rating          whereHelpernull_Int
+	ImageLink       whereHelpernull_String
 	UserNotes       whereHelpernull_String
 	UserID          whereHelperstring
 }{
@@ -203,6 +209,7 @@ var BookWhere = struct {
 	Genre:           whereHelpernull_String{field: "\"books\".\"genre\""},
 	Pages:           whereHelpernull_Int{field: "\"books\".\"pages\""},
 	Rating:          whereHelpernull_Int{field: "\"books\".\"rating\""},
+	ImageLink:       whereHelpernull_String{field: "\"books\".\"image_link\""},
 	UserNotes:       whereHelpernull_String{field: "\"books\".\"user_notes\""},
 	UserID:          whereHelperstring{field: "\"books\".\"user_id\""},
 }
@@ -245,9 +252,9 @@ func (r *bookR) GetLists() ListSlice {
 type bookL struct{}
 
 var (
-	bookAllColumns            = []string{"book_id", "title", "author", "publisher", "book_description", "genre", "pages", "rating", "user_notes", "user_id"}
+	bookAllColumns            = []string{"book_id", "title", "author", "publisher", "book_description", "genre", "pages", "rating", "image_link", "user_notes", "user_id"}
 	bookColumnsWithoutDefault = []string{"title", "author", "user_id"}
-	bookColumnsWithDefault    = []string{"book_id", "publisher", "book_description", "genre", "pages", "rating", "user_notes"}
+	bookColumnsWithDefault    = []string{"book_id", "publisher", "book_description", "genre", "pages", "rating", "image_link", "user_notes"}
 	bookPrimaryKeyColumns     = []string{"book_id"}
 	bookGeneratedColumns      = []string{}
 )

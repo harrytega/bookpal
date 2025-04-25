@@ -56,6 +56,7 @@ func (h *Handler) SearchUserBooks() echo.HandlerFunc {
 				Rating:          SafeInt32(book.Rating.Int),
 				Title:           &book.Title,
 				UserNotes:       book.UserNotes.String,
+				ImageLink:       book.ImageLink.String,
 			}
 			convertedBooks = append(convertedBooks, convertedBook)
 		}

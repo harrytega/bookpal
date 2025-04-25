@@ -8,6 +8,7 @@ CREATE TABLE books (
     genre text,
     pages integer,
     rating integer,
+    image_link text,
     user_notes text,
     user_id uuid NOT NULL,
     CONSTRAINT books_pkey PRIMARY KEY (book_id),

@@ -392,7 +392,7 @@ func (listL) LoadBooks(ctx context.Context, e boil.ContextExecutor, singular boo
 	}
 
 	query := NewQuery(
-		qm.Select("\"books\".\"book_id\", \"books\".\"title\", \"books\".\"author\", \"books\".\"publisher\", \"books\".\"book_description\", \"books\".\"genre\", \"books\".\"pages\", \"books\".\"rating\", \"books\".\"user_notes\", \"books\".\"user_id\", \"a\".\"list_id\""),
+		qm.Select("\"books\".\"book_id\", \"books\".\"title\", \"books\".\"author\", \"books\".\"publisher\", \"books\".\"book_description\", \"books\".\"genre\", \"books\".\"pages\", \"books\".\"rating\", \"books\".\"image_link\", \"books\".\"user_notes\", \"books\".\"user_id\", \"a\".\"list_id\""),
 		qm.From("\"books\""),
 		qm.InnerJoin("\"book_list\" as \"a\" on \"books\".\"book_id\" = \"a\".\"book_id\""),
 		qm.WhereIn("\"a\".\"list_id\" in ?", argsSlice...),
@@ -413,7 +413,7 @@ func (listL) LoadBooks(ctx context.Context, e boil.ContextExecutor, singular boo
 		one := new(Book)
 		var localJoinCol string
 
-		err = results.Scan(&one.BookID, &one.Title, &one.Author, &one.Publisher, &one.BookDescription, &one.Genre, &one.Pages, &one.Rating, &one.UserNotes, &one.UserID, &localJoinCol)
+		err = results.Scan(&one.BookID, &one.Title, &one.Author, &one.Publisher, &one.BookDescription, &one.Genre, &one.Pages, &one.Rating, &one.ImageLink, &one.UserNotes, &one.UserID, &localJoinCol)
 		if err != nil {
 			return errors.Wrap(err, "failed to scan eager loaded results for books")
 		}

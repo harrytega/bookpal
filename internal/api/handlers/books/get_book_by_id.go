@@ -47,6 +47,7 @@ func (h *Handler) GetBookByID() echo.HandlerFunc {
 			Rating:          SafeInt32(res.Rating.Int),
 			Title:           &res.Title,
 			UserNotes:       res.UserNotes.String,
+			ImageLink:       res.ImageLink.String,
 		}
 		return util.ValidateAndReturn(c, http.StatusOK, response)
 	}

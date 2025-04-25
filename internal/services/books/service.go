@@ -223,6 +223,10 @@ func (s *Service) AddGoogleBook(ctx context.Context, googleID, userID string) er
 			newBook.Pages = null.IntFrom(googleBook.BookDetails.Pages)
 		}
 
+		if googleBook.BookDetails.ImageLinks.Thumbnail != "" {
+			newBook.ImageLink = null.StringFrom(googleBook.BookDetails.ImageLinks.Thumbnail)
+		}
+
 		if err := newBook.Insert(ctx, tx, boil.Infer()); err != nil {
 			logger.Error().Err(err).Msg("error inserting book")
 			return fmt.Errorf("error inserting book: %w", err)
