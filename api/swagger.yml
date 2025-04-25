@@ -902,6 +902,9 @@ definitions:
       google_book_ID:
         type: string
         example: P3LFEAAAQBAJ
+      image_link:
+        type: string
+        example: http://books.google.com/books/content?id=u30YAAAAYAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api
       pages:
         type: integer
         format: int32

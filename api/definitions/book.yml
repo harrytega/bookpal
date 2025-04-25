@@ -62,6 +62,9 @@ definitions:
           type: integer
           format: int32
           example: 409
+        image_link:
+          type: string
+          example: "http://books.google.com/books/content?id=u30YAAAAYAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api"
       required:
         - google_book_ID
         - title

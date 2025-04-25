@@ -81,6 +81,7 @@ func (h *Handler) SearchBooks() echo.HandlerFunc {
 				convertedBook.Genre = book.BookDetails.Genre[0]
 			}
 			convertedBook.Pages = SafeInt32(book.BookDetails.Pages)
+			convertedBook.ImageLink = book.BookDetails.ImageLinks.Thumbnail
 			convertedBooks = append(convertedBooks, convertedBook)
 		}
 

@@ -41,6 +41,7 @@ func (h *Handler) GetBookByID() echo.HandlerFunc {
 			BookDescription: book.BookDetails.Description,
 			Genre:           book.BookDetails.Genre[0],
 			Pages:           SafeInt32(book.BookDetails.Pages),
+			ImageLink:       book.BookDetails.ImageLinks.Thumbnail,
 		}
 		return util.ValidateAndReturn(c, http.StatusOK, response)
 	}

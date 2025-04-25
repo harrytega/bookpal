@@ -37,6 +37,10 @@ type GoogleBook struct {
 	// Required: true
 	GoogleBookID *string `json:"google_book_ID"`
 
+	// image link
+	// Example: http://books.google.com/books/content?id=u30YAAAAYAAJ\u0026printsec=frontcover\u0026img=1\u0026zoom=1\u0026source=gbs_api
+	ImageLink string `json:"image_link,omitempty"`
+
 	// pages
 	// Example: 409
 	Pages int32 `json:"pages,omitempty"`
