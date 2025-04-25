@@ -26,11 +26,11 @@ func NewService(config config.GoogleBooks) *Service {
 	}
 }
 
-func (s *Service) SearchBooks(ctx context.Context, query string, pageSize, page int) (*dto.BookSearchResult, int64, error) {
+func (s *Service) SearchBooks(ctx context.Context, query string, pageSize, currentPage int) (*dto.BookSearchResult, int64, error) {
 	logger := log.Ctx(ctx).With().
 		Str("query", query).
 		Int("pageSize", pageSize).
-		Int("page", page).
+		Int("page", currentPage).
 		Logger()
 
 	baseURL := s.baseURL
@@ -40,7 +40,7 @@ func (s *Service) SearchBooks(ctx context.Context, query string, pageSize, page 
 		return nil, 0, fmt.Errorf("Google Books API Key not configured")
 	}
 
-	startIndex := (page - 1) * pageSize
+	startIndex := (currentPage - 1) * pageSize
 
 	params := url.Values{}
 	params.Add("q", query)
